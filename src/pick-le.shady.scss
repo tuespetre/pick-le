@@ -1,0 +1,24 @@
+$host:     'pick-le';
+$left:     '.pick-le-left';
+$right:    '.pick-le-right';
+$expanded: '[aria-expanded=true]';
+$popup:    '.pick-le.popup';
+$title:    '.pick-le.title';
+$close:    '.pick-le.close';
+$tool:     'pick-le .shady-content > .pick-le-tool';
+$filter:   '.pick-le.filter';
+$list:     '.pick-le.list';
+$option:   '.pick-le.option';
+$glyph:    '.pick-le.glyph';
+$label:    '.pick-le.label';
+$text:     '.pick-le.text';
+
+@import 'pick-le.scss';
+
+#{$host} .pick-le.shadow {
+    position: relative;
+}
+
+.content[select='.pick-le-tool'] {
+    flex-shrink: 0;
+}
