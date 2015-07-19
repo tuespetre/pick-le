@@ -464,7 +464,7 @@
             if (list.type === SELECT_MULTIPLE) {
                 listOption.selected = !listOption.selected;
                 option.setAttribute(ATTR.ARIA_SELECTED, listOption.selected ? TRUE : FALSE);
-                option.classList.add(CLASS.SELECTED);
+                option.classList.toggle(CLASS.SELECTED, listOption.selected);
             }
             else {
                 listOption.selected = true;
@@ -508,9 +508,7 @@
                 option.getAttribute(ATTR.DATA_LABEL) ||
                 option.getAttribute(ATTR.DATA_TEXT);
                 
-            let elem = 
-                this.querySelector(DOT + CLASS.JS_TEXT) ||
-                (this.children.length ? null : this);
+            let elem = this.querySelector(DOT + CLASS.JS_TEXT);
 
             if (elem) elem.textContent = value;
         },
