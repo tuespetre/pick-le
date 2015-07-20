@@ -1,5 +1,4 @@
 // SVGs courtesy of https://github.com/encharm/Font-Awesome-SVG-PNG
-// Inspiration taken from GitHub's issue tracker's dropdowns
 (function () {
     var PICKLE_PERF_LOGGING = () => window.PICKLE_PERF_LOGGING || false;
     var SHADOWDOM_SUPPORTED = 'createShadowRoot' in document.createElement('div');
@@ -360,64 +359,84 @@
                 if (quit) break;
             }
         },
+		
+		apply_highlight: function (option, highlighted) {
+			if (highlighted) {				
+				this.setAttribute(ATTR.ARIA_ACTIVEDESCENDANT, option.id);
+				option.classList.add(CLASS.HIGHLIGHTED);
+				
+				// Focusing the option is no bueno.
+				// Causes iOS (et al) to hide keyboard
+				// if the filter was focused
+				// option.focus();
+				// Since the goal was to get the highlighted
+				// link into view (and because scrollIntoView sucks)
+				// we'll just have to adjust the scrollTop ourselves...
+				let menu = this.shadowRoot.querySelector(DOT + CLASS.LIST),
+					v_rect = undefined,
+					m_rect = menu.getBoundingClientRect(),
+					o_rect = option.getBoundingClientRect();
+				
+				if (o_rect.bottom > m_rect.bottom) {
+					menu.scrollTop += o_rect.bottom - m_rect.bottom;
+				}
+				else if (o_rect.top < m_rect.top) {
+					menu.scrollTop -= m_rect.top - o_rect.top;
+				}
+				
+				o_rect = option.getBoundingClientRect();
+				v_rect = document.documentElement.getBoundingClientRect();
+				
+				if (o_rect.bottom > v_rect.height) {
+					let diff = o_rect.bottom - v_rect.height;
+					document.body.scrollTop += diff;
+					document.documentElement.scrollTop += diff;
+				}  
+				else if (o_rect.top < 0) {
+					let diff = 0 - o_rect.top;
+					document.body.scrollTop -= diff;
+					document.documentElement.scrollTop -= diff;
+				}                  
+			}
+			else {
+				option.classList.remove(CLASS.HIGHLIGHTED);
+			}
+		},
 
         highlight_option: function (option) {
-            this.setAttribute(ATTR.ARIA_ACTIVEDESCENDANT, option.id);
-            internals.each_option.call(this, (function (_option) {
-                if (option === _option) {
-                    _option.classList.add(CLASS.HIGHLIGHTED);
-                    // Focusing the option is no bueno.
-                    // Causes iOS (et al) to hide keyboard
-                    // if the filter was focused
-                    // _option.focus();
-                    // Since the goal was to get the highlighted
-                    // link into view (and because scrollIntoView sucks)
-                    // we'll just have to adjust the scrollTop ourselves...
-                    let menu = this.shadowRoot.querySelector(DOT + CLASS.LIST),
-                        v_rect = undefined,
-                        m_rect = menu.getBoundingClientRect(),
-                        o_rect = _option.getBoundingClientRect();
-                    
-                    if (o_rect.bottom > m_rect.bottom) {
-                        menu.scrollTop += o_rect.bottom - m_rect.bottom;
-                    }
-                    else if (o_rect.top < m_rect.top) {
-                        menu.scrollTop -= m_rect.top - o_rect.top;
-                    }
-                    
-                    o_rect = _option.getBoundingClientRect();
-                    v_rect = document.documentElement.getBoundingClientRect();
-                    
-                    if (o_rect.bottom > v_rect.height) {
-                        let diff = o_rect.bottom - v_rect.height;
-                        document.body.scrollTop += diff;
-                        document.documentElement.scrollTop += diff;
-                    }  
-                    else if (o_rect.top < 0) {
-                        let diff = 0 - o_rect.top;
-                        document.body.scrollTop -= diff;
-                        document.documentElement.scrollTop -= diff;
-                    }                  
-                }
-                else {
-                    _option.classList.remove(CLASS.HIGHLIGHTED);
-                }
-            }).bind(this));
+            internals.each_option.call(this, _option => {
+				internals.apply_highlight.call(this, _option, option === _option);
+			});
         },
 
         apply_filter: function (value) {
-            let allWereHidden = true;
-            internals.each_option.call(this, function (option) {
+            let allWereHidden = true,
+				highlightedOne = false;
+			
+            internals.each_option.call(this, option => {
                 let match = internals.match_filter(option, value),
-                    display = match && !option.hasAttribute(ATTR.DATA_HIDDEN);
+                    display = match && !option.hasAttribute(ATTR.DATA_HIDDEN),
+					gotHighlighted = false;
                     
                 if (display) {
                     option.removeAttribute(ATTR.HIDDEN);
                     allWereHidden = false;
+					
+					if (
+						!highlightedOne && 
+						(value || option.classList.contains(CLASS.SELECTED))
+					) {
+						internals.apply_highlight.call(this, option, true);
+						highlightedOne = gotHighlighted = true;
+					}
                 }
                 else {
                     option.setAttribute(ATTR.HIDDEN, '');
                 }
+				
+				if (!gotHighlighted) {
+					internals.apply_highlight.call(this, option, false);
+				}
             });
             
             // This stops a weird bug where IE11 likes to set the container's
@@ -425,18 +444,6 @@
             // the container was in overflow.
             let container = this.shadowRoot.querySelector(DOT + CLASS.LIST);
             container.style.height = allWereHidden ? 0 : '';
-
-            let highlight = value
-                ?
-                    this.shadowRoot.querySelector(OPTION_VISIBLE)
-                :
-                    this.shadowRoot.querySelector(OPTION_VISIBLE_SELECTED) ||
-                    this.shadowRoot.querySelector(OPTION_VISIBLE)
-            ;
-
-            if (highlight) {
-                internals.highlight_option.call(this, highlight);
-            }
         },
 
         match_filter: function (option, filter) {
@@ -465,15 +472,15 @@
                 listOption.selected = !listOption.selected;
                 option.setAttribute(ATTR.ARIA_SELECTED, listOption.selected ? TRUE : FALSE);
                 option.classList.toggle(CLASS.SELECTED, listOption.selected);
+				internals.highlight_option.call(this, option);
             }
             else {
                 listOption.selected = true;
                 internals.set_display_text.call(this, option);
-                internals.each_option.call(this, function (opt) {
-                    opt.setAttribute(
-                        ATTR.ARIA_SELECTED,
-                        opt === option ? TRUE : FALSE);
+                internals.each_option.call(this, opt => {
+                    opt.setAttribute(ATTR.ARIA_SELECTED, opt === option ? TRUE : FALSE);
                     opt.classList.toggle(CLASS.SELECTED, opt === option);
+					internals.apply_highlight.call(this, opt, opt === option);
                 });
             }
             
@@ -481,15 +488,16 @@
             // doing the changing. 
             list.dispatchEvent(new CustomEvent('change'));
         },
-
-        focus_filter_input: function () {
-            let target = this.filterable
+		
+		get_focus_target: function () {			
+            return this.filterable
                 ? this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT)
                 : this.shadowRoot.querySelector(DOT + CLASS.POPUP);
-                
-            if (document.activeElement) document.activeElement.blur();
-            
-            target.focus();
+		},
+
+        focus_filter_input: function () {                
+            if (document.activeElement) document.activeElement.blur();            
+            internals.get_focus_target.call(this).focus();
         },
 
         focus_collapsed_target: function () {
@@ -612,19 +620,24 @@
                 let target = 
                     internals.get_highlighted_option.call(this) ||
                     this.shadowRoot.querySelector(OPTION_SELECTED) ||
-                    this.shadowRoot.querySelector(OPTION_VISIBLE);
+                    this.shadowRoot.querySelector(OPTION_VISIBLE),
+					original = target;
                     
-                if (!target) return;
-                
-                if (!wasExpanded)
+                if (!target) {
+					return;
+				}
+                else if (!wasExpanded) {
                     this.expanded = true;
-                else if (!(target = getSibling(target)))
+				}
+                else if (!(target = getSibling(target))) {
                     return;
+				}
                     
                 do {
                     if (!target.hasAttribute(ATTR.HIDDEN)) {  
-                        internals.highlight_option.call(this, target);
-                        return;
+						internals.apply_highlight.call(this, original, false);
+						internals.apply_highlight.call(this, target, true);
+                        break;
                     }
                 } while (target = getSibling(target));
             };
@@ -686,6 +699,8 @@
                 default:
                     break;
             }
+			
+			let filter = () => this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
 
             if (handled) {
                 e.preventDefault();
@@ -694,7 +709,7 @@
             else if (!this.expanded) {
                 return;
             }
-            else if (e.currentTarget !== this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT)) {
+            else if (this.filterable && e.currentTarget !== filter()) {
                 internals.focus_filter_input.call(this);
             }
             else {
@@ -723,26 +738,18 @@
         },
 
         option_click: function (e) {
-            var target = e.target;
+            let target = e.target,			
+				isList = target => target.classList && target.classList.contains(CLASS.LIST),
+				isOption = target => target.classList && target.classList.contains(CLASS.OPTION);
             
-            if (
-                target.classList && // <--- because it could be SVG
-                target.classList.contains(CLASS.LIST)
-            ) {
-                return;
-            }
-
-            while (
-                !target.classList || // <--- because it could be SVG
-                !target.classList.contains(CLASS.OPTION)
-            ) {
-                target = target.parentNode;
-            }
+            if (isList(target)) return;
+			while (!isOption(target)) target = target.parentNode;
 
             switch (this.mode) {
                 case MODE.SELECT:
                     internals.toggle_option.call(this, target);
-                    internals.highlight_option.call(this, target);
+					e.preventDefault();
+					e.stopPropagation();
                     break;
                 case MODE.NAVIGATE:
                     break;
@@ -767,8 +774,8 @@
             }
             
             if (!isFromMe && this.expanded) {
+                internals.get_focus_target.call(this).blur();
                 this.expanded = false;
-                this.blur();
             }
         }
 
@@ -905,6 +912,11 @@
                         frag.appendChild(option);
                     }
                     PERF('options loop finish');
+					
+					let select = s => this.shadowRoot.querySelector(s),
+						selected = select(OPTION_SELECTED);
+					
+					selected && internals.set_display_text.call(this, selected);
                 }
                 else {
                     this.removeAttribute(ATTR.LIST);
@@ -952,12 +964,12 @@
                     let filter = select(SELECTOR.FILTER_INPUT),
                         list = select(DOT + CLASS.LIST);
                 
-                    attr(FALSE);
-                    internals.apply_filter.call(this, null);
                     filter.value = null;
                     filter.setAttribute(ATTR.DATA_VALUE, '');
+                    internals.apply_filter.call(this, null);
+                    listener(SCREEN_XS_MAX);
                     SCREEN_XS_MAX.removeListener(listener);
-                    OVERLAY_CONTEXT.unregister(list);
+                    attr(FALSE);
                     
                     // This should be called or not called when collapse 
                     // depending on context, so we can't just do it here.
@@ -975,10 +987,12 @@
             set: function (value) {
                 var filterable = value ? true : false;
 
-                if (filterable)
+                if (filterable) {
                     this.setAttribute(ATTR.FILTERABLE, '');
-                else
+				}
+                else {
                     this.removeAttribute(ATTR.FILTERABLE);
+				}
             }
         }
 

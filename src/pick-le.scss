@@ -15,6 +15,7 @@ $host: ':host' !default;
 $left: '(.pick-le-left)' !default;
 $right: '(.pick-le-right)' !default;
 $expanded: '([aria-expanded=true])' !default;
+$anchor: '.anchor' !default;
 $popup: '.popup' !default;
 $title: '.title' !default;
 $close: '.close' !default;
@@ -50,6 +51,15 @@ $text: '.text' !default;
 
 #{$host} {
     position: relative;
+	display: inline-block;
+}
+
+#{$anchor} {
+	position: absolute;
+	top: 0; 
+	left: 0; 
+	bottom: 0;
+	width: 0;
 }
 
 #{$popup} {
@@ -60,7 +70,7 @@ $text: '.text' !default;
     top: 100%;
     left: 0;
     right: auto;
-    min-width: 250px;
+    width: 300px;
     z-index: 3000;
     border: 1px solid $border-color;
     border-radius: 4px;
