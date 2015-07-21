@@ -11,21 +11,21 @@ $bg-color-light: #f5f5f5;
 $border-color: gainsboro;
 
 // selectors
-$host: ':host' !default;
-$left: '(.pick-le-left)' !default;
-$right: '(.pick-le-right)' !default;
+$host:     ':host' !default;
+$right:    '(.pick-le-right)' !default;
+$top:      '(.pick-le-top)' !default;
 $expanded: '([aria-expanded=true])' !default;
-$anchor: '.anchor' !default;
-$popup: '.popup' !default;
-$title: '.title' !default;
-$close: '.close' !default;
-$tool: '::content > .pick-le-tool' !default;
-$filter: '.filter' !default;
-$list: '.list' !default;
-$option: '.option' !default;
-$glyph: '.glyph' !default;
-$label: '.label' !default;
-$text: '.text' !default;
+$anchor:   '.anchor' !default;
+$popup:    '.popup' !default;
+$title:    '.title' !default;
+$close:    '.close' !default;
+$tool:     '::content > .pick-le-tool' !default;
+$filter:   '.filter' !default;
+$list:     '.list' !default;
+$option:   '.option' !default;
+$glyph:    '.glyph' !default;
+$label:    '.label' !default;
+$text:     '.text' !default;
 
 %element {
     background-clip: border-box;
@@ -59,7 +59,13 @@ $text: '.text' !default;
 	top: 0; 
 	left: 0; 
 	bottom: 0;
+    right: auto;
 	width: 0;
+    
+    #{$host}#{$right} & {
+        right: 0;
+        left: auto;
+    }
 }
 
 #{$popup} {
@@ -70,6 +76,7 @@ $text: '.text' !default;
     top: 100%;
     left: 0;
     right: auto;
+    bottom: auto;
     width: 300px;
     z-index: 3000;
     border: 1px solid $border-color;
@@ -88,14 +95,14 @@ $text: '.text' !default;
         }
     }
     
-    #{$host}#{$left} & {
-        left: 0;
-        right: auto;
-    }
-    
     #{$host}#{$right} & {
         right: 0;
         left: auto;
+    }
+    
+    #{$host}#{$top} & {
+        top: auto;
+        bottom: 100%;
     }
     
     @media #{$screen-sm-max} { 
