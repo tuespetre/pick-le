@@ -219,7 +219,7 @@
             };
             
         const applyStyles = (currentStyles, newStyles) => {
-            for (var prop in NEW_STYLE) {
+            for (var prop in overlayStyle) {
                 currentStyles[prop] = newStyles[prop];
             }
         }
