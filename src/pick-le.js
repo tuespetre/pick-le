@@ -147,17 +147,13 @@
         PLACEHOLDER:           'placeholder',
         ID:                    'id',
         HIDDEN:                'hidden',
-        SELECT:                'select'
+        SELECT:                'select',
+		NAVIGATIONAL:          'navigational'
     });
     
     const TAG = Object.freeze({
         DIV:     'div',
         CONTENT: 'content'
-    });
-
-    const MODE = Object.freeze({
-        SELECT:   'select',
-        NAVIGATE: 'navigate'
     });
 
     const TRUE            = 'true',
@@ -744,14 +740,12 @@
                 var highlighted = internals.get_highlighted_option.call(this);
                 
                 if (highlighted) {
-                    switch (this.mode) {
-                        case MODE.SELECT:
-                            internals.toggle_option.call(this, highlighted);
-                            break;
-                        case MODE.NAVIGATE:
-                            window.location = highlighted.href;
-                            break;
-                    }
+					if (this.navigational) {
+						window.location = highlighted.href;
+					}
+					else {
+						internals.toggle_option.call(this, highlighted);
+					}
                 }
             }
             
@@ -812,19 +806,15 @@
 			while (!isOption(target) && target.parentNode) target = target.parentNode;
             if (!isOption(target)) return; // then what happened?
             
-            switch (this.mode) {
-                case MODE.SELECT:
-					e.preventDefault();
-					e.stopPropagation();
-                    internals.toggle_option.call(this, target);
-                    internals.get_focus_target.call(this).focus();
-                    // toggle_option causes the list to be replaced,
-                    // and we lost focus, so need to regain it for
-                    // keyboard operations to continue to work
-                    break;
-                case MODE.NAVIGATE:
-                    break;
-            }
+			if (!this.navigational) {
+				e.preventDefault();
+				internals.toggle_option.call(this, target);
+				internals.get_focus_target.call(this).focus();
+				// toggle_option causes the list to be replaced,
+				// and we lost focus, so need to regain it for
+				// keyboard operations to continue to work
+			}
+			e.stopPropagation();
         },
 
         document_click: function (e) {
@@ -912,7 +902,7 @@
                     case ATTR.LIST:
                         this.list = document.getElementById(newValue);
                         break;
-                    case ATTR.MODE:
+                    case ATTR.NAVIGATIONAL:
                         this.list = this.list;
                         break;
                     case ATTR.FILTERABLE:
@@ -939,20 +929,19 @@
             }
         },
 
-        'mode': {
+        'navigational': {
             get: function () {
-                var value = this.getAttribute(ATTR.MODE);
-
-                switch (value) {
-                    case MODE.SELECT:
-                    case MODE.NAVIGATE:
-                        return value;
-                    default:
-                        return MODE.SELECT;
-                }
+                return this.hasAttribute(ATTR.NAVIGATIONAL);
             },
             set: function (value) {
-                this.setAttribute(ATTR.MODE, value);
+                let navigational = value ? true : false;
+
+                if (navigational) {
+                    this.setAttribute(ATTR.NAVIGATIONAL, '');
+				}
+                else {
+                    this.removeAttribute(ATTR.NAVIGATIONAL);
+				}
             }
         },
 
@@ -972,7 +961,7 @@
                     set(ATTR.ARIA_MULTISELECTABLE, list.type === SELECT_MULTIPLE);
                     
                     let options  = list.options,
-                        addHref  = (this.mode === MODE.NAVIGATE),
+                        addHref  = (this.navigational),
                         template = addHref ? TEMPLATE_LINK : TEMPLATE_OPTION,
                         shell    = template.querySelector(SELECTOR.OPTION);
                     
