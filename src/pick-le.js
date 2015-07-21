@@ -118,7 +118,8 @@
     const EVENT = Object.freeze({
         CLICK:   'click',
         KEYDOWN: 'keydown',
-        INPUT:   'input'
+        INPUT:   'input',
+		CHANGE:  'change'
     });
 
     const ATTR = Object.freeze({
@@ -520,8 +521,17 @@
             if (!multiple) internals.set_display_text.call(this, cloned);
             
             // 'change' only fires naturally when the user is the one
+            // doing the changing. // 'change' only fires naturally when the user is the one
             // doing the changing. 
-            list.dispatchEvent(new CustomEvent('change'));
+			var event;
+			try {
+				event = new CustomEvent(EVENT.CHANGE);
+			}
+			catch (e) {
+				event = document.createEvent('CustomEvent');
+				event.initCustomEvent(EVENT.CHANGE, true, true, null);
+			}			
+            list.dispatchEvent(event);
         },
 		
 		get_focus_target: function () {
