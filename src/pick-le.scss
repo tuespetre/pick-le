@@ -4,7 +4,7 @@ $screen-sm-max: 'screen and (max-width: 767px)';
 $font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $font-size: 14px;
 $line-height: 20px;
-$text-lighter: #555;
+$text-lighter: #777;
 $text-darker: #111;
 $bg-color: #f1f1f1;
 $bg-color-light: #f5f5f5;
@@ -159,7 +159,7 @@ $text:     '.text' !default;
     font-weight: bold;
     font-size: 20px;
     line-height: 20px;
-    color: lighten($text-lighter, 50%);
+    color: lighten($text-lighter, 25%);
     float: right;
     
     &:hover {
@@ -303,5 +303,6 @@ $text:     '.text' !default;
     #{$label} + & {
         font-size: 0.9em;
         margin-top: 7px;
+        color: $text-lighter;
     }
 }
