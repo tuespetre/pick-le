@@ -1024,6 +1024,7 @@
                 else {
                     listener(SCREEN_XS_MAX);
                     SCREEN_XS_MAX.removeListener(listener);
+                    overlayContext.unregister(list);
                     attr(FALSE);
                     
                     // This should be called or not called when collapse 
