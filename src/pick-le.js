@@ -15,14 +15,11 @@
         return text;
     };
     
-    const PERF = (label, unit) => {
-        let start = performance.now();
-        
-        unit();
-        
-        let finish = performance.now();
-        
-        if (!PICKLE_PERF_LOGGING()) return;
+    const PERF = (label, unit) => {  
+        let start = performance.now();        
+        unit();        
+        let finish = performance.now();  
+        if (!PICKLE_PERF_LOGGING()) return;    
         console.log(`${label}: ${(finish - start).toFixed(0)}ms elapsed`);
     };
 
@@ -396,6 +393,7 @@
             // Causes iOS (et al) to hide keyboard
             // if the filter was focused
             // option.focus();
+			
             // Since the goal was to get the highlighted
             // link into view (and because scrollIntoView sucks)
             // we'll just have to adjust the scrollTop ourselves.
@@ -517,7 +515,6 @@
             if (!multiple) internals.set_display_text.call(this, cloned);
             
             // 'change' only fires naturally when the user is the one
-            // doing the changing. // 'change' only fires naturally when the user is the one
             // doing the changing. 
 			var event;
 			try {
@@ -657,27 +654,35 @@
 
         pickle_keydown: function (e) {
             switch (KEY_MAP[e.key || e.which || e.keyCode]) {
+			
                 case KEY.UP:
                     handlers.key_up_down.call(this, e, t => t.previousElementSibling);
                     break;
+					
                 case KEY.DOWN:
                     handlers.key_up_down.call(this, e, t => t.nextElementSibling);
                     break;
+					
                 case KEY.ESCAPE:
                     handlers.key_escape.call(this, e);
-                    break;
+                    break;					
+					
                 case KEY.SPACE:
                     handlers.key_space.call(this, e);
                     break;
+					
                 case KEY.ENTER:
                     handlers.key_enter.call(this, e);
                     break;
+					
                 case KEY.TAB:
                     handlers.key_tab.call(this, e);
                     break;
+					
                 default:
                     handlers.key_other.call(this, e);
                     break;
+					
             }
         },
 
@@ -718,7 +723,7 @@
         key_escape: function (e) {
             if (this.expanded) {
                 this.expanded = false;
-                internals.focus_collapsed_target.call(this)
+                internals.focus_collapsed_target.call(this);
                 e.preventDefault();
                 e.stopPropagation();
             }
@@ -745,6 +750,11 @@
 					}
 					else {
 						internals.toggle_option.call(this, highlighted);
+						
+						if ((this.list || {}).type !== SELECT_MULTIPLE) {
+							this.expanded = false;
+							internals.focus_collapsed_target.call(this);
+						}
 					}
                 }
             }
@@ -802,18 +812,34 @@
                 isContainer = target => target.classList && target.classList.contains(CLASS.PRIVATE_LIST),
 				isOption = target => target.classList && target.classList.contains(CLASS.OPTION);
             
-            if (isList(target) || isContainer(target)) return;
-			while (!isOption(target) && target.parentNode) target = target.parentNode;
-            if (!isOption(target)) return; // then what happened?
+            if (isList(target) || isContainer(target)) {
+				return;
+			}
+			
+			while (!isOption(target) && target.parentNode) {
+				target = target.parentNode;
+			}
+			
+            if (!isOption(target)) {
+				return; // then what happened?
+			}
             
 			if (!this.navigational) {
 				e.preventDefault();
 				internals.toggle_option.call(this, target);
-				internals.get_focus_target.call(this).focus();
-				// toggle_option causes the list to be replaced,
-				// and we lost focus, so need to regain it for
-				// keyboard operations to continue to work
+				
+				if ((this.list || {}).type === SELECT_MULTIPLE) {
+					internals.get_focus_target.call(this).focus();
+					// toggle_option causes the list to be replaced,
+					// and we lost focus, so need to regain it for
+					// keyboard operations to continue to work
+				}
+				else {				
+					this.expanded = false;
+					internals.focus_collapsed_target.call(this);
+				}
 			}
+			
 			e.stopPropagation();
         },
 
@@ -896,24 +922,30 @@
         'attributeChangedCallback': {
             value: function (name, oldValue, newValue) {
                 switch (name) {
+				
                     case ATTR.TITLE:
                         internals.set_title_text.call(this, newValue);
                         break;
+						
                     case ATTR.LIST:
                         this.list = document.getElementById(newValue);
                         break;
+						
                     case ATTR.NAVIGATIONAL:
                         this.list = this.list;
                         break;
+						
                     case ATTR.FILTERABLE:
                         let filterable = (newValue === null),
                             filter = this.shadowRoot.querySelector(SELECTOR.FILTER);
                             
                         filter.setAttribute(ATTR.ARIA_HIDDEN, filterable ? FALSE : TRUE);
                         break;
+						
                     case ATTR.ARIA_EXPANDED:
                         this.expanded = (newValue === TRUE);
                         break;
+						
                     default:
                         break;
                 }
