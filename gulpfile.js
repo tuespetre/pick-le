@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
+	util = require('gulp-util'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
-    inject = require('gulp-inject'),
     babel = require('gulp-babel'),
     htmlmin = require('gulp-htmlmin'),
     replace = require('gulp-replace'),
@@ -34,8 +34,10 @@ gulp.task('js', ['css', 'html'], function () {
             while (injectRegex.exec(found) !== null);
             return fs.readFileSync(match[1], 'utf8');
         }))
-        .pipe(babel())
-        .pipe(uglify())
+        .pipe(babel({
+			presets: ['es2015']
+		}))
+        .pipe(uglify().on('error', util.log))
         .pipe(gulp.dest('dist'));
 });
 
