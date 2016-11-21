@@ -1,4 +1,4 @@
-<content select=":not(.pick-le-tool)"></content>
+<slot></slot>
 <div class="anchor shady-shadow">
     <div class="popup" tabindex="-1">
         <div class="title">
@@ -9,7 +9,7 @@
                 </svg>
             </span>
         </div>
-        <content select=".pick-le-tool"></content>
+        <slot name="pick-le-tool"></slot>
         <div class="filter">
             <input type="search" autocomplete="off" aria-label="Filter options" tabindex="-1" data-value="" />
         </div>

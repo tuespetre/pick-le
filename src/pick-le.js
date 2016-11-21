@@ -1,92 +1,60 @@
-(function () {
-
-    const PICKLE_PERF_LOGGING = () => window.PICKLE_PERF_LOGGING || false;
-
-    const SHADOWDOM_SUPPORTED = 'attachShadow' in Element.prototype;
+(function() {
 
     const SHADOWDOM_POLYFILLED = window.shadowDomPolyfilled;
 
     const SCREEN_XS_MAX = window.matchMedia('screen and (max-width: 767px)');
 
-    // http://stackoverflow.com/a/1349426/1030925
-    const MAKEID = () => {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-        for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    };
-
-    const PERF = (label, unit) => {
-        let start = performance.now();
-        unit();
-        let finish = performance.now();
-        if (!PICKLE_PERF_LOGGING()) return;
-        console.log(`${label}: ${(finish - start).toFixed(0)}ms elapsed`);
-    };
-
     const FRAG = strings => {
-        let fragment = document.createDocumentFragment();
+        const fragment = document.createDocumentFragment();
+        const template = document.createElement('div');
 
-        PERF('frag start', () => {
-            let template = document.createElement('div');
+        template.innerHTML = strings[0];
 
-            template.innerHTML = strings[0];
-
-            while (template.firstChild) {
-                fragment.appendChild(template.firstChild);
-            }
-        });
+        while (template.firstChild) {
+            fragment.appendChild(template.firstChild);
+        }
 
         return fragment;
     };
 
-    const KEY = Object.freeze({
-        UP: 'ArrowUp',
-        DOWN: 'ArrowDown',
-        SPACE: ' ',
-        ESCAPE: 'Escape',
-        ENTER: 'Enter',
-        TAB: 'Tab'
-    });
+    const KEY_UP = 'ArrowUp';
+    const KEY_DOWN = 'ArrowDown';
+    const KEY_SPACE = ' ';
+    const KEY_ESCAPE = 'Escape';
+    const KEY_ENTER = 'Enter';
+    const KEY_TAB = 'Tab';
 
     const KEY_MAP = Object.freeze({
 
         // Standard 'key' values, see: http://www.w3.org/TR/DOM-Level-3-Events-key/
 
-        'ArrowUp': KEY.UP,
-        'ArrowDown': KEY.DOWN,
-        ' ': KEY.SPACE,
-        'Escape': KEY.ESCAPE,
-        'Enter': KEY.ENTER,
-        'Tab': KEY.TAB,
+        'ArrowUp': KEY_UP,
+        'ArrowDown': KEY_DOWN,
+        ' ': KEY_SPACE,
+        'Escape': KEY_ESCAPE,
+        'Enter': KEY_ENTER,
+        'Tab': KEY_TAB,
 
         // Nonstandard 'key' values, used in IE and older Gecko
         // see: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
 
-        'Up': KEY.UP,
-        'Down': KEY.DOWN,
-        'Spacebar': KEY.SPACE,
-        'Esc': KEY.ESCAPE,
+        'Up': KEY_UP,
+        'Down': KEY_DOWN,
+        'Spacebar': KEY_SPACE,
+        'Esc': KEY_ESCAPE,
 
         // deprecated 'which' and 'keyCode' values
 
-        38: KEY.UP,
-        40: KEY.DOWN,
-        32: KEY.SPACE,
-        27: KEY.ESCAPE,
-        13: KEY.ENTER,
-        9: KEY.TAB
+        38: KEY_UP,
+        40: KEY_DOWN,
+        32: KEY_SPACE,
+        27: KEY_ESCAPE,
+        13: KEY_ENTER,
+        9: KEY_TAB
 
     });
 
     const CLASS = Object.freeze({
-        CONTENT: 'shady-content',
-        SHADOW: 'shady-shadow',
-        JS_TEXT: 'pick-le-text',
-        JS_PICKLE_FOCUS: 'pick-le-focus',
         PRIVATE_LIST: 'private-list',
         POPUP: 'popup',
         TITLE_TEXT: 'title-text',
@@ -94,7 +62,6 @@
         FILTER: 'filter',
         LIST: 'list',
         OPTION: 'option',
-        SHADY: 'shady-' + MAKEID(),
         SCOPE: 'pick-le',
         HIGHLIGHTED: 'highlighted',
         SELECTED: 'selected',
@@ -152,15 +119,8 @@
         NAVIGATIONAL: 'navigational'
     });
 
-    const TAG = Object.freeze({
-        DIV: 'div',
-        CONTENT: 'content'
-    });
-
-    const TRUE = 'true';
-    const FALSE = 'false';
-    const HASH = '#';
-    const PICKLE = 'pick-le';
+    const TRUE_STRING = 'true';
+    const FALSE_STRING = 'false';
     const SELECT_MULTIPLE = 'select-multiple';
     const LISTBOX = 'listbox';
     const TEMPLATE_MAIN = FRAG`inject(build/template.main.html)`;
@@ -169,36 +129,24 @@
     const STYLE_SHADOW = `inject(build/pick-le.css)`;
     const STYLE_SHADY = `inject(build/pick-le.shady.css)`;
 
-    ///////////////////////////////////////////////////////////////////////
-    //
-    // Always use 'shady' CSS style for compatibility
-    //
-    ///////////////////////////////////////////////////////////////////////
+    if (!SHADOWDOM_POLYFILLED) {
+        const style = document.createElement('style');
+        style.textContent = STYLE_SHADOW;
+        TEMPLATE_MAIN.insertBefore(style, TEMPLATE_MAIN.firstChild);
+    }
+    else {
+        const style = document.createElement('style');
+        style.textContent = STYLE_SHADY;
+        document.head.appendChild(style);
 
-    {
-        if (SHADOWDOM_SUPPORTED && !SHADOWDOM_POLYFILLED) {   
-            var style = document.createElement('style');
-            style.textContent = STYLE_SHADOW;
-            TEMPLATE_MAIN.insertBefore(style, TEMPLATE_MAIN.firstChild);       
-        }    
-        else {
-            var style = document.createElement('style');
-            style.textContent = STYLE_SHADY;
-            document.head.appendChild(style);   
-            
-            let transform = node => 
-                Array.prototype.forEach.call(
-                    node.querySelectorAll('*'), 
-                    elem => {
-                        if (!elem.classList) return;
-                        elem.classList.add(CLASS.SHADY);
-                        elem.classList.add(CLASS.SCOPE);
-                    });
-            
-            transform(TEMPLATE_MAIN);
-            transform(TEMPLATE_OPTION);
-            transform(TEMPLATE_LINK);
-        }
+        const transform = node =>
+            Array.prototype.forEach.call(
+                node.querySelectorAll('*'),
+                elem => elem.classList.add(CLASS.SCOPE));
+
+        transform(TEMPLATE_MAIN);
+        transform(TEMPLATE_OPTION);
+        transform(TEMPLATE_LINK);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -207,7 +155,7 @@
     //
     ///////////////////////////////////////////////////////////////////////
 
-    const overlayContext = new function () {
+    const overlayContext = new (function() {
         let container = () => document.documentElement,
             map = new WeakMap(),
             length = 0,
@@ -229,7 +177,7 @@
             moveY: 0,
             top: false,
             bottom: false,
-            allowY: function (context) {
+            allowY: function(context) {
                 return (
                     (context.top && context.moveY > context.startY) ||
                     (context.bottom && context.moveY < context.startY)
@@ -259,7 +207,7 @@
 
         return {
 
-            register: function (element) {
+            register: function(element) {
                 if (map.has(element)) return;
 
                 element.addEventListener('touchstart', touchstart);
@@ -276,7 +224,7 @@
                 }
             },
 
-            unregister: function (element) {
+            unregister: function(element) {
                 if (!map.has(element)) return;
 
                 element.removeEventListener('touchstart', touchstart);
@@ -292,7 +240,7 @@
             }
 
         }
-    };
+    });
 
     ///////////////////////////////////////////////////////////////////////
     //
@@ -302,7 +250,7 @@
 
     const internals = Object.freeze({
 
-        create_option: function (option, newNode, addHref) {
+        create_option: function(option, newNode, addHref) {
             let opt = newNode;
 
             let vals = {
@@ -335,12 +283,12 @@
             }
 
             if (vals.selected) {
-                opt.setAttribute(ATTR.ARIA_SELECTED, TRUE);
+                opt.setAttribute(ATTR.ARIA_SELECTED, TRUE_STRING);
                 opt.classList.add(CLASS.SELECTED);
             }
 
             if (vals.disabled) {
-                opt.setAttribute(ATTR.ARIA_DISABLED, TRUE);
+                opt.setAttribute(ATTR.ARIA_DISABLED, TRUE_STRING);
                 opt.classList.add(CLASS.DISABLED);
             }
 
@@ -366,32 +314,19 @@
             of all options within pick-le; replaces the existing list of
             options with the operated-on close
         */
-        each_option: function (func) {
+        each_option: function(func) {
             var oldContainer, newContainer, options;
-
-            PERF('each option', () => {
-
-                PERF('each option clone', () => {
-                    oldContainer = this.shadowRoot.querySelector(SELECTOR.PRIVATE_LIST);
-                    newContainer = oldContainer.cloneNode(true);
-                    options = newContainer.querySelectorAll(SELECTOR.OPTION);
-                });
-
-                PERF('each option loop start', () => {
-                    for (var i = 0; i < options.length; i++) {
-                        func(options[i]);
-                    }
-                });
-
-                PERF('each option replace', () => {
-                    newContainer.className = oldContainer.className;
-                    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
-                });
-
-            });
+            oldContainer = this.shadowRoot.querySelector(SELECTOR.PRIVATE_LIST);
+            newContainer = oldContainer.cloneNode(true);
+            options = newContainer.querySelectorAll(SELECTOR.OPTION);
+            for (var i = 0; i < options.length; i++) {
+                func(options[i]);
+            }
+            newContainer.className = oldContainer.className;
+            oldContainer.parentNode.replaceChild(newContainer, oldContainer);
         },
 
-        scroll_option_into_view: function (option) {
+        scroll_option_into_view: function(option) {
             // Focusing the option is no bueno.
             // Causes iOS (et al) to hide keyboard
             // if the filter was focused
@@ -429,7 +364,7 @@
             }
         },
 
-        apply_highlight: function (option, highlighted) {
+        apply_highlight: function(option, highlighted) {
             if (highlighted) {
                 this.setAttribute(ATTR.ARIA_ACTIVEDESCENDANT, option.id);
                 option.classList.add(CLASS.HIGHLIGHTED);
@@ -439,7 +374,7 @@
             }
         },
 
-        apply_filter: function (value) {
+        apply_filter: function(value) {
             let allWereHidden = true,
                 highlightedOne = false,
                 firstVisible = undefined,
@@ -474,7 +409,7 @@
                 && applyHighlight(firstVisible, true);
         },
 
-        match_filter: function (option, filter) {
+        match_filter: function(option, filter) {
             if (!filter) return true;
 
             filter = filter.toLowerCase();
@@ -488,8 +423,8 @@
             return matches;
         },
 
-        toggle_option: function (option) {
-            let disabled = option.getAttribute(ATTR.ARIA_DISABLED) === TRUE,
+        toggle_option: function(option) {
+            let disabled = option.getAttribute(ATTR.ARIA_DISABLED) === TRUE_STRING,
                 list = this.list || {},
                 multiple = (list.type === SELECT_MULTIPLE),
                 cloned = undefined;
@@ -508,7 +443,7 @@
                 // the second parameter for 'toggle'
                 listOption.selected = selected;
                 opt.classList[selected ? 'add' : 'remove'](CLASS.SELECTED);
-                opt.setAttribute(ATTR.ARIA_SELECTED, selected ? TRUE : FALSE);
+                opt.setAttribute(ATTR.ARIA_SELECTED, selected ? TRUE_STRING : FALSE_STRING);
                 internals.apply_highlight.call(this, opt, identical);
                 identical && (cloned = opt);
             });
@@ -530,25 +465,25 @@
             list.dispatchEvent(event);
         },
 
-        get_focus_target: function () {
+        get_focus_target: function() {
             return this.filterable
                 ? this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT)
                 : this.shadowRoot.querySelector(SELECTOR.POPUP);
         },
 
-        focus_collapsed_target: function () {
+        focus_collapsed_target: function() {
             let target = this.querySelector(SELECTOR.PICK_LE_FOCUS) || this;
 
             target.focus();
         },
 
-        get_highlighted_option: function () {
+        get_highlighted_option: function() {
             let id = this.getAttribute(ATTR.ARIA_ACTIVEDESCENDANT);
 
             return this.shadowRoot.getElementById(id);
         },
 
-        set_display_text: function (option) {
+        set_display_text: function(option) {
             let elem = this.querySelector(SELECTOR.PICK_LE_TEXT),
                 value = option
                     ? option.getAttribute(ATTR.DATA_LABEL)
@@ -558,7 +493,7 @@
             if (elem) elem.textContent = value;
         },
 
-        respond_xs_media_query: function (query) {
+        respond_xs_media_query: function(query) {
             let list = this.shadowRoot.querySelector(SELECTOR.LIST);
 
             if (query.matches) {
@@ -569,72 +504,13 @@
             }
         },
 
-        prepare_shadow_dom: function () {
-            var templateClone = TEMPLATE_MAIN.cloneNode(true);
-
-            // Nothing to prepare! :)
-            if ('attachShadow' in this) {
-                this.attachShadow({ mode: 'open' });
-                this.shadowRoot.appendChild(templateClone);
-                return;
-            }
-
-            // Time to do some 'shady DOM', to borrow from Polymer
-            // Not going to bother with shimming appendChild, etc.
-            // unless it is demanded.
-
-            // Supply a sufficient shadowRoot implementation
-            var modifier = SHADOWDOM_SUPPORTED ? '' : '.' + CLASS.SHADY;
-            Object.defineProperty(this, 'shadowRoot', {
-                get: function () {
-                    var me = this;
-                    return {
-                        get querySelector() {
-                            return function (selector) {
-                                return me.querySelector(modifier + selector);
-                            };
-                        },
-                        get querySelectorAll() {
-                            return function (selector) {
-                                return me.querySelectorAll(modifier + selector);
-                            };
-                        },
-                        get getElementById() {
-                            return function (id) {
-                                return me.querySelector(HASH + id + modifier);
-                            };
-                        }
-                    };
-                }
-            });
-
-            // Grab 'content'
-            var originalId = this.id ? true : false;
-            if (!originalId) this.id = MAKEID();
-            var content = templateClone.querySelectorAll(TAG.CONTENT);
-            for (var i = 0; i < content.length; i++) {
-                var selector = content[i].getAttribute(ATTR.SELECT);
-                var matches = this.parentNode.querySelectorAll(`#${this.id} > ${selector}`);
-                var polyfill = document.createElement(TAG.DIV);
-                polyfill.classList.add(CLASS.CONTENT);
-                polyfill.setAttribute(ATTR.SELECT, selector);
-                for (var j = 0; j < matches.length; j++) {
-                    polyfill.appendChild(matches[j]);
-                }
-                (content[i].parentNode || templateClone).replaceChild(polyfill, content[i]);
-            }
-            if (!originalId) this.id = null;
-            this.innerHTML = '';
-            this.appendChild(templateClone);
-        },
-
-        set_title_text: function (text) {
+        set_title_text: function(text) {
             let elem = this.shadowRoot.querySelector(SELECTOR.PRIVATE_TITLE);
 
             if (elem) elem.textContent = text;
         },
 
-        get_first_visible_prefer_selected: function () {
+        get_first_visible_prefer_selected: function() {
             let list = this.shadowRoot.querySelector(SELECTOR.LIST);
 
             return list.querySelector(SELECTOR.SELECTED_VISIBLE)
@@ -645,8 +521,8 @@
 
     const handlers = Object.freeze({
 
-        pickle_click: function (e) {
-            if (this.getAttribute(ATTR.ARIA_EXPANDED) !== TRUE) {
+        pickle_click: function(e) {
+            if (this.getAttribute(ATTR.ARIA_EXPANDED) !== TRUE_STRING) {
                 this.expanded = true;
             }
             else {
@@ -655,30 +531,30 @@
             }
         },
 
-        pickle_keydown: function (e) {
+        pickle_keydown: function(e) {
             switch (KEY_MAP[e.key || e.which || e.keyCode]) {
 
-                case KEY.UP:
+                case KEY_UP:
                     handlers.key_up_down.call(this, e, t => t.previousElementSibling);
                     break;
 
-                case KEY.DOWN:
+                case KEY_DOWN:
                     handlers.key_up_down.call(this, e, t => t.nextElementSibling);
                     break;
 
-                case KEY.ESCAPE:
+                case KEY_ESCAPE:
                     handlers.key_escape.call(this, e);
                     break;
 
-                case KEY.SPACE:
+                case KEY_SPACE:
                     handlers.key_space.call(this, e);
                     break;
 
-                case KEY.ENTER:
+                case KEY_ENTER:
                     handlers.key_enter.call(this, e);
                     break;
 
-                case KEY.TAB:
+                case KEY_TAB:
                     handlers.key_tab.call(this, e);
                     break;
 
@@ -689,7 +565,7 @@
             }
         },
 
-        key_up_down: function (e, getSibling) {
+        key_up_down: function(e, getSibling) {
             let wasExpanded = this.expanded,
                 list = this.querySelector(SELECTOR.LIST),
                 target = internals.get_highlighted_option.call(this)
@@ -723,7 +599,7 @@
             e.stopPropagation();
         },
 
-        key_escape: function (e) {
+        key_escape: function(e) {
             if (this.expanded) {
                 this.expanded = false;
                 internals.focus_collapsed_target.call(this);
@@ -732,7 +608,7 @@
             }
         },
 
-        key_space: function (e) {
+        key_space: function(e) {
             if (!this.expanded) {
                 this.expanded = true;
                 e.preventDefault();
@@ -740,7 +616,7 @@
             }
         },
 
-        key_enter: function (e) {
+        key_enter: function(e) {
             if (!this.expanded) {
                 this.expanded = true;
             }
@@ -766,7 +642,7 @@
             e.stopPropagation();
         },
 
-        key_tab: function (e) {
+        key_tab: function(e) {
             if (this.expanded) {
                 this.expanded = false;
                 internals.focus_collapsed_target.call(this);
@@ -775,7 +651,7 @@
             }
         },
 
-        key_other: function (e) {
+        key_other: function(e) {
             let filter = () => this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
 
             if (!this.expanded) {
@@ -789,16 +665,16 @@
             }
         },
 
-        menu_click: function (e) {
+        menu_click: function(e) {
             e.stopPropagation();
         },
 
-        close_click: function (e) {
+        close_click: function(e) {
             this.expanded = false;
             internals.focus_collapsed_target.call(this);
         },
 
-        filter_input: function (e) {
+        filter_input: function(e) {
             let input = this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT),
                 last = input.getAttribute(ATTR.DATA_VALUE),
                 next = e.target.value;
@@ -809,7 +685,7 @@
             }
         },
 
-        option_click: function (e) {
+        option_click: function(e) {
             let target = e.target,
                 isList = target => target.classList && target.classList.contains(CLASS.LIST),
                 isContainer = target => target.classList && target.classList.contains(CLASS.PRIVATE_LIST),
@@ -846,22 +722,8 @@
             e.stopPropagation();
         },
 
-        document_click: function (e) {
-            // Check if e.path even exists (it should if shadow DOM is supported)
-            var isFromMe;
-
-            if (SHADOWDOM_SUPPORTED) {
-                isFromMe = e.path.indexOf(this) > -1;
-            }
-            else if (e.target.classList.contains(CLASS.SHADY)) {
-                isFromMe = true;
-            }
-            else {
-                var alreadyHadAnId = e.target.hasAttribute(ATTR.ID);
-                if (!alreadyHadAnId) e.target.setAttribute(ATTR.ID, 'temp-' + MAKEID());
-                isFromMe = this.querySelector(HASH + e.target.id) ? true : false;
-                if (!alreadyHadAnId) e.target.removeAttribute(ATTR.ID);
-            }
+        document_click: function(e) {
+            const isFromMe = e.path.indexOf(this) !== -1;
 
             if (!isFromMe && this.expanded) {
                 internals.get_focus_target.call(this).blur();
@@ -874,50 +736,50 @@
     class pickle extends HTMLElement {
 
         connectedCallback() {
-            PERF('createdCallback', () => {
-                internals.prepare_shadow_dom.call(this);
+            var templateClone = TEMPLATE_MAIN.cloneNode(true);
+            this.attachShadow({ mode: 'open' });
+            this.shadowRoot.appendChild(templateClone);
 
-                let select = s => this.shadowRoot.querySelector(s),
-                    menu = select(SELECTOR.POPUP),
-                    close = select(SELECTOR.CLOSE),
-                    filter = select(SELECTOR.FILTER_INPUT),
-                    list = select(SELECTOR.LIST);
+            let select = s => this.shadowRoot.querySelector(s),
+                menu = select(SELECTOR.POPUP),
+                close = select(SELECTOR.CLOSE),
+                filter = select(SELECTOR.FILTER_INPUT),
+                list = select(SELECTOR.LIST);
 
-                let handlerMap = [
-                    [this, EVENT.CLICK, handlers.pickle_click],
-                    [this, EVENT.KEYDOWN, handlers.pickle_keydown],
-                    [menu, EVENT.CLICK, handlers.menu_click],
-                    [close, EVENT.CLICK, handlers.close_click],
-                    [filter, EVENT.INPUT, handlers.filter_input],
-                    [filter, EVENT.KEYDOWN, handlers.pickle_keydown],
-                    [list, EVENT.CLICK, handlers.option_click],
-                    [document, EVENT.CLICK, handlers.document_click],
-                ];
+            let handlerMap = [
+                [this, EVENT.CLICK, handlers.pickle_click],
+                [this, EVENT.KEYDOWN, handlers.pickle_keydown],
+                [menu, EVENT.CLICK, handlers.menu_click],
+                [close, EVENT.CLICK, handlers.close_click],
+                [filter, EVENT.INPUT, handlers.filter_input],
+                [filter, EVENT.KEYDOWN, handlers.pickle_keydown],
+                [list, EVENT.CLICK, handlers.option_click],
+                [document, EVENT.CLICK, handlers.document_click],
+            ];
 
-                handlerMap.forEach(def =>
-                    def[0].addEventListener(def[1], def[2].bind(this)));
+            handlerMap.forEach(def =>
+                def[0].addEventListener(def[1], def[2].bind(this)));
 
-                // init title
-                internals.set_title_text.call(this, this.getAttribute(ATTR.TITLE));
+            // init title
+            internals.set_title_text.call(this, this.getAttribute(ATTR.TITLE));
 
-                // init list
-                this.list = document.getElementById(this.getAttribute(ATTR.LIST));
+            // init list
+            this.list = document.getElementById(this.getAttribute(ATTR.LIST));
 
-                // init filterable
-                let hidden = this.hasAttribute(ATTR.FILTERABLE) ? FALSE : TRUE;
-                select(SELECTOR.FILTER).setAttribute(ATTR.ARIA_HIDDEN, hidden);
+            // init filterable
+            let hidden = this.hasAttribute(ATTR.FILTERABLE) ? FALSE_STRING : TRUE_STRING;
+            select(SELECTOR.FILTER).setAttribute(ATTR.ARIA_HIDDEN, hidden);
 
-                // init first selected item
-                let firstSelected = list.querySelector(SELECTOR.SELECTED_VISIBLE);
-                firstSelected && internals.set_display_text.call(this, firstSelected);
+            // init first selected item
+            let firstSelected = list.querySelector(SELECTOR.SELECTED_VISIBLE);
+            firstSelected && internals.set_display_text.call(this, firstSelected);
 
-                // init accessibility attributes
-                this.setAttribute(ATTR.ROLE, LISTBOX);
-                this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE);
+            // init accessibility attributes
+            this.setAttribute(ATTR.ROLE, LISTBOX);
+            this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
 
-                // init unresolved attribute
-                this.removeAttribute('unresolved');
-            });
+            // init unresolved attribute
+            this.removeAttribute('unresolved');
         }
 
         attributeChangedCallback(name, oldValue, newValue) {
@@ -938,11 +800,11 @@
                     let filterable = (newValue === null),
                         filter = this.shadowRoot.querySelector(SELECTOR.FILTER);
 
-                    filter.setAttribute(ATTR.ARIA_HIDDEN, filterable ? FALSE : TRUE);
+                    filter.setAttribute(ATTR.ARIA_HIDDEN, filterable ? FALSE_STRING : TRUE_STRING);
                     break;
 
                 case ATTR.ARIA_EXPANDED:
-                    this.expanded = (newValue === TRUE);
+                    this.expanded = (newValue === TRUE_STRING);
                     break;
 
                 default:
@@ -980,7 +842,7 @@
 
         set list(list) {
             let oldContainer = this.shadowRoot.querySelector(SELECTOR.PRIVATE_LIST),
-                newContainer = document.createElement(TAG.DIV),
+                newContainer = document.createElement('div'),
                 set = (name, value) => this.setAttribute(name, value),
                 remove = (name) => this.removeAttribute(name);
 
@@ -993,12 +855,10 @@
                     template = addHref ? TEMPLATE_LINK : TEMPLATE_OPTION,
                     shell = template.querySelector(SELECTOR.OPTION);
 
-                PERF('options creation loop', () => {
-                    for (var i = 0; i < options.length; i++) {
-                        let option = internals.create_option(options[i], shell.cloneNode(true), addHref);
-                        newContainer.appendChild(option);
-                    }
-                });
+                for (var i = 0; i < options.length; i++) {
+                    let option = internals.create_option(options[i], shell.cloneNode(true), addHref);
+                    newContainer.appendChild(option);
+                }
 
                 let selected = newContainer.querySelector(SELECTOR.SELECTED_VISIBLE);
                 selected && internals.set_display_text.call(this, selected);
@@ -1009,14 +869,12 @@
                 internals.set_display_text.call(this, null);
             }
 
-            PERF('created options attachment', () => {
-                newContainer.className = oldContainer.className;
-                oldContainer.parentNode.replaceChild(newContainer, oldContainer);
-            });
+            newContainer.className = oldContainer.className;
+            oldContainer.parentNode.replaceChild(newContainer, oldContainer);
         }
 
         get expanded() {
-            return this.getAttribute(ATTR.ARIA_EXPANDED) === TRUE;
+            return this.getAttribute(ATTR.ARIA_EXPANDED) === TRUE_STRING;
         }
 
         set expanded(value) {
@@ -1038,7 +896,7 @@
                 internals.apply_filter.call(this, null);
                 listener(SCREEN_XS_MAX);
                 SCREEN_XS_MAX.addListener(listener);
-                attr(TRUE);
+                attr(TRUE_STRING);
 
                 let active = internals.get_first_visible_prefer_selected.call(this);
                 active && internals.scroll_option_into_view.call(this, active);
@@ -1052,7 +910,7 @@
                 listener(SCREEN_XS_MAX);
                 SCREEN_XS_MAX.removeListener(listener);
                 overlayContext.unregister(list);
-                attr(FALSE);
+                attr(FALSE_STRING);
 
                 // This should be called or not called when collapse 
                 // depending on context, so we can't just do it here.
@@ -1078,6 +936,6 @@
 
     }
 
-    customElements.define(PICKLE, pickle);
+    customElements.define('pick-le', pickle);
 
 })();
