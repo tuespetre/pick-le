@@ -723,7 +723,7 @@
         },
 
         document_click: function(e) {
-            const isFromMe = e.path.indexOf(this) !== -1;
+            const isFromMe = e.composedPath().indexOf(this) !== -1;
 
             if (!isFromMe && this.expanded) {
                 internals.get_focus_target.call(this).blur();
