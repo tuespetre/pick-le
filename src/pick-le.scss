@@ -19,7 +19,7 @@ $anchor:   '.anchor' !default;
 $popup:    '.popup' !default;
 $title:    '.title' !default;
 $close:    '.close' !default;
-$tool:     '::content > .pick-le-tool' !default;
+$tool:     'slot[name=pick-le-tool]::slotted(*)' !default;
 $filter:   '.filter' !default;
 $list:     '.list' !default;
 $option:   '.option' !default;

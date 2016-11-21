@@ -6,7 +6,7 @@ $anchor:   '.pick-le.anchor';
 $popup:    '.pick-le.popup';
 $title:    '.pick-le.title';
 $close:    '.pick-le.close';
-$tool:     'pick-le .shady-content > .pick-le-tool';
+$tool:     'slot.pick-le[name=pick-le-tool] > *';
 $filter:   '.pick-le.filter';
 $list:     '.pick-le.list';
 $option:   '.pick-le.option';
@@ -20,6 +20,6 @@ $text:     '.pick-le.text';
     position: relative;
 }
 
-.content[select='.pick-le-tool'] {
+slot[name=pick-le-tool] {
     flex-shrink: 0;
 }
