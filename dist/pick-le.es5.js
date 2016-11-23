@@ -153,7 +153,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     } else {
         var _style = document.createElement('style');
         _style.textContent = STYLE_SHADY;
-        document.head.appendChild(_style);
+        document.head.insertBefore(_style, document.head.firstChild);
 
         var transform = function transform(node) {
             return Array.prototype.forEach.call(node.querySelectorAll('*'), function (elem) {

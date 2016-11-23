@@ -138,7 +138,7 @@
     else {
         const style = document.createElement('style');
         style.textContent = STYLE_SHADY;
-        document.head.appendChild(style);
+        document.head.insertBefore(style, document.head.firstChild);
 
         const transform = node =>
             Array.prototype.forEach.call(
