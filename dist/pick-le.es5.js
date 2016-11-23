@@ -747,17 +747,18 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         function pickle() {
             _classCallCheck(this, pickle);
 
-            return _possibleConstructorReturn(this, (pickle.__proto__ || Object.getPrototypeOf(pickle)).apply(this, arguments));
+            var _this4 = _possibleConstructorReturn(this, (pickle.__proto__ || Object.getPrototypeOf(pickle)).call(this));
+
+            var templateClone = TEMPLATE_MAIN.cloneNode(true);
+            _this4.attachShadow({ mode: 'open' });
+            _this4.shadowRoot.appendChild(templateClone);
+            return _this4;
         }
 
         _createClass(pickle, [{
             key: 'connectedCallback',
             value: function connectedCallback() {
                 var _this5 = this;
-
-                var templateClone = TEMPLATE_MAIN.cloneNode(true);
-                this.attachShadow({ mode: 'open' });
-                this.shadowRoot.appendChild(templateClone);
 
                 var select = function select(s) {
                     return _this5.shadowRoot.querySelector(s);
@@ -790,9 +791,6 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 // init accessibility attributes
                 this.setAttribute(ATTR.ROLE, LISTBOX);
                 this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
-
-                // init unresolved attribute
-                this.removeAttribute('unresolved');
             }
         }, {
             key: 'attributeChangedCallback',
@@ -865,7 +863,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                     return _this6.removeAttribute(name);
                 };
 
-                if (list && list.constructor === HTMLSelectElement) {
+                if (list instanceof HTMLSelectElement) {
                     set(ATTR.LIST, list.id);
                     set(ATTR.ARIA_MULTISELECTABLE, list.type === SELECT_MULTIPLE);
 

@@ -736,11 +736,14 @@
 
     class pickle extends HTMLElement {
 
-        connectedCallback() {
+        constructor() {
+            super();
             var templateClone = TEMPLATE_MAIN.cloneNode(true);
             this.attachShadow({ mode: 'open' });
             this.shadowRoot.appendChild(templateClone);
+        }
 
+        connectedCallback() {
             let select = s => this.shadowRoot.querySelector(s),
                 menu = select(SELECTOR.POPUP),
                 close = select(SELECTOR.CLOSE),
@@ -758,8 +761,7 @@
                 [document, EVENT.CLICK, handlers.document_click],
             ];
 
-            handlerMap.forEach(def =>
-                def[0].addEventListener(def[1], def[2].bind(this)));
+            handlerMap.forEach(def => def[0].addEventListener(def[1], def[2].bind(this)));
 
             // init title
             internals.set_title_text.call(this, this.getAttribute(ATTR.TITLE));
@@ -778,9 +780,6 @@
             // init accessibility attributes
             this.setAttribute(ATTR.ROLE, LISTBOX);
             this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
-
-            // init unresolved attribute
-            this.removeAttribute('unresolved');
         }
 
         attributeChangedCallback(name, oldValue, newValue) {
@@ -847,7 +846,7 @@
                 set = (name, value) => this.setAttribute(name, value),
                 remove = (name) => this.removeAttribute(name);
 
-            if (list && list.constructor === HTMLSelectElement) {
+            if (list instanceof HTMLSelectElement) {
                 set(ATTR.LIST, list.id);
                 set(ATTR.ARIA_MULTISELECTABLE, list.type === SELECT_MULTIPLE);
 
