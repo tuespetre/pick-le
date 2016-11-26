@@ -51,7 +51,7 @@ gulp.task('es2015', ['css', 'html'], function () {
             return fs.readFileSync(match[1], 'utf8');
         }))
         //.pipe(uglify().on('error', util.log))
-        .pipe(rename('pick-le.es2015.js'))
+        .pipe(rename('pick-le.js'))
         .pipe(gulp.dest('dist'));
 });
 
