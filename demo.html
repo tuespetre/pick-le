@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>pick-le demo</title>
+    <script src="./dist/pick-le.js"></script>
+</head>
+<body>
+    <pick-le>
+        <button slot="toggle">
+            Radio buttons (like a single select)
+        </button>
+        <label slot="items">
+            <input type="radio" name="radio-pick-le" value="one" />
+            Option one
+        </label>
+        <label slot="items">
+            <input type="radio" name="radio-pick-le" value="two" />
+            Option two
+        </label>
+        <label slot="items">
+            <input type="radio" name="radio-pick-le" value="three" />
+            Option three
+        </label>
+    </pick-le>
+    <hr />
+    <pick-le data-title="Title for the pick-le">
+        <button slot="toggle">
+            Checkboxes (like a multiple select)
+        </button>
+        <div slot="tool">
+            This is where you can put an extra tool, maybe like a button or something!
+        </div>
+        <script>
+            for (var i = 0; i < 20; i++) {
+                var num = i + 1;
+                document.write('<label slot="items">');
+                document.write('<input type="checkbox" name="checkbox-pick-le" value="' + num +'" />');
+                document.write('Option ' + num);
+                document.write('</label>');
+            }
+        </script>
+    </pickle>
+</body>
+</html>

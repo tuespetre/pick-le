@@ -1,21 +1,18 @@
-<slot></slot>
+<slot name="toggle"></slot>
 <div class="anchor shady-shadow">
     <div class="popup" tabindex="-1">
         <div class="title">
             <span class="private-title"></span>
             <span class="close" aria-label="Close" role="button">
-                <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z" />
-                </svg>
+                &#x2716;&#xfe0e;
             </span>
         </div>
-        <slot name="pick-le-tool"></slot>
+        <slot name="tool"></slot>
         <div class="filter">
             <input type="search" autocomplete="off" aria-label="Filter options" tabindex="-1" data-value="" />
         </div>
-        <div class="list">
-            <div class="private-list">
-            </div>
+        <div class="items-container">
+            <slot name="items"></slot>
         </div>
     </div>
 </div>

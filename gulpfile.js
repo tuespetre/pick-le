@@ -13,7 +13,7 @@ var gulp = require('gulp'),
 var injectRegex = /inject\(([\w\.\-\/]+)\)/g;
     
 gulp.task('css', function () {
-    return gulp.src('src/*.scss')
+    return gulp.src('src/pick-le.scss')
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(minifyCss())

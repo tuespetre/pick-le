@@ -1,9 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    const SHADOWDOM_POLYFILLED = window.shadowDomPolyfilled;
-
-    const SCREEN_XS_MAX = window.matchMedia('screen and (max-width: 767px)');
+    const smallScreenMediaQuery = window.matchMedia('screen and (max-width: 767px)');
 
     const FRAG = strings => {
         const fragment = document.createDocumentFragment();
@@ -17,43 +15,6 @@
 
         return fragment;
     };
-
-    const KEY_UP = 'ArrowUp';
-    const KEY_DOWN = 'ArrowDown';
-    const KEY_SPACE = ' ';
-    const KEY_ESCAPE = 'Escape';
-    const KEY_ENTER = 'Enter';
-    const KEY_TAB = 'Tab';
-
-    const KEY_MAP = Object.freeze({
-
-        // Standard 'key' values, see: http://www.w3.org/TR/DOM-Level-3-Events-key/
-
-        'ArrowUp': KEY_UP,
-        'ArrowDown': KEY_DOWN,
-        ' ': KEY_SPACE,
-        'Escape': KEY_ESCAPE,
-        'Enter': KEY_ENTER,
-        'Tab': KEY_TAB,
-
-        // Nonstandard 'key' values, used in IE and older Gecko
-        // see: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
-
-        'Up': KEY_UP,
-        'Down': KEY_DOWN,
-        'Spacebar': KEY_SPACE,
-        'Esc': KEY_ESCAPE,
-
-        // deprecated 'which' and 'keyCode' values
-
-        38: KEY_UP,
-        40: KEY_DOWN,
-        32: KEY_SPACE,
-        27: KEY_ESCAPE,
-        13: KEY_ENTER,
-        9: KEY_TAB
-
-    });
 
     const CLASS = Object.freeze({
         PRIVATE_LIST: 'private-list',
@@ -77,22 +38,16 @@
         FILTER: '.filter',
         FILTER_INPUT: '.filter input',
         POPUP: '.popup',
-        LIST: '.list',
+        ITEMS: 'slot[name=items]',
         PRIVATE_LIST: '.private-list',
         OPTION: '.option',
         SELECTED_VISIBLE: '.option.selected:not([hidden])',
         VISIBLE: '.option:not([hidden])'
     });
 
-    const EVENT = Object.freeze({
-        CLICK: 'click',
-        KEYDOWN: 'keydown',
-        INPUT: 'input',
-        CHANGE: 'change'
-    });
+    const ATTR_ROLE = 'role';
 
     const ATTR = Object.freeze({
-        ROLE: 'role',
         ARIA_EXPANDED: 'aria-expanded',
         ARIA_SELECTED: 'aria-selected',
         ARIA_HIDDEN: 'aria-hidden',
@@ -116,21 +71,18 @@
         PLACEHOLDER: 'placeholder',
         ID: 'id',
         HIDDEN: 'hidden',
-        SELECT: 'select',
-        NAVIGATIONAL: 'navigational'
+        SELECT: 'select'
     });
 
     const TRUE_STRING = 'true';
     const FALSE_STRING = 'false';
-    const SELECT_MULTIPLE = 'select-multiple';
     const LISTBOX = 'listbox';
     const TEMPLATE_MAIN = FRAG`inject(build/template.main.html)`;
-    const TEMPLATE_OPTION = FRAG`inject(build/template.option.html)`;
-    const TEMPLATE_LINK = FRAG`inject(build/template.link.html)`;
     const STYLE_SHADOW = `inject(build/pick-le.css)`;
     const STYLE_SHADY = `inject(build/pick-le.shady.css)`;
 
-    if (!SHADOWDOM_POLYFILLED) {
+    // TODO: This is kind of a hack that should probably go away somehow.
+    if (!window.shadowDomPolyfilled) {
         const style = document.createElement('style');
         style.textContent = STYLE_SHADOW;
         TEMPLATE_MAIN.insertBefore(style, TEMPLATE_MAIN.firstChild);
@@ -156,7 +108,7 @@
     //
     ///////////////////////////////////////////////////////////////////////
 
-    const overlayContext = new (function() {
+    const overlayContext = new (function () {
         let container = () => document.documentElement,
             map = new WeakMap(),
             length = 0,
@@ -178,7 +130,7 @@
             moveY: 0,
             top: false,
             bottom: false,
-            allowY: function(context) {
+            allowY: function (context) {
                 return (
                     (context.top && context.moveY > context.startY) ||
                     (context.bottom && context.moveY < context.startY)
@@ -208,7 +160,7 @@
 
         return {
 
-            register: function(element) {
+            register: function (element) {
                 if (map.has(element)) return;
 
                 element.addEventListener('touchstart', touchstart);
@@ -225,7 +177,7 @@
                 }
             },
 
-            unregister: function(element) {
+            unregister: function (element) {
                 if (!map.has(element)) return;
 
                 element.removeEventListener('touchstart', touchstart);
@@ -249,628 +201,317 @@
     //
     ///////////////////////////////////////////////////////////////////////
 
-    const internals = Object.freeze({
+    function getItemsContainer(control) {
+        return control.shadowRoot.querySelector('.items-container');
+    }
 
-        create_option: function(option, newNode, addHref) {
-            let opt = newNode;
+    function getFilterInput(control) {
+        return control.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
+    }
 
-            let vals = {
-                index: option.index,
-                value: option.value,
-                label: option.getAttribute(ATTR.LABEL),
-                text: option.textContent.trim(),
-                selected: option.selected,
-                disabled: option.disabled
-            };
+    function scrollItemIntoView(itemsContainer, item) {
+        // Focusing the option is no bueno.
+        // Causes iOS (et al) to hide keyboard
+        // if the filter was focused
+        // option.focus();
 
-            let elems = {
-                label: opt.children[1],
-                text: opt.children[2]
-            };
+        // Since the goal was to get the highlighted
+        // link into view (and because scrollIntoView sucks)
+        // we'll just have to adjust the scrollTop ourselves.
+        // This requires some certain CSS constraints on
+        // the <html> and <body> elements to work cross-browser.
+        let documentRect = null;
+        let listRect = itemsContainer.getBoundingClientRect();
+        let optionRect = item.getBoundingClientRect();
 
-            opt.id += option.index.toString();
-            opt.setAttribute(ATTR.DATA_INDEX, vals.index);
-            opt.setAttribute(ATTR.DATA_VALUE, vals.value);
-            opt.setAttribute(ATTR.DATA_LABEL, vals.label || '');
-            opt.setAttribute(ATTR.DATA_TEXT, vals.text);
-
-            if (addHref) {
-                opt.setAttribute(ATTR.HREF, vals.value);
-            }
-
-            if (option.hasAttribute(ATTR.HIDDEN)) {
-                opt.setAttribute(ATTR.HIDDEN, '');
-                opt.setAttribute(ATTR.DATA_HIDDEN, '');
-            }
-
-            if (vals.selected) {
-                opt.setAttribute(ATTR.ARIA_SELECTED, TRUE_STRING);
-                opt.classList.add(CLASS.SELECTED);
-            }
-
-            if (vals.disabled) {
-                opt.setAttribute(ATTR.ARIA_DISABLED, TRUE_STRING);
-                opt.classList.add(CLASS.DISABLED);
-            }
-
-            if (vals.label) {
-                elems.label.textContent = vals.label;
-            }
-            else {
-                opt.removeChild(elems.label);
-            }
-
-            if (vals.text) {
-                elems.text.textContent = vals.text;
-            }
-            else {
-                opt.removeChild(elems.text);
-            }
-
-            return opt;
-        },
-
-        /* 
-            Executes a function against each option within a cloned list
-            of all options within pick-le; replaces the existing list of
-            options with the operated-on close
-        */
-        each_option: function(func) {
-            var oldContainer, newContainer, options;
-            oldContainer = this.shadowRoot.querySelector(SELECTOR.PRIVATE_LIST);
-            newContainer = oldContainer.cloneNode(true);
-            options = newContainer.querySelectorAll(SELECTOR.OPTION);
-            for (var i = 0; i < options.length; i++) {
-                func(options[i]);
-            }
-            newContainer.className = oldContainer.className;
-            oldContainer.parentNode.replaceChild(newContainer, oldContainer);
-        },
-
-        scroll_option_into_view: function(option) {
-            // Focusing the option is no bueno.
-            // Causes iOS (et al) to hide keyboard
-            // if the filter was focused
-            // option.focus();
-
-            // Since the goal was to get the highlighted
-            // link into view (and because scrollIntoView sucks)
-            // we'll just have to adjust the scrollTop ourselves.
-            // This requires some certain CSS constraints on
-            // the <html> and <body> elements to work cross-browser.
-            let menu = this.shadowRoot.querySelector(SELECTOR.LIST),
-                v_rect = undefined,
-                m_rect = menu.getBoundingClientRect(),
-                o_rect = option.getBoundingClientRect();
-
-            if (o_rect.bottom > m_rect.bottom) {
-                menu.scrollTop += o_rect.bottom - m_rect.bottom;
-            }
-            else if (o_rect.top < m_rect.top) {
-                menu.scrollTop -= m_rect.top - o_rect.top;
-            }
-
-            o_rect = option.getBoundingClientRect();
-            v_rect = document.documentElement.getBoundingClientRect();
-
-            if (o_rect.bottom > v_rect.height) {
-                let diff = o_rect.bottom - v_rect.height;
-                document.body.scrollTop += diff;
-                document.documentElement.scrollTop += diff;
-            }
-            else if (o_rect.top < 0) {
-                let diff = 0 - o_rect.top;
-                document.body.scrollTop -= diff;
-                document.documentElement.scrollTop -= diff;
-            }
-        },
-
-        apply_highlight: function(option, highlighted) {
-            if (highlighted) {
-                this.setAttribute(ATTR.ARIA_ACTIVEDESCENDANT, option.id);
-                option.classList.add(CLASS.HIGHLIGHTED);
-            }
-            else {
-                option.classList.remove(CLASS.HIGHLIGHTED);
-            }
-        },
-
-        apply_filter: function(value) {
-            let allWereHidden = true,
-                highlightedOne = false,
-                firstVisible = undefined,
-                applyHighlight = (option, highlighted) => internals.apply_highlight.call(this, option, highlighted),
-                getFirstVisible = () => internals.get_first_visible_prefer_selected.call(this);
-
-            internals.each_option.call(this, option => {
-                let match = internals.match_filter(option, value),
-                    display = match && !option.hasAttribute(ATTR.DATA_HIDDEN),
-                    selected = option.classList.contains(CLASS.SELECTED),
-                    highlight = !highlightedOne && display && (value || selected);
-
-                if (display) {
-                    allWereHidden = false;
-                    option.removeAttribute(ATTR.HIDDEN);
-                }
-                else {
-                    option.setAttribute(ATTR.HIDDEN, '');
-                }
-
-                if (highlight) {
-                    highlightedOne = true;
-                    applyHighlight(option, true);
-                }
-                else {
-                    applyHighlight(option, false);
-                }
-            });
-
-            !highlightedOne
-                && (firstVisible = getFirstVisible())
-                && applyHighlight(firstVisible, true);
-        },
-
-        match_filter: function(option, filter) {
-            if (!filter) return true;
-
-            filter = filter.toLowerCase();
-
-            let label = option.getAttribute(ATTR.DATA_LABEL),
-                text = option.getAttribute(ATTR.DATA_TEXT),
-                matchesLabel = label && label.toLowerCase().indexOf(filter) > -1,
-                matchesText = text && text.toLowerCase().indexOf(filter) > -1,
-                matches = matchesLabel || matchesText;
-
-            return matches;
-        },
-
-        toggle_option: function(option) {
-            let disabled = option.getAttribute(ATTR.ARIA_DISABLED) === TRUE_STRING,
-                list = this.list || {},
-                multiple = (list.type === SELECT_MULTIPLE),
-                cloned = undefined;
-
-            if (disabled) return;
-
-            internals.each_option.call(this, opt => {
-                let index = opt.getAttribute(ATTR.DATA_INDEX),
-                    listOption = list[opt.getAttribute(ATTR.DATA_INDEX)],
-                    identical = opt.id === option.id,
-                    selected = multiple
-                        ? (identical ? !listOption.selected : listOption.selected)
-                        : identical;
-
-                // IE10 and IE11 and some Android do not support
-                // the second parameter for 'toggle'
-                listOption.selected = selected;
-                opt.classList[selected ? 'add' : 'remove'](CLASS.SELECTED);
-                opt.setAttribute(ATTR.ARIA_SELECTED, selected ? TRUE_STRING : FALSE_STRING);
-                internals.apply_highlight.call(this, opt, identical);
-                identical && (cloned = opt);
-            });
-
-            internals.scroll_option_into_view.call(this, cloned);
-
-            if (!multiple) internals.set_display_text.call(this, cloned);
-
-            // 'change' only fires naturally when the user is the one
-            // doing the changing. 
-            var event;
-            try {
-                event = new CustomEvent(EVENT.CHANGE);
-            }
-            catch (e) {
-                event = document.createEvent('CustomEvent');
-                event.initCustomEvent(EVENT.CHANGE, true, true, null);
-            }
-            list.dispatchEvent(event);
-        },
-
-        get_focus_target: function() {
-            return this.filterable
-                ? this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT)
-                : this.shadowRoot.querySelector(SELECTOR.POPUP);
-        },
-
-        focus_collapsed_target: function() {
-            let target = this.querySelector(SELECTOR.PICK_LE_FOCUS) || this;
-
-            target.focus();
-        },
-
-        get_highlighted_option: function() {
-            let id = this.getAttribute(ATTR.ARIA_ACTIVEDESCENDANT);
-
-            return this.shadowRoot.getElementById(id);
-        },
-
-        set_display_text: function(option) {
-            let elem = this.querySelector(SELECTOR.PICK_LE_TEXT),
-                value = option
-                    ? option.getAttribute(ATTR.DATA_LABEL)
-                    || option.getAttribute(ATTR.DATA_TEXT)
-                    : null;
-
-            if (elem) elem.textContent = value;
-        },
-
-        respond_xs_media_query: function(query) {
-            let list = this.shadowRoot.querySelector(SELECTOR.LIST);
-
-            if (query.matches) {
-                overlayContext.register(list);
-            }
-            else {
-                overlayContext.unregister(list);
-            }
-        },
-
-        set_title_text: function(text) {
-            let elem = this.shadowRoot.querySelector(SELECTOR.PRIVATE_TITLE);
-
-            if (elem) elem.textContent = text;
-        },
-
-        get_first_visible_prefer_selected: function() {
-            let list = this.shadowRoot.querySelector(SELECTOR.LIST);
-
-            return list.querySelector(SELECTOR.SELECTED_VISIBLE)
-                || list.querySelector(SELECTOR.VISIBLE);
+        if (optionRect.bottom > listRect.bottom) {
+            itemsContainer.scrollTop += optionRect.bottom - listRect.bottom;
+        }
+        else if (optionRect.top < listRect.top) {
+            itemsContainer.scrollTop -= listRect.top - optionRect.top;
         }
 
-    });
+        optionRect = item.getBoundingClientRect();
+        documentRect = document.documentElement.getBoundingClientRect();
 
-    const handlers = Object.freeze({
+        if (optionRect.bottom > documentRect.height) {
+            const diff = optionRect.bottom - documentRect.height;
+            document.body.scrollTop += diff;
+            document.documentElement.scrollTop += diff;
+        }
+        else if (optionRect.top < 0) {
+            const diff = 0 - optionRect.top;
+            document.body.scrollTop -= diff;
+            document.documentElement.scrollTop -= diff;
+        }
+    }
 
-        pickle_click: function(e) {
-            if (this.getAttribute(ATTR.ARIA_EXPANDED) !== TRUE_STRING) {
-                this.expanded = true;
+    function filterItems(control, filter) {
+        if (filter) {
+            filter = filter.trim().toLowerCase();
+        }
+
+        const children = control.children;
+        const childCount = children.length;
+        for (let i = 0; i < childCount; i++) {
+            const child = children[i];
+            if (child.slot !== 'items') {
+                continue;
+            }
+            delete child.dataset.pickLeHighlight;
+            if (filter && child.textContent.toLowerCase().indexOf(filter) === -1) {
+                child.dataset.pickLeFiltered = true;
             }
             else {
-                this.expanded = false;
-                internals.focus_collapsed_target.call(this);
+                delete child.dataset.pickLeFiltered;
             }
-        },
+        }
 
-        pickle_keydown: function(e) {
-            switch (KEY_MAP[e.key || e.which || e.keyCode]) {
+        let itemToHighlight = getFirstCheckedItem(control);
 
-                case KEY_UP:
-                    handlers.key_up_down.call(this, e, t => t.previousElementSibling);
-                    break;
+        if (!itemToHighlight || itemToHighlight.dataset.pickLeFiltered) {
+            itemToHighlight = getFirstVisibleItem(control);
+        }
 
-                case KEY_DOWN:
-                    handlers.key_up_down.call(this, e, t => t.nextElementSibling);
-                    break;
+        if (itemToHighlight) {
+            itemToHighlight.dataset.pickLeHighlight = true;
+        }
+    }
 
-                case KEY_ESCAPE:
-                    handlers.key_escape.call(this, e);
-                    break;
+    function getFocusTarget(control) {
+        return control.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
+    }
 
-                case KEY_SPACE:
-                    handlers.key_space.call(this, e);
-                    break;
+    function focusCollapsedTarget(control) {
+        let target = control.querySelector(SELECTOR.PICK_LE_FOCUS) || control;
+        target.focus();
+    }
 
-                case KEY_ENTER:
-                    handlers.key_enter.call(this, e);
-                    break;
+    function getFirstHighlightedItem(control) {
+        return control.querySelector('[slot=items][data-pick-le-highlight=true]');
+    }
 
-                case KEY_TAB:
-                    handlers.key_tab.call(this, e);
-                    break;
+    function setDisplayText(control, option) {
+        let value = null;
 
-                default:
-                    handlers.key_other.call(this, e);
-                    break;
+        if (option) {
+            value = option.getAttribute(ATTR.DATA_LABEL) || option.getAttribute(ATTR.DATA_TEXT);
+        }
 
+        const displayTextElement = control.querySelector(SELECTOR.PICK_LE_TEXT);
+
+        if (displayTextElement) {
+            displayTextElement.textContent = value;
+        }
+    }
+
+    function respondToXsMediaQuery(query) {
+        let list = this.shadowRoot.querySelector(SELECTOR.ITEMS);
+
+        if (query.matches) {
+            overlayContext.register(list);
+        }
+        else {
+            overlayContext.unregister(list);
+        }
+    }
+
+    function setTitleText(control, text) {
+        let titleTextElement = control.shadowRoot.querySelector(SELECTOR.PRIVATE_TITLE);
+
+        if (titleTextElement) {
+            titleTextElement.textContent = text;
+        }
+    }
+
+    function getFirstCheckedItem(control) {
+        const children = control.children;
+        const childCount = children.length;
+        for (let i = 0; i < childCount; i++) {
+            const child = children[i];
+            if (child.slot !== 'items') {
+                continue;
             }
-        },
-
-        key_up_down: function(e, getSibling) {
-            let wasExpanded = this.expanded,
-                list = this.querySelector(SELECTOR.LIST),
-                target = internals.get_highlighted_option.call(this)
-                    || internals.get_first_visible_prefer_selected.call(this),
-                original = target;
-
-            if (!target) {
-                return;
+            if (child.control && child.control.checked) {
+                return child;
             }
-            else if (!wasExpanded) {
-                this.expanded = true;
+        }
+    }
+
+    function getFirstVisibleItem(control) {
+        const children = control.children;
+        const childCount = children.length;
+        for (let i = 0; i < childCount; i++) {
+            const child = children[i];
+            if (child.slot !== 'items') {
+                continue;
             }
-            else if (!(target = getSibling(target))) {
-                return;
+            if (!child.dataset.pickLeFiltered) {
+                return child;
             }
+        }
+    }
 
-            do {
-                if (!target.hasAttribute(ATTR.HIDDEN)) {
-                    // Not using each_option here because there *should*
-                    // only be one highlighted option unless someone was messing
-                    // with our stuff, and each_option takes an undesirable
-                    // performance hit on keyboard navigation.
-                    internals.apply_highlight.call(this, original, false);
-                    internals.apply_highlight.call(this, target, true);
-                    internals.scroll_option_into_view.call(this, target);
-                    break;
-                }
-            } while (target = getSibling(target));
+    function handleKeyNavigation(control, event, getSibling) {
+        let highlightedItem = getFirstHighlightedItem(control) 
+            || getFirstCheckedItem(control);
 
-            e.preventDefault();
-            e.stopPropagation();
-        },
+        if (!highlightedItem) {
+            const firstVisibleItem = getFirstVisibleItem(control);
+            firstVisibleItem.dataset.pickLeHighlight = true;
+            return;
+        }
 
-        key_escape: function(e) {
-            if (this.expanded) {
-                this.expanded = false;
-                internals.focus_collapsed_target.call(this);
-                e.preventDefault();
-                e.stopPropagation();
+        if (!control.expanded) {
+            control.expanded = true;
+            return;
+        }
+
+        let next = highlightedItem;
+        while (next = getSibling(next)) {
+            if (next.slot === 'items') {
+                highlightedItem.dataset.pickLeHighlight = false;
+                next.dataset.pickLeHighlight = true;
+                scrollItemIntoView(getItemsContainer(control), next);
+                break;
             }
-        },
+        }
 
-        key_space: function(e) {
-            if (!this.expanded) {
-                this.expanded = true;
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        },
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-        key_enter: function(e) {
-            if (!this.expanded) {
-                this.expanded = true;
-            }
-            else {
-                var highlighted = internals.get_highlighted_option.call(this);
+    function handleKeydown(event) {
+        switch (event.key || event.which || event.keyCode) {
+            case 'ArrowUp': case 'Up': case 38:
+                handleKeyNavigation(this, event, t => t.previousElementSibling);
+                break;
 
-                if (highlighted) {
-                    if (this.navigational) {
-                        window.location = highlighted.href;
-                    }
-                    else {
-                        internals.toggle_option.call(this, highlighted);
+            case 'ArrowDown': case 'Down': case 40:
+                handleKeyNavigation(this, event, t => t.nextElementSibling);
+                break;
 
-                        if ((this.list || {}).type !== SELECT_MULTIPLE) {
-                            this.expanded = false;
-                            internals.focus_collapsed_target.call(this);
-                        }
-                    }
-                }
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-        },
-
-        key_tab: function(e) {
-            if (this.expanded) {
-                this.expanded = false;
-                internals.focus_collapsed_target.call(this);
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        },
-
-        key_other: function(e) {
-            let filter = () => this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
-
-            if (!this.expanded) {
-                return;
-            }
-            else if (this.filterable && e.currentTarget !== filter()) {
-                internals.get_focus_target.call(this).focus();
-            }
-            else {
-                e.stopPropagation();
-            }
-        },
-
-        menu_click: function(e) {
-            e.stopPropagation();
-        },
-
-        close_click: function(e) {
-            this.expanded = false;
-            internals.focus_collapsed_target.call(this);
-        },
-
-        filter_input: function(e) {
-            let input = this.shadowRoot.querySelector(SELECTOR.FILTER_INPUT),
-                last = input.getAttribute(ATTR.DATA_VALUE),
-                next = e.target.value;
-
-            if (last != next) {
-                input.setAttribute(ATTR.DATA_VALUE, next);
-                internals.apply_filter.call(this, next);
-            }
-        },
-
-        option_click: function(e) {
-            let target = e.target,
-                isList = target => target.classList && target.classList.contains(CLASS.LIST),
-                isContainer = target => target.classList && target.classList.contains(CLASS.PRIVATE_LIST),
-                isOption = target => target.classList && target.classList.contains(CLASS.OPTION);
-
-            if (isList(target) || isContainer(target)) {
-                return;
-            }
-
-            while (!isOption(target) && target.parentNode) {
-                target = target.parentNode;
-            }
-
-            if (!isOption(target)) {
-                return; // then what happened?
-            }
-
-            if (!this.navigational) {
-                e.preventDefault();
-                internals.toggle_option.call(this, target);
-
-                if ((this.list || {}).type === SELECT_MULTIPLE) {
-                    internals.get_focus_target.call(this).focus();
-                    // toggle_option causes the list to be replaced,
-                    // and we lost focus, so need to regain it for
-                    // keyboard operations to continue to work
-                }
-                else {
+            case 'Escape': case 'Esc': case 27:
+                if (this.expanded) {
                     this.expanded = false;
-                    internals.focus_collapsed_target.call(this);
+                    focusCollapsedTarget(this);
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-            }
+                break;
 
-            e.stopPropagation();
-        },
+            case ' ': case 'Spacebar': case 32:
+                if (!this.expanded) {
+                    this.expanded = true;
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                else {                    
+                    getFocusTarget(this).focus();
+                }
+                break;
 
-        document_click: function(e) {
-            const isFromMe = e.composedPath().indexOf(this) !== -1;
+            case 'Enter': case 13:
+                if (!this.expanded) {
+                    this.expanded = true;
+                }
+                else {
+                    var highlighted = getFirstHighlightedItem(this);
+                    if (highlighted) {
+                        highlighted.click();
+                    }
+                }
+                event.preventDefault();
+                event.stopPropagation();
+                break;
 
-            if (!isFromMe && this.expanded) {
-                internals.get_focus_target.call(this).blur();
-                this.expanded = false;
-            }
+            case 'Tab': case 9:
+                if (this.expanded) {
+                    this.expanded = false;
+                    focusCollapsedTarget(this);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                break;
+
+            default:
+                if (!this.expanded) {
+                    return;
+                }
+                else if (event.currentTarget !== getFilterInput(this)) {
+                    getFocusTarget(this).focus();
+                }
+                else {
+                    event.stopPropagation();
+                }
+                break;
         }
+    }
 
-    });
+    function handleDocumentClick(event) {
+        if (this.expanded && event.composedPath().indexOf(this) === -1) {
+            getFocusTarget(this).blur();
+            this.expanded = false;
+        }
+    }
 
     class pickle extends HTMLElement {
 
         constructor() {
             super();
-            var templateClone = TEMPLATE_MAIN.cloneNode(true);
+
             this.attachShadow({ mode: 'open' });
-            this.shadowRoot.appendChild(templateClone);
+            this.shadowRoot.appendChild(TEMPLATE_MAIN.cloneNode(true));
+
+            this.addEventListener('click', event => {
+                if (!this.expanded) {
+                    this.expanded = true;
+                }
+                else {
+                    this.expanded = false;
+                    focusCollapsedTarget(this);
+                }
+            });
+
+            this.addEventListener('keydown', handleKeydown.bind(this));
+
+            this.shadowRoot.querySelector(SELECTOR.POPUP).addEventListener('click', event => {
+                event.stopPropagation();
+            });
+
+            this.shadowRoot.querySelector(SELECTOR.CLOSE).addEventListener('click', event => {
+                this.expanded = false;
+                focusCollapsedTarget(this);
+            });
+
+            const filterInput = getFilterInput(this);
+
+            filterInput.addEventListener('input', event => {
+                const oldValue = filterInput.getAttribute(ATTR.DATA_VALUE);
+                const newValue = event.target.value;
+
+                if (newValue !== oldValue) {
+                    filterInput.setAttribute(ATTR.DATA_VALUE, newValue);
+                    filterItems(this, newValue);
+                }
+            });
+
+            filterInput.addEventListener('keydown', handleKeydown.bind(this));
         }
 
         connectedCallback() {
-            let select = s => this.shadowRoot.querySelector(s),
-                menu = select(SELECTOR.POPUP),
-                close = select(SELECTOR.CLOSE),
-                filter = select(SELECTOR.FILTER_INPUT),
-                list = select(SELECTOR.LIST);
-
-            let handlerMap = [
-                [this, EVENT.CLICK, handlers.pickle_click],
-                [this, EVENT.KEYDOWN, handlers.pickle_keydown],
-                [menu, EVENT.CLICK, handlers.menu_click],
-                [close, EVENT.CLICK, handlers.close_click],
-                [filter, EVENT.INPUT, handlers.filter_input],
-                [filter, EVENT.KEYDOWN, handlers.pickle_keydown],
-                [list, EVENT.CLICK, handlers.option_click],
-                [document, EVENT.CLICK, handlers.document_click],
-            ];
-
-            handlerMap.forEach(def => def[0].addEventListener(def[1], def[2].bind(this)));
+            document.addEventListener('click', handleDocumentClick.bind(this));
 
             // init title
-            internals.set_title_text.call(this, this.getAttribute(ATTR.TITLE));
-
-            // init list
-            this.list = document.getElementById(this.getAttribute(ATTR.LIST));
-
-            // init filterable
-            let hidden = this.hasAttribute(ATTR.FILTERABLE) ? FALSE_STRING : TRUE_STRING;
-            select(SELECTOR.FILTER).setAttribute(ATTR.ARIA_HIDDEN, hidden);
-
-            // init first selected item
-            let firstSelected = list.querySelector(SELECTOR.SELECTED_VISIBLE);
-            firstSelected && internals.set_display_text.call(this, firstSelected);
+            setTitleText(this, this.dataset.title);
 
             // init accessibility attributes
-            this.setAttribute(ATTR.ROLE, LISTBOX);
+            this.setAttribute(ATTR_ROLE, LISTBOX);
             this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
         }
 
-        attributeChangedCallback(name, oldValue, newValue) {
-            switch (name) {
-                case ATTR.TITLE:
-                    internals.set_title_text.call(this, newValue);
-                    break;
-
-                case ATTR.LIST:
-                    this.list = document.getElementById(newValue);
-                    break;
-
-                case ATTR.NAVIGATIONAL:
-                    this.list = this.list;
-                    break;
-
-                case ATTR.FILTERABLE:
-                    let filterable = (newValue === null),
-                        filter = this.shadowRoot.querySelector(SELECTOR.FILTER);
-
-                    filter.setAttribute(ATTR.ARIA_HIDDEN, filterable ? FALSE_STRING : TRUE_STRING);
-                    break;
-
-                case ATTR.ARIA_EXPANDED:
-                    this.expanded = (newValue === TRUE_STRING);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        get title() {
-            return this.getAttribute(ATTR.TITLE);
-        }
-
-        set title(value) {
-            this.setAttribute(ATTR.TITLE, value);
-        }
-
-        get navigational() {
-            return this.hasAttribute(ATTR.NAVIGATIONAL);
-        }
-
-        set navigational(value) {
-            let navigational = value ? true : false;
-
-            if (navigational) {
-                this.setAttribute(ATTR.NAVIGATIONAL, '');
-            }
-            else {
-                this.removeAttribute(ATTR.NAVIGATIONAL);
-            }
-        }
-
-        get list() {
-            let id = this.getAttribute(ATTR.LIST);
-            return document.getElementById(id);
-        }
-
-        set list(list) {
-            let oldContainer = this.shadowRoot.querySelector(SELECTOR.PRIVATE_LIST),
-                newContainer = document.createElement('div'),
-                set = (name, value) => this.setAttribute(name, value),
-                remove = (name) => this.removeAttribute(name);
-
-            if (list instanceof HTMLSelectElement) {
-                set(ATTR.LIST, list.id);
-                set(ATTR.ARIA_MULTISELECTABLE, list.type === SELECT_MULTIPLE);
-
-                let options = list.options,
-                    addHref = (this.navigational),
-                    template = addHref ? TEMPLATE_LINK : TEMPLATE_OPTION,
-                    shell = template.querySelector(SELECTOR.OPTION);
-
-                for (var i = 0; i < options.length; i++) {
-                    let option = internals.create_option(options[i], shell.cloneNode(true), addHref);
-                    newContainer.appendChild(option);
-                }
-
-                let selected = newContainer.querySelector(SELECTOR.SELECTED_VISIBLE);
-                selected && internals.set_display_text.call(this, selected);
-            }
-            else {
-                remove(ATTR.LIST);
-                remove(ATTR.ARIA_MULTISELECTABLE);
-                internals.set_display_text.call(this, null);
-            }
-
-            newContainer.className = oldContainer.className;
-            oldContainer.parentNode.replaceChild(newContainer, oldContainer);
+        disconnectedCallback() {
+            document.removeEventListener('click', handleDocumentClick.bind(this));
         }
 
         get expanded() {
@@ -878,59 +519,32 @@
         }
 
         set expanded(value) {
-            let current = this.expanded,
-                expanded = value === true,
-                attr = val => this.setAttribute(ATTR.ARIA_EXPANDED, val),
-                select = s => this.shadowRoot.querySelector(s),
-                list = select(SELECTOR.LIST),
-                listener = internals.respond_xs_media_query.bind(this);
+            const expanded = value === true;
 
-            if (current === expanded) {
+            if (this.expanded === expanded) {
                 return;
             }
             else if (expanded) {
-                let filter = select(SELECTOR.FILTER_INPUT);
+                const filterInput = getFilterInput(this);
+                const listener = respondToXsMediaQuery.bind(this);
+                filterInput.value = null;
+                filterInput.setAttribute(ATTR.DATA_VALUE, '');
+                filterItems(this, null);
+                listener(smallScreenMediaQuery);
+                smallScreenMediaQuery.addListener(listener);
+                this.setAttribute(ATTR.ARIA_EXPANDED, TRUE_STRING);
 
-                filter.value = null;
-                filter.setAttribute(ATTR.DATA_VALUE, '');
-                internals.apply_filter.call(this, null);
-                listener(SCREEN_XS_MAX);
-                SCREEN_XS_MAX.addListener(listener);
-                attr(TRUE_STRING);
-
-                let active = internals.get_first_visible_prefer_selected.call(this);
-                active && internals.scroll_option_into_view.call(this, active);
-
-                // This is a little too jarring for mobile devices,
-                // and since we divert keyboard input anyways,
-                // not really necessary.
-                // internals.get_focus_target.call(this).focus();
+                let firstChecked = getFirstCheckedItem(this);
+                if (firstChecked) {
+                    scrollItemIntoView(getItemsContainer(this), firstChecked);
+                }
             }
             else {
-                listener(SCREEN_XS_MAX);
-                SCREEN_XS_MAX.removeListener(listener);
-                overlayContext.unregister(list);
-                attr(FALSE_STRING);
-
-                // This should be called or not called when collapse 
-                // depending on context, so we can't just do it here.
-                // Responsibility lies on the function doing the collapsing.
-                // internals.focus_collapsed_target.call(this);
-            }
-        }
-
-        get filterable() {
-            return this.hasAttribute(ATTR.FILTERABLE);
-        }
-
-        set filterable(value) {
-            let filterable = value ? true : false;
-
-            if (filterable) {
-                this.setAttribute(ATTR.FILTERABLE, '');
-            }
-            else {
-                this.removeAttribute(ATTR.FILTERABLE);
+                const listener = respondToXsMediaQuery.bind(this);
+                listener(smallScreenMediaQuery);
+                smallScreenMediaQuery.removeListener(listener);
+                overlayContext.unregister(getItemsContainer(this));
+                this.setAttribute(ATTR.ARIA_EXPANDED, FALSE_STRING);
             }
         }
 

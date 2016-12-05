@@ -19,9 +19,9 @@ $anchor:   '.anchor' !default;
 $popup:    '.popup' !default;
 $title:    '.title' !default;
 $close:    '.close' !default;
-$tool:     'slot[name=pick-le-tool]::slotted(*)' !default;
+$tool:     'slot[name=tool]::slotted(*)' !default;
 $filter:   '.filter' !default;
-$list:     '.list' !default;
+$list:     '.items-container' !default;
 $option:   '.option' !default;
 $glyph:    '.glyph' !default;
 $label:    '.label' !default;
@@ -31,7 +31,7 @@ $text:     '.text' !default;
     background-clip: border-box;
     background-color: inherit;
     box-sizing: border-box;
-    color: inherit;
+    color: #111;
     display: block;
     font-family: $font-family;
     line-height: $line-height;
@@ -52,6 +52,29 @@ $text:     '.text' !default;
 #{$host} {
     position: relative;
 	display: inline-block;
+}
+
+slot[name=items]::slotted(*) {
+    display: block;    
+    border: none;
+    border-bottom: 1px solid $border-color;
+    padding: 7px;
+    position: relative;
+    cursor: pointer;
+}
+
+slot[name=items]::slotted(:hover),
+slot[name=items]::slotted(:active),
+slot[name=items]::slotted(:focus),
+slot[name=items]::slotted([data-pick-le-highlight=true]) {
+    background-color: $bg-color-light;
+    text-decoration: none;
+    color: $text-darker;
+    outline: none;
+}
+
+slot[name=items]::slotted([data-pick-le-filtered]) {
+    display: none;
 }
 
 #{$anchor} {
@@ -127,25 +150,17 @@ $text:     '.text' !default;
     flex-shrink: 0;
     flex-grow: 0;
     line-height: 20px;
-    vertical-align: bottom;
 }
 
 #{$title} {
     @extend %element;
     @extend %tool;
     
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
     color: $text-darker;
     font-weight: bold;
-    vertical-align: middle;
-    
-    &::after {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        font-size: 0;
-        content: "";
-        clear: both;
-    }
     
     @media #{$screen-sm-max} {            
         padding: 15px 10px;
@@ -155,38 +170,23 @@ $text:     '.text' !default;
 #{$close} {
     @extend %element;
     
+    margin-left: auto;
+    flex: 0 0 auto;
     display: inline-block;
     font-weight: bold;
     font-size: 20px;
     line-height: 20px;
-    color: lighten($text-lighter, 25%);
-    float: right;
+    color: #BBB;
     
     &:hover {
         cursor: pointer;
         color: $text-darker;
-    }
-    
-    svg {
-        width: 15px;
-        height: 15px;
-        display: inline-block;
-        fill: currentColor;        
-        
-        @media #{$screen-sm-max} {            
-            width: 20px;
-            height: 20px;
-        }
     }
 }
 
 #{$filter} {
     @extend %element;
     @extend %tool;
-    
-    &[aria-hidden=true] {
-        display: none;
-    }
     
     input {
         display: block;
@@ -225,6 +225,7 @@ $text:     '.text' !default;
 #{$list} {
     @extend %element;
     
+    display: block;
     overflow-x: hidden;
     overflow-y: auto;
     max-height: 340px;
@@ -237,72 +238,5 @@ $text:     '.text' !default;
         height: auto;
         flex-grow: 1;
         flex-shrink: 1;
-    }
-}
-
-#{$option} {
-    @extend %element;
-    
-    border: none;
-    border-bottom: 1px solid $border-color;
-    padding: 7px 25px;
-    position: relative;
-    cursor: pointer;
-    
-    &:hover, &:active, &:focus, &.highlighted {
-        background-color: $bg-color-light;
-        text-decoration: none;
-        color: $text-darker;
-        outline: none;
-    }
-
-    &[hidden] {
-        display: none !important;
-    }
-        
-    &.disabled {
-        cursor: default;
-    }
-}
-
-#{$glyph} {
-    @extend %element;
-    
-    position: absolute;
-    top: 7px;
-    left: 0;
-    right: auto;
-    bottom: auto;
-    width: 25px;
-    height: 20px;
-    text-align: center;
-    
-    svg {
-        visibility: hidden;
-        display: inline-block;
-        height: 14px;
-        width: 14px;
-        margin-top: 3px;
-        fill: currentColor;
-    }
-    
-    #{$option}.selected & svg {
-        visibility: visible;
-    }
-}
-
-#{$label} {
-    @extend %element;
-    
-    font-weight: bold;
-}
-
-#{$text} {
-    @extend %element;
-    
-    #{$label} + & {
-        font-size: 0.9em;
-        margin-top: 7px;
-        color: $text-lighter;
     }
 }
