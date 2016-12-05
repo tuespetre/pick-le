@@ -1,0 +1,14 @@
+$select: 'pickle-select' !default;
+$focus: ':focus' !default;
+$details: 'details[open] pickle-select' !default;
+$tool: 'slot[name=tool] > *' !default;
+
+$option: 'pickle-option';
+$hover: ':hover';
+$active: ':active';
+$focus: ':focus';
+$highlight: '[data-pickle-highlight]';
+$filtered: '[data-pickle-filtered]';
+
+@import 'style.select.scss';
+@import 'style.option.scss';

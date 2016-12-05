@@ -1,0 +1,76 @@
+$option: ':host' !default;
+$hover: '(:hover)' !default;
+$active: '(:active)' !default;
+$focus: '(:focus)' !default;
+$highlight: '([data-pickle-highlight])' !default;
+$filtered: '([data-pickle-filtered])' !default;
+
+#{$option} {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+#{$option}#{$hover}, #{$option}#{$active}, #{$option}#{$focus}, #{$option}#{$highlight} {
+    background-color: #f5f5f5;
+    outline: none;
+}
+
+#{$option}#{$filtered} {
+    display: none;
+}
+
+#{$option} > label, #{$option} > a {
+    display: flex;
+    flex-flow: row nowrap;
+    border: none;
+    border-bottom: 1px solid gainsboro;
+    padding: 7px 25px 7px 0;
+    position: relative;
+    cursor: pointer;
+    color: #111;
+    text-decoration: none;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+
+    &:hover, &:active, &:focus {
+        color: #111;
+        text-decoration: none;
+    }
+}
+
+.pickle-option-glyph {
+    opacity: 0;
+    height: 20px;
+    width: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.pickle-option-glyph svg {
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    margin-top: 3px;
+    fill: currentColor;
+}
+
+.pickle-option-input {
+    display: none;
+}
+
+.pickle-option-input:checked + .pickle-option-glyph {
+    opacity: 1;
+}
+
+.pickle-option-label {
+    display: none;
+    font-weight: bold;
+}
+
+.pickle-option-label:not(:empty) {
+    display: block;
+    margin-bottom: 7px;
+}

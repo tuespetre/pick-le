@@ -2,6 +2,9 @@
     'use strict';
 
     const smallScreenMediaQuery = window.matchMedia('screen and (max-width: 767px)');
+    const shadowDomPolyfilled = window.shadowDomPolyfilled;
+    const nativeShadowDom = !shadowDomPolyfilled;
+    let detailsElementPolyfilled = false;
 
     const FRAG = strings => {
         const fragment = document.createDocumentFragment();
@@ -16,90 +19,24 @@
         return fragment;
     };
 
-    const CLASS = Object.freeze({
-        PRIVATE_LIST: 'private-list',
-        POPUP: 'popup',
-        TITLE_TEXT: 'title-text',
-        CLOSE: 'close',
-        FILTER: 'filter',
-        LIST: 'list',
-        OPTION: 'option',
-        SCOPE: 'pick-le',
-        HIGHLIGHTED: 'highlighted',
-        SELECTED: 'selected',
-        DISABLED: 'disabled'
-    });
+    const TEMPLATE_SELECT = FRAG`inject(build/template.select.html)`;
+    const TEMPLATE_OPTION = FRAG`inject(build/template.option.html)`;
+    const STYLE_SELECT = `inject(build/style.select.css)`;
+    const STYLE_OPTION = `inject(build/style.option.css)`;
+    const STYLE_FALLBACK = `inject(build/style.fallback.css)`;
 
-    const SELECTOR = Object.freeze({
-        PICK_LE_FOCUS: '.pick-le-focus',
-        PICK_LE_TEXT: '.pick-le-text',
-        PRIVATE_TITLE: '.private-title',
-        CLOSE: '.close',
-        FILTER: '.filter',
-        FILTER_INPUT: '.filter input',
-        POPUP: '.popup',
-        ITEMS: 'slot[name=items]',
-        PRIVATE_LIST: '.private-list',
-        OPTION: '.option',
-        SELECTED_VISIBLE: '.option.selected:not([hidden])',
-        VISIBLE: '.option:not([hidden])'
-    });
-
-    const ATTR_ROLE = 'role';
-
-    const ATTR = Object.freeze({
-        ARIA_EXPANDED: 'aria-expanded',
-        ARIA_SELECTED: 'aria-selected',
-        ARIA_HIDDEN: 'aria-hidden',
-        ARIA_HASPOPUP: 'aria-haspopup',
-        ARIA_DISABLED: 'aria-disabled',
-        ARIA_ACTIVEDESCENDANT: 'aria-activedescendant',
-        ARIA_MULTISELECTABLE: 'aria-multiselectable',
-        DATA_INDEX: 'data-index',
-        DATA_LABEL: 'data-label',
-        DATA_TEXT: 'data-text',
-        DATA_VALUE: 'data-value',
-        DATA_HIDDEN: 'data-hidden',
-        TITLE: 'title',
-        LIST: 'list',
-        FILTERABLE: 'filterable',
-        MODE: 'mode',
-        LABEL: 'label',
-        VALUE: 'value',
-        HREF: 'href',
-        TABINDEX: 'tabindex',
-        PLACEHOLDER: 'placeholder',
-        ID: 'id',
-        HIDDEN: 'hidden',
-        SELECT: 'select'
-    });
-
-    const TRUE_STRING = 'true';
-    const FALSE_STRING = 'false';
-    const LISTBOX = 'listbox';
-    const TEMPLATE_MAIN = FRAG`inject(build/template.main.html)`;
-    const STYLE_SHADOW = `inject(build/pick-le.css)`;
-    const STYLE_SHADY = `inject(build/pick-le.shady.css)`;
-
-    // TODO: This is kind of a hack that should probably go away somehow.
-    if (!window.shadowDomPolyfilled) {
-        const style = document.createElement('style');
-        style.textContent = STYLE_SHADOW;
-        TEMPLATE_MAIN.insertBefore(style, TEMPLATE_MAIN.firstChild);
-    }
+    if (shadowDomPolyfilled) {
+        const fallbackStyles = document.createElement('style');
+        fallbackStyles.textContent = STYLE_FALLBACK;
+        document.head.insertBefore(fallbackStyles, document.head.firstChild);
+    } 
     else {
-        const style = document.createElement('style');
-        style.textContent = STYLE_SHADY;
-        document.head.insertBefore(style, document.head.firstChild);
-
-        const transform = node =>
-            Array.prototype.forEach.call(
-                node.querySelectorAll('*'),
-                elem => elem.classList.add(CLASS.SCOPE));
-
-        transform(TEMPLATE_MAIN);
-        transform(TEMPLATE_OPTION);
-        transform(TEMPLATE_LINK);
+        const selectStyles = document.createElement('style');
+        selectStyles.textContent = STYLE_SELECT;
+        TEMPLATE_SELECT.insertBefore(selectStyles, TEMPLATE_SELECT.firstChild);
+        const optionStyles = document.createElement('style');
+        optionStyles.textContent = STYLE_OPTION;
+        TEMPLATE_OPTION.insertBefore(optionStyles, TEMPLATE_OPTION.firstChild);
     }
 
     const ModalHelper = (() => {
@@ -172,30 +109,154 @@
 
     })();
 
-    function getItemsContainer(control) {
-        return control.shadowRoot.querySelector('.items-container');
+    // Little polyfill for <details> if needed (IE...)
+    if (!('HTMLDetailsElement' in window)) {
+        detailsElementPolyfilled = true;
+
+        const detailsStyle = document.createElement('style');
+        detailsStyle.textContent = `
+            details:not([open]) > :not(summary) {
+                display: none;
+            }
+        `;
+        document.head.insertBefore(detailsStyle, document.head.firstChild);
+
+        Object.defineProperty(HTMLUnknownElement.prototype, 'open', {
+            get: function () {
+                return this.hasAttribute('open');
+            },
+            set: function (value) {
+                if (value === false) {
+                    this.removeAttribute('open');
+                }
+                else {
+                    this.setAttribute('open', '');
+                }
+            }
+        });
+
+        function queueDetailsNotificationTask(details) {
+            if (details._notificationTaskQueued) {
+                return;
+            }
+            details._notificationTaskQueued = true;
+            setTimeout(function () {
+                details._notificationTaskQueued = false;
+                details.open = !details.open;
+                const toggle = document.createEvent('event');
+                toggle.initEvent('toggle', true, false);
+                details.dispatchEvent(toggle);
+            });
+        }
+
+        document.addEventListener('click', function (event) {
+            const summary = event.target.closest('summary');
+            if (summary) {
+                queueDetailsNotificationTask(summary.parentNode);
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            const summary = event.target.closest('summary');
+            if (summary) {
+                switch (event.key || event.which || event.keyCode) {
+                    case ' ': case 'Spacebar': case 32:
+                    case 'Enter': case 13:
+                        queueDetailsNotificationTask(summary.parentNode);
+                        event.preventDefault();
+                        break;
+                }
+            }
+        });
+    }
+
+    function isPickleOption(node) {
+        return node.nodeType === Node.ELEMENT_NODE
+            && node.localName === 'pickle-option';
+    }
+
+    function findFirstOption(control, predicate) {
+        const assignedNodes = getOptionsSlot(control).assignedNodes();
+        const assignedNodesCount = assignedNodes.length;
+        for (let i = 0; i < assignedNodesCount; i++) {
+            const assignedNode = assignedNodes[i];
+            if (!isPickleOption(assignedNode)) {
+                continue;
+            }
+            if (predicate(assignedNode)) {
+                return assignedNode;
+            }
+        }
+    }
+
+    function forEachOption(control, action) {
+        const assignedNodes = getOptionsSlot(control).assignedNodes();
+        const assignedNodesCount = assignedNodes.length;
+        for (let i = 0; i < assignedNodesCount; i++) {
+            const assignedNode = assignedNodes[i];
+            if (!isPickleOption(assignedNode)) {
+                continue;
+            }
+            action(assignedNode);
+        }
+    }
+
+    function getAncestorDetails(control) {
+        return control.closest('details');
+    }
+
+    function getAncestorSelect(option) {
+        return option.closest('pickle-select');
+    }
+
+    function getTitleElement(control) {
+        return control.shadowRoot.querySelector('.private-title');
+    }
+
+    function getOptionsContainer(control) {
+        return control.shadowRoot.querySelector('.options-container');
+    }
+
+    function getOptionsSlot(control) {
+        return control.shadowRoot.querySelector('.options-slot');
     }
 
     function getFilterInput(control) {
-        return control.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
+        return control.shadowRoot.querySelector('.filter input');
     }
 
-    function scrollItemIntoView(itemsContainer, item) {
+    function getFirstHighlightedOption(control) {
+        return findFirstOption(control, option => option.hasAttribute('data-pickle-highlight'));
+    }
+
+    function getFirstSelectedOption(control) {
+        return findFirstOption(control, option => option.selected);
+    }
+
+    function getFirstVisibleOption(control) {
+        return findFirstOption(control, option => !option.hasAttribute('data-pickle-filtered'));
+    }
+
+    function getFocusTarget(control) {
+        return getFilterInput(control);
+    }
+
+    function scrollOptionIntoView(optionsContainer, option) {
         // focus() causes iOS (et al) to hide keyboard.
         // our scroll logic has constraints: no height: 100% on body
 
         let documentRect = null;
-        let listRect = itemsContainer.getBoundingClientRect();
-        let optionRect = item.getBoundingClientRect();
+        let containerRect = optionsContainer.getBoundingClientRect();
+        let optionRect = option.getBoundingClientRect();
 
-        if (optionRect.bottom > listRect.bottom) {
-            itemsContainer.scrollTop += optionRect.bottom - listRect.bottom;
+        if (optionRect.bottom > containerRect.bottom) {
+            optionsContainer.scrollTop += optionRect.bottom - containerRect.bottom;
         }
-        else if (optionRect.top < listRect.top) {
-            itemsContainer.scrollTop -= listRect.top - optionRect.top;
+        else if (optionRect.top < containerRect.top) {
+            optionsContainer.scrollTop -= containerRect.top - optionRect.top;
         }
 
-        optionRect = item.getBoundingClientRect();
+        optionRect = option.getBoundingClientRect();
         documentRect = document.documentElement.getBoundingClientRect();
 
         if (optionRect.bottom > documentRect.height) {
@@ -210,133 +271,81 @@
         }
     }
 
-    function filterItems(control, filter) {
+    function filterOptions(control, filter) {
         if (filter) {
             filter = filter.trim().toLowerCase();
         }
 
-        const children = control.children;
-        const childCount = children.length;
-        for (let i = 0; i < childCount; i++) {
-            const child = children[i];
-            if (child.slot !== 'items') {
-                continue;
+        forEachOption(control, option => {
+            option.removeAttribute('data-pickle-highlight');
+
+            let filtered = false;
+            if (filter) {
+                const label = option.label.toLowerCase();
+                const text = option.text.toLowerCase();
+                if (label.indexOf(filter) === -1 && text.indexOf(filter) === -1) {
+                    filtered = true;
+                }
             }
-            delete child.dataset.pickLeHighlight;
-            if (filter && child.textContent.toLowerCase().indexOf(filter) === -1) {
-                child.dataset.pickLeFiltered = true;
+
+            if (filtered) {
+                option.setAttribute('data-pickle-filtered', '');
             }
             else {
-                delete child.dataset.pickLeFiltered;
+                option.removeAttribute('data-pickle-filtered');
             }
+        });
+
+        let optionToHighlight = getFirstSelectedOption(control);
+
+        if (!optionToHighlight || optionToHighlight.hasAttribute('data-pickle-filtered')) {
+            optionToHighlight = getFirstVisibleOption(control);
         }
 
-        let itemToHighlight = getFirstCheckedItem(control);
-
-        if (!itemToHighlight || itemToHighlight.dataset.pickLeFiltered) {
-            itemToHighlight = getFirstVisibleItem(control);
+        if (optionToHighlight) {
+            optionToHighlight.setAttribute('data-pickle-highlight', '');
         }
-
-        if (itemToHighlight) {
-            itemToHighlight.dataset.pickLeHighlight = true;
-        }
-    }
-
-    function getFocusTarget(control) {
-        return control.shadowRoot.querySelector(SELECTOR.FILTER_INPUT);
     }
 
     function focusCollapsedTarget(control) {
-        let target = control.querySelector(SELECTOR.PICK_LE_FOCUS) || control;
-        target.focus();
-    }
-
-    function getFirstHighlightedItem(control) {
-        return control.querySelector('[slot=items][data-pick-le-highlight=true]');
-    }
-
-    function setDisplayText(control, option) {
-        let value = null;
-
-        if (option) {
-            value = option.getAttribute(ATTR.DATA_LABEL) || option.getAttribute(ATTR.DATA_TEXT);
-        }
-
-        const displayTextElement = control.querySelector(SELECTOR.PICK_LE_TEXT);
-
-        if (displayTextElement) {
-            displayTextElement.textContent = value;
+        const details = getAncestorDetails(control);
+        if (details) {
+            const summary = details.querySelector('summary');
+            if (summary) {
+                summary.focus();
+            }
         }
     }
 
     function respondToXsMediaQuery(query) {
-        let list = this.shadowRoot.querySelector(SELECTOR.ITEMS);
+        const optionsContainer = getOptionsContainer(this);
 
         if (query.matches) {
-            ModalHelper.register(list);
+            ModalHelper.register(optionsContainer);
         }
         else {
-            ModalHelper.unregister(list);
-        }
-    }
-
-    function setTitleText(control, text) {
-        let titleTextElement = control.shadowRoot.querySelector(SELECTOR.PRIVATE_TITLE);
-
-        if (titleTextElement) {
-            titleTextElement.textContent = text;
-        }
-    }
-
-    function getFirstCheckedItem(control) {
-        const children = control.children;
-        const childCount = children.length;
-        for (let i = 0; i < childCount; i++) {
-            const child = children[i];
-            if (child.slot !== 'items') {
-                continue;
-            }
-            if (child.control && child.control.checked) {
-                return child;
-            }
-        }
-    }
-
-    function getFirstVisibleItem(control) {
-        const children = control.children;
-        const childCount = children.length;
-        for (let i = 0; i < childCount; i++) {
-            const child = children[i];
-            if (child.slot !== 'items') {
-                continue;
-            }
-            if (!child.dataset.pickLeFiltered) {
-                return child;
-            }
+            ModalHelper.unregister(optionsContainer);
         }
     }
 
     function handleKeyNavigation(control, event, getSibling) {
-        let highlightedItem = getFirstHighlightedItem(control)
-            || getFirstCheckedItem(control);
+        let highlightedOption = getFirstHighlightedOption(control)
+            || getFirstSelectedOption(control);
 
-        if (!highlightedItem) {
-            const firstVisibleItem = getFirstVisibleItem(control);
-            firstVisibleItem.dataset.pickLeHighlight = true;
+        if (!highlightedOption) {
+            const firstVisibleOption = getFirstVisibleOption(control);
+            if (firstVisibleOption) {
+                firstVisibleOption.setAttribute('data-pickle-highlight', '');
+            }
             return;
         }
 
-        if (!control.expanded) {
-            control.expanded = true;
-            return;
-        }
-
-        let next = highlightedItem;
+        let next = highlightedOption;
         while (next = getSibling(next)) {
-            if (next.slot === 'items') {
-                highlightedItem.dataset.pickLeHighlight = false;
-                next.dataset.pickLeHighlight = true;
-                scrollItemIntoView(getItemsContainer(control), next);
+            if (isPickleOption(next) && !next.dataset.pickleFiltered) {
+                highlightedOption.removeAttribute('data-pickle-highlight');
+                next.setAttribute('data-pickle-highlight', '');
+                scrollOptionIntoView(getOptionsContainer(control), next);
                 break;
             }
         }
@@ -355,108 +364,202 @@
                 handleKeyNavigation(this, event, t => t.nextElementSibling);
                 break;
 
-            case 'Escape': case 'Esc': case 27:
-                if (this.expanded) {
-                    this.expanded = false;
-                    focusCollapsedTarget(this);
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
+            case 'Escape': case 'Esc': case 27: {
+                getAncestorDetails(this).open = false;
+                focusCollapsedTarget(this);
+                event.preventDefault();
+                event.stopPropagation();
                 break;
+            }
 
             case ' ': case 'Spacebar': case 32:
-                if (!this.expanded) {
-                    this.expanded = true;
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                else {
-                    getFocusTarget(this).focus();
-                }
+                getFilterInput(this).focus();
                 break;
 
             case 'Enter': case 13:
-                if (!this.expanded) {
-                    this.expanded = true;
-                }
-                else {
-                    var highlighted = getFirstHighlightedItem(this);
-                    if (highlighted) {
-                        highlighted.click();
-                    }
+                var highlighted = getFirstHighlightedOption(this);
+                if (highlighted) {
+                    highlighted.click();
                 }
                 event.preventDefault();
                 event.stopPropagation();
                 break;
 
             case 'Tab': case 9:
-                if (this.expanded) {
-                    this.expanded = false;
-                    focusCollapsedTarget(this);
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
+                getAncestorDetails(this).open = false;
+                focusCollapsedTarget(this);
+                event.preventDefault();
+                event.stopPropagation();
                 break;
 
-            default:
-                if (!this.expanded) {
-                    return;
-                }
-                else if (event.currentTarget !== getFilterInput(this)) {
-                    getFocusTarget(this).focus();
+            default: {
+                const filterInput = getFilterInput(this);
+                if (event.currentTarget !== filterInput) {
+                    filterInput.focus();
                 }
                 else {
                     event.stopPropagation();
                 }
                 break;
+            }
         }
     }
 
     function handleDocumentClick(event) {
-        if (this.expanded && event.composedPath().indexOf(this) === -1) {
-            getFocusTarget(this).blur();
-            this.expanded = false;
+        const details = getAncestorDetails(this);
+        if (details.open && event.composedPath().indexOf(this) === -1) {
+            getFilterInput(this).blur();
+            details.open = false;
         }
     }
 
-    class pickle extends HTMLElement {
+    function handleDetailsToggle(event) {
+        const details = event.target;
+
+        if (details.open) {
+            const filterInput = getFilterInput(this);
+            const listener = respondToXsMediaQuery.bind(this);
+            filterInput.value = null;
+            filterInput.dataset.value = '';
+            filterOptions(this, null);
+            listener(smallScreenMediaQuery);
+            smallScreenMediaQuery.addListener(listener);
+
+            let firstChecked = getFirstSelectedOption(this);
+            if (firstChecked) {
+                scrollOptionIntoView(getOptionsContainer(this), firstChecked);
+            }
+
+            if (!this.hasAttribute('tabindex')) {
+                this.setAttribute('tabindex', 0);
+            }
+
+            this.focus();
+        }
+        else {
+            const listener = respondToXsMediaQuery.bind(this);
+            listener(smallScreenMediaQuery);
+            smallScreenMediaQuery.removeListener(listener);
+            ModalHelper.unregister(getOptionsContainer(this));
+        }
+    }
+
+    function handleOptionClick(event) {
+        const ancestorSelect = getAncestorSelect(this);
+        if (ancestorSelect) {
+            const firstHighlightedOption = getFirstHighlightedOption(ancestorSelect);
+            if (firstHighlightedOption) {
+                firstHighlightedOption.removeAttribute('data-pickle-highlight');
+            }
+        }
+        this.setAttribute('data-pickle-highlight');
+        
+        const input = this.shadowRoot.querySelector('input');
+        switch (ancestorSelect.type) {
+            case 'checkbox':
+                input.checked = !input.checked;
+                break;
+            case 'radio':
+            case 'navigation':
+                input.checked = true;
+                if (nativeShadowDom || ancestorSelect.type === 'navigation') {
+                    forEachOption(ancestorSelect, option => {
+                        if (option !== this) {
+                            option.selected = false;
+                            option.shadowRoot.querySelector('input').checked = false;
+                        }
+                    });
+                }
+                break;
+        }
+        this.selected = input.checked;
+    }
+
+    function renderOption(option) {
+        const select = getAncestorSelect(option);
+        const contents = document.importNode(TEMPLATE_OPTION, true);
+
+        const input = contents.querySelector('.pickle-option-input');
+        input.checked = option.selected;
+        input.value = option.value;
+        
+        const label = contents.querySelector('.pickle-option-label');
+        label.textContent = option.label;
+        label.normalize();
+
+        let wrapper = null;        
+        switch (select.type) {
+            case 'radio':
+            case 'checkbox':
+                input.type = select.type;
+                input.name = select.name;
+                wrapper = document.createElement('label');
+                break;
+            case 'navigation':
+                input.type = 'radio';
+                wrapper = document.createElement('a');
+                wrapper.href = option.value;
+                break;
+        }
+
+        wrapper.appendChild(contents);
+        const existing = option.shadowRoot.firstElementChild;
+        if (existing) {
+            option.shadowRoot.replaceChild(wrapper, existing);
+        }
+        else {
+            option.shadowRoot.appendChild(wrapper);
+        }
+    }
+
+    function registerOptionForFormParticipation(option) {
+        // This is here until there is a more 'blessed' way of
+        // participating in form submission.
+        // See: https://github.com/w3c/webcomponents/issues/187
+        const proxyInput = document.createElement('input');
+        proxyInput.type = 'hidden';
+        document.addEventListener('submit', event => {
+            const ancestorSelect = getAncestorSelect(option);
+            let participated = false;
+            if (ancestorSelect && ancestorSelect.type !== 'navigation' && option.selected) {
+                proxyInput.name = ancestorSelect.name;
+                proxyInput.value = option.value;
+                if (event.target.contains(option)) {
+                    event.target.appendChild(proxyInput);
+                    participated = true;
+                }
+            }
+            if (!participated && proxyInput.parentNode) {
+                proxyInput.parentNode.removeChild(proxyInput);
+            }
+        }, true);
+    }
+
+    class PickleSelect extends HTMLElement {
 
         constructor() {
             super();
 
             this.attachShadow({ mode: 'open' });
-            this.shadowRoot.appendChild(TEMPLATE_MAIN.cloneNode(true));
 
-            this.addEventListener('click', event => {
-                if (!this.expanded) {
-                    this.expanded = true;
-                }
-                else {
-                    this.expanded = false;
-                    focusCollapsedTarget(this);
-                }
-            });
+            this.shadowRoot.appendChild(TEMPLATE_SELECT.cloneNode(true));
 
             this.addEventListener('keydown', handleKeydown.bind(this));
 
-            this.shadowRoot.querySelector(SELECTOR.POPUP).addEventListener('click', event => {
-                event.stopPropagation();
-            });
-
-            this.shadowRoot.querySelector(SELECTOR.CLOSE).addEventListener('click', event => {
-                this.expanded = false;
+            this.shadowRoot.querySelector('.pickle-select-close').addEventListener('click', event => {
+                getAncestorDetails(this).open = false;
                 focusCollapsedTarget(this);
             });
 
             const filterInput = getFilterInput(this);
 
             filterInput.addEventListener('input', event => {
-                const oldValue = filterInput.getAttribute(ATTR.DATA_VALUE);
+                const oldValue = filterInput.dataset.value;
                 const newValue = event.target.value;
 
                 if (newValue !== oldValue) {
-                    filterInput.setAttribute(ATTR.DATA_VALUE, newValue);
-                    filterItems(this, newValue);
+                    filterInput.dataset.value = newValue;
+                    filterOptions(this, newValue);
                 }
             });
 
@@ -464,54 +567,134 @@
         }
 
         connectedCallback() {
+            const details = this.closest('details');
+            if (details) {
+                if (detailsElementPolyfilled) {
+                    const summary = details.querySelector('summary');
+                    if (summary) {
+                        summary.setAttribute('tabindex', '0');
+                    }
+                }
+                details.addEventListener('toggle', handleDetailsToggle.bind(this));
+            }
+
             document.addEventListener('click', handleDocumentClick.bind(this));
 
-            setTitleText(this, this.dataset.title);
+            getTitleElement(this).textContent = this.dataset.title;
 
-            this.setAttribute(ATTR_ROLE, LISTBOX);
-            this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
+            // Simulate the :defined pseudo-class
+            this.setAttribute('defined', '');
         }
 
         disconnectedCallback() {
             document.removeEventListener('click', handleDocumentClick.bind(this));
         }
 
-        get expanded() {
-            return this.getAttribute(ATTR.ARIA_EXPANDED) === TRUE_STRING;
+        get type() {
+            const value = this.getAttribute('type');
+            switch (value) {
+                case 'radio':
+                case 'checkbox':
+                case 'navigation':
+                    return value;
+                default:
+                    return 'radio';
+            }
         }
 
-        set expanded(value) {
-            const expanded = value === true;
+        set type(value) {
+            this.setAttribute('type', value);
+        }
 
-            if (this.expanded === expanded) {
-                return;
+        get name() {
+            const value = this.getAttribute('name');
+            if (value !== null) {
+                return value.trim();
             }
-            else if (expanded) {
-                const filterInput = getFilterInput(this);
-                const listener = respondToXsMediaQuery.bind(this);
-                filterInput.value = null;
-                filterInput.setAttribute(ATTR.DATA_VALUE, '');
-                filterItems(this, null);
-                listener(smallScreenMediaQuery);
-                smallScreenMediaQuery.addListener(listener);
-                this.setAttribute(ATTR.ARIA_EXPANDED, TRUE_STRING);
+            return '';
+        }
 
-                let firstChecked = getFirstCheckedItem(this);
-                if (firstChecked) {
-                    scrollItemIntoView(getItemsContainer(this), firstChecked);
-                }
+        set name(value) {
+            if (value == null) {
+                this.removeAttribute('name');
             }
             else {
-                const listener = respondToXsMediaQuery.bind(this);
-                listener(smallScreenMediaQuery);
-                smallScreenMediaQuery.removeListener(listener);
-                ModalHelper.unregister(getItemsContainer(this));
-                this.setAttribute(ATTR.ARIA_EXPANDED, FALSE_STRING);
+                this.setAttribute('name', value);
             }
+        }
+    }
+
+    class PickleOption extends HTMLElement {
+
+        constructor() {
+            super();
+
+            this.attachShadow({ mode: 'open' });
+
+            this.addEventListener('click', handleOptionClick.bind(this));
+
+            if (nativeShadowDom) {
+                registerOptionForFormParticipation(this);
+            }
+        }
+
+        connectedCallback() {
+            renderOption(this);
+
+            // Simulate the :defined pseudo-class
+            this.setAttribute('defined', '');
+        }
+
+        get value() {
+            return this.getAttribute('value');
+        }
+
+        set value(value) {
+            this.setAttribute('value', value);
+        }
+
+        get selected() {
+            return this.hasAttribute('selected');
+        }
+
+        set selected(value) {
+            if (new Boolean(value) == true) {
+                this.setAttribute('selected', '');
+            }
+            else {
+                this.removeAttribute('selected');
+            }
+        }
+
+        get label() {
+            const value = this.getAttribute('label');
+            if (value !== null) {
+                return value.trim();
+            }
+            return '';
+        }
+
+        set label(value) {
+            if (value == null) {
+                this.removeAttribute('label');
+            }
+            else {
+                this.setAttribute('label', value);
+            }
+        }
+
+        get text() {
+            return this.textContent.replace(/\s+/, ' ').trim();
+        }
+
+        set text(value) {
+            this.textContent = value;
         }
 
     }
 
-    customElements.define('pick-le', pickle);
+    customElements.define('pickle-select', PickleSelect);
+
+    customElements.define('pickle-option', PickleOption);
 
 })();
