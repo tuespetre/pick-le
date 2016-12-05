@@ -460,15 +460,26 @@
                 input.checked = !input.checked;
                 break;
             case 'radio':
-            case 'navigation':
                 input.checked = true;
-                if (nativeShadowDom || ancestorSelect.type === 'navigation') {
+                if (nativeShadowDom) {
                     forEachOption(ancestorSelect, option => {
                         if (option !== this) {
                             option.selected = false;
                             option.shadowRoot.querySelector('input').checked = false;
                         }
                     });
+                }
+                break;
+            case 'navigation':
+                input.checked = true;
+                forEachOption(ancestorSelect, option => {
+                    if (option !== this) {
+                        option.selected = false;
+                        option.shadowRoot.querySelector('input').checked = false;
+                    }
+                });
+                if (event.composedPath()[0] === this) {
+                    this.shadowRoot.querySelector('a').click();
                 }
                 break;
         }

@@ -481,15 +481,26 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 input.checked = !input.checked;
                 break;
             case 'radio':
-            case 'navigation':
                 input.checked = true;
-                if (nativeShadowDom || ancestorSelect.type === 'navigation') {
+                if (nativeShadowDom) {
                     forEachOption(ancestorSelect, function (option) {
                         if (option !== _this) {
                             option.selected = false;
                             option.shadowRoot.querySelector('input').checked = false;
                         }
                     });
+                }
+                break;
+            case 'navigation':
+                input.checked = true;
+                forEachOption(ancestorSelect, function (option) {
+                    if (option !== _this) {
+                        option.selected = false;
+                        option.shadowRoot.querySelector('input').checked = false;
+                    }
+                });
+                if (event.composedPath()[0] === this) {
+                    this.shadowRoot.querySelector('a').click();
                 }
                 break;
         }
