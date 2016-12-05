@@ -452,7 +452,7 @@
                 firstHighlightedOption.removeAttribute('data-pickle-highlight');
             }
         }
-        this.setAttribute('data-pickle-highlight');
+        this.setAttribute('data-pickle-highlight', '');
         
         const input = this.shadowRoot.querySelector('input');
         switch (ancestorSelect.type) {

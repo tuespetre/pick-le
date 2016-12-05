@@ -473,7 +473,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 firstHighlightedOption.removeAttribute('data-pickle-highlight');
             }
         }
-        this.setAttribute('data-pickle-highlight');
+        this.setAttribute('data-pickle-highlight', '');
 
         var input = this.shadowRoot.querySelector('input');
         switch (ancestorSelect.type) {
