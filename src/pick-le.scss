@@ -58,19 +58,19 @@ slot[name=items]::slotted(*) {
     display: block;    
     border: none;
     border-bottom: 1px solid $border-color;
-    padding: 7px;
+    padding: 7px 10px;
     position: relative;
     cursor: pointer;
+    color: $text-darker !important;
+    text-decoration: none !important;
 }
 
 slot[name=items]::slotted(:hover),
 slot[name=items]::slotted(:active),
 slot[name=items]::slotted(:focus),
 slot[name=items]::slotted([data-pick-le-highlight=true]) {
-    background-color: $bg-color-light;
-    text-decoration: none;
-    color: $text-darker;
-    outline: none;
+    background-color: $bg-color-light !important;
+    outline: none !important;
 }
 
 slot[name=items]::slotted([data-pick-le-filtered]) {

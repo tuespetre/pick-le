@@ -5,6 +5,18 @@
     <script src="./dist/pick-le.js"></script>
 </head>
 <body>
+    <style>
+        a { color: fuchsia; }
+    </style>
+    <pick-le>
+        <button slot="toggle">
+            Links (like on GitHub issues)
+        </button>
+        <a slot="items" href="#">Link one</a>
+        <a slot="items" href="#">Link one</a>
+        <a slot="items" href="#">Link one</a>
+    </pick-le>
+    <hr />
     <pick-le>
         <button slot="toggle">
             Radio buttons (like a single select)

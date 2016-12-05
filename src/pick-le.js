@@ -102,104 +102,75 @@
         transform(TEMPLATE_LINK);
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    //
-    // Deal with fixed position stuffs        
-    //
-    ///////////////////////////////////////////////////////////////////////
+    const ModalHelper = (() => {
 
-    const overlayContext = new (function () {
-        let container = () => document.documentElement,
-            map = new WeakMap(),
-            length = 0,
-            cachedStyle = {},
-            cachedScroll = 0,
-            overlayStyle = {
-                'overflow': 'hidden',
-                'position': 'fixed'
-            };
+        let instances = 0;
+        let capturedOverflow = '';
+        let capturedScrollTop = 0;
 
-        const applyStyles = (currentStyles, newStyles) => {
-            for (var prop in overlayStyle) {
-                currentStyles[prop] = newStyles[prop];
+        class HelperContext {
+
+            constructor(element) {
+                this.lastY = 0;
+                this.element = element;
+                element.addEventListener('touchstart', this.onTouchStart.bind(this));
+                element.addEventListener('touchmove', this.onTouchMove.bind(this));
             }
-        }
 
-        const touchContext = {
-            startY: 0,
-            moveY: 0,
-            top: false,
-            bottom: false,
-            allowY: function (context) {
-                return (
-                    (context.top && context.moveY > context.startY) ||
-                    (context.bottom && context.moveY < context.startY)
-                );
+            onTouchStart(event) {
+                const currentY = event.touches[0].clientY;
+
+                this.lastY = currentY;
             }
-        };
 
-        const touchstart = e => {
-            let element = e.currentTarget,
-                context = map.get(element);
+            onTouchMove(event) {
+                const currentY = event.touches[0].clientY;
+                const top = this.element.scrollTop;
+                const totalScroll = this.element.scrollHeight;
+                const currentScroll = top + this.element.offsetHeight;
 
-            context.startY = e.targetTouches[0].clientY;
-            context.top = element.scrollTop > 0;
-            context.bottom = (element.scrollHeight - element.clientHeight) > element.scrollTop;
-        };
+                const scrollingUp = (currentY > this.lastY);
+                const scrollingDown = (currentY < this.lastY);
+                const cannotScrollUp = (top === 0);
+                const cannotScrollDown = (currentScroll === totalScroll);
 
-        const touchmove = e => {
-            let element = e.currentTarget,
-                context = map.get(element);
+                if ((scrollingUp && cannotScrollUp) || (scrollingDown && cannotScrollDown)) {
+                    event.preventDefault();
+                }
 
-            context.moveY = e.targetTouches[0].clientY;
-
-            if (!context.allowY(context)) {
-                e.preventDefault();
+                this.lastY = currentY;
             }
+
         };
 
         return {
 
-            register: function (element) {
-                if (map.has(element)) return;
-
-                element.addEventListener('touchstart', touchstart);
-                element.addEventListener('touchmove', touchmove);
-                map.set(element, Object.create(touchContext));
-                length++;
-
-                if (length === 1) {
-                    cachedScroll =
-                        document.documentElement.scrollTop ||
-                        document.body.scrollTop;
-                    applyStyles(cachedStyle, container().style);
-                    applyStyles(container().style, overlayStyle);
+            register(element) {
+                if (!element._modalHelperContext) {
+                    const context = new HelperContext(element);
+                    element._modalHelperContext = context;
+                }
+                instances++;
+                if (instances === 1) {
+                    capturedOverflow = document.documentElement.style.overflow;
+                    document.documentElement.style.overflow = 'hidden';
                 }
             },
 
-            unregister: function (element) {
-                if (!map.has(element)) return;
-
-                element.removeEventListener('touchstart', touchstart);
-                element.removeEventListener('touchmove', touchmove);
-                map.delete(element);
-                length--;
-
-                if (!length) {
-                    applyStyles(container().style, cachedStyle);
-                    document.documentElement.scrollTop = cachedScroll;
-                    document.body.scrollTop = cachedScroll;
+            unregister(element) {
+                if (instances === 0) {
+                    return;
+                }
+                instances--;
+                if (instances === 0) {
+                    document.documentElement.style.overflow = capturedOverflow;
+                    capturedOverflow = '';
                 }
             }
 
-        }
-    });
+        };
 
-    ///////////////////////////////////////////////////////////////////////
-    //
-    // <pick-le>       
-    //
-    ///////////////////////////////////////////////////////////////////////
+    })();
 
     function getItemsContainer(control) {
         return control.shadowRoot.querySelector('.items-container');
@@ -210,16 +181,9 @@
     }
 
     function scrollItemIntoView(itemsContainer, item) {
-        // Focusing the option is no bueno.
-        // Causes iOS (et al) to hide keyboard
-        // if the filter was focused
-        // option.focus();
+        // focus() causes iOS (et al) to hide keyboard.
+        // our scroll logic has constraints: no height: 100% on body
 
-        // Since the goal was to get the highlighted
-        // link into view (and because scrollIntoView sucks)
-        // we'll just have to adjust the scrollTop ourselves.
-        // This requires some certain CSS constraints on
-        // the <html> and <body> elements to work cross-browser.
         let documentRect = null;
         let listRect = itemsContainer.getBoundingClientRect();
         let optionRect = item.getBoundingClientRect();
@@ -309,10 +273,10 @@
         let list = this.shadowRoot.querySelector(SELECTOR.ITEMS);
 
         if (query.matches) {
-            overlayContext.register(list);
+            ModalHelper.register(list);
         }
         else {
-            overlayContext.unregister(list);
+            ModalHelper.unregister(list);
         }
     }
 
@@ -353,7 +317,7 @@
     }
 
     function handleKeyNavigation(control, event, getSibling) {
-        let highlightedItem = getFirstHighlightedItem(control) 
+        let highlightedItem = getFirstHighlightedItem(control)
             || getFirstCheckedItem(control);
 
         if (!highlightedItem) {
@@ -406,7 +370,7 @@
                     event.preventDefault();
                     event.stopPropagation();
                 }
-                else {                    
+                else {
                     getFocusTarget(this).focus();
                 }
                 break;
@@ -502,10 +466,8 @@
         connectedCallback() {
             document.addEventListener('click', handleDocumentClick.bind(this));
 
-            // init title
             setTitleText(this, this.dataset.title);
 
-            // init accessibility attributes
             this.setAttribute(ATTR_ROLE, LISTBOX);
             this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
         }
@@ -543,7 +505,7 @@
                 const listener = respondToXsMediaQuery.bind(this);
                 listener(smallScreenMediaQuery);
                 smallScreenMediaQuery.removeListener(listener);
-                overlayContext.unregister(getItemsContainer(this));
+                ModalHelper.unregister(getItemsContainer(this));
                 this.setAttribute(ATTR.ARIA_EXPANDED, FALSE_STRING);
             }
         }

@@ -4,11 +4,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _templateObject = _taggedTemplateLiteral(['<slot name="toggle"></slot><div class="anchor shady-shadow"><div class="popup" tabindex="-1"><div class="title"><span class="private-title"></span> <span class="close" aria-label="Close" role="button">&#x2716;&#xfe0e;</span></div><slot name="tool"></slot><div class="filter"><input type="search" autocomplete="off" aria-label="Filter options" tabindex="-1" data-value=""></div><div class="items-container"><slot name="items"></slot></div></div></div>'], ['<slot name="toggle"></slot><div class="anchor shady-shadow"><div class="popup" tabindex="-1"><div class="title"><span class="private-title"></span> <span class="close" aria-label="Close" role="button">&#x2716;&#xfe0e;</span></div><slot name="tool"></slot><div class="filter"><input type="search" autocomplete="off" aria-label="Filter options" tabindex="-1" data-value=""></div><div class="items-container"><slot name="items"></slot></div></div></div>']);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -92,7 +92,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     var FALSE_STRING = 'false';
     var LISTBOX = 'listbox';
     var TEMPLATE_MAIN = FRAG(_templateObject);
-    var STYLE_SHADOW = '.close,.filter,.items-container,.popup,.title,slot[name=tool]::slotted(*){background-clip:border-box;background-color:inherit;box-sizing:border-box;color:#111;display:block;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:20px;font-size:14px;font-weight:400;height:auto;margin:0;opacity:1;padding:0;text-align:left;text-decoration:none;text-shadow:none;text-transform:inherit;-webkit-transform:none;transform:none;width:auto}.close,.title{font-weight:700}:host{position:relative;display:inline-block}slot[name=items]::slotted(*){display:block;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer}.popup,slot[name=items]::slotted([data-pick-le-filtered]){display:none}.anchor,.popup{position:absolute}slot[name=items]::slotted(:active),slot[name=items]::slotted(:focus),slot[name=items]::slotted(:hover),slot[name=items]::slotted([data-pick-le-highlight=true]){background-color:#f5f5f5;text-decoration:none;color:#111;outline:0}.anchor{top:0;left:0;bottom:0;right:auto;width:0}:host(.pick-le-right) .anchor{right:0;left:auto}.popup{top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important}.filter input,.filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .popup{display:block}:host(.pick-le-right) .popup{right:0;left:auto}:host(.pick-le-top) .popup{top:auto;bottom:100%}@media screen and (max-width:767px){:host([aria-expanded=true]) .popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}}.filter,.title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111}@media screen and (max-width:767px){.title{padding:15px 10px}}.close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-size:20px;line-height:20px;color:#BBB}.filter input,.items-container{display:block;background-color:#fff}.close:hover{cursor:pointer;color:#111}.filter input{width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.filter input:focus{border-color:#66afe9;outline:0}.items-container{overflow-x:hidden;overflow-y:auto;max-height:340px;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.items-container{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}';
+    var STYLE_SHADOW = '.close,.filter,.items-container,.popup,.title,slot[name=tool]::slotted(*){background-clip:border-box;background-color:inherit;box-sizing:border-box;color:#111;display:block;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:20px;font-size:14px;font-weight:400;height:auto;margin:0;opacity:1;padding:0;text-align:left;text-decoration:none;text-shadow:none;text-transform:inherit;-webkit-transform:none;transform:none;width:auto}.close,.title{font-weight:700}:host{position:relative;display:inline-block}slot[name=items]::slotted(*){display:block;border:none;border-bottom:1px solid #dcdcdc;padding:7px 10px;position:relative;cursor:pointer;color:#111!important;text-decoration:none!important}.popup,slot[name=items]::slotted([data-pick-le-filtered]){display:none}.anchor,.popup{position:absolute}slot[name=items]::slotted(:active),slot[name=items]::slotted(:focus),slot[name=items]::slotted(:hover),slot[name=items]::slotted([data-pick-le-highlight=true]){background-color:#f5f5f5!important;outline:0!important}.anchor{top:0;left:0;bottom:0;right:auto;width:0}:host(.pick-le-right) .anchor{right:0;left:auto}.popup{top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important}.filter input,.filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .popup{display:block}:host(.pick-le-right) .popup{right:0;left:auto}:host(.pick-le-top) .popup{top:auto;bottom:100%}@media screen and (max-width:767px){:host([aria-expanded=true]) .popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}}.filter,.title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111}@media screen and (max-width:767px){.title{padding:15px 10px}}.close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-size:20px;line-height:20px;color:#BBB}.filter input,.items-container{display:block;background-color:#fff}.close:hover{cursor:pointer;color:#111}.filter input{width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.filter input:focus{border-color:#66afe9;outline:0}.items-container{overflow-x:hidden;overflow-y:auto;max-height:340px;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.items-container{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}';
     var STYLE_SHADY = '.pick-le.close,.pick-le.filter,.pick-le.list,.pick-le.popup,.pick-le.title,slot.pick-le[name=pick-le-tool]>*{background-clip:border-box;background-color:inherit;box-sizing:border-box;color:inherit;display:block;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:20px;font-size:14px;font-weight:400;height:auto;margin:0;opacity:1;padding:0;text-align:left;text-decoration:none;text-shadow:none;text-transform:inherit;-webkit-transform:none;transform:none;width:auto}pick-le{position:relative;display:inline-block}slot[name=items]::slotted(*){display:block;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer}slot[name=items]::slotted(:active),slot[name=items]::slotted(:focus),slot[name=items]::slotted(:hover),slot[name=items]::slotted([data-pick-le-highlight=true]){background-color:#f5f5f5;text-decoration:none;color:#111;outline:0}slot[name=items]::slotted([data-pick-le-match=false]){display:none}.pick-le.anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}pick-le.pick-le-right .pick-le.anchor{right:0;left:auto}.pick-le.popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important}.pick-le.filter input,.pick-le.filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pick-le[aria-expanded=true] .pick-le.popup{display:block}pick-le.pick-le-right .pick-le.popup{right:0;left:auto}pick-le.pick-le-top .pick-le.popup{top:auto;bottom:100%}@media screen and (max-width:767px){pick-le[aria-expanded=true] .pick-le.popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pick-le.popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}}.pick-le.list,pick-le .pick-le.shadow{position:relative}.pick-le.filter,.pick-le.title,slot.pick-le[name=pick-le-tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px;vertical-align:bottom}.pick-le.title{color:#111;font-weight:700;vertical-align:middle}.pick-le.title::after{display:inline-block;width:0;height:0;font-size:0;content:"";clear:both}.pick-le.close{display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#b7b7b7;float:right}.pick-le.close:hover{cursor:pointer;color:#111}.pick-le.close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pick-le.filter input,.pick-le.list{display:block;background-color:#fff}@media screen and (max-width:767px){.pick-le.title{padding:15px 10px}.pick-le.close svg{width:20px;height:20px}}.pick-le.filter input{width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pick-le.filter input:focus{border-color:#66afe9;outline:0}.pick-le.list{overflow-x:hidden;overflow-y:auto;max-height:340px;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pick-le.list{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}slot[name=pick-le-tool]{-ms-flex-negative:0;flex-shrink:0}';
 
     // TODO: This is kind of a hack that should probably go away somehow.
@@ -116,101 +116,79 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         transform(TEMPLATE_LINK);
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    //
-    // Deal with fixed position stuffs        
-    //
-    ///////////////////////////////////////////////////////////////////////
+    var ModalHelper = function () {
 
-    var overlayContext = new function () {
-        var container = function container() {
-            return document.documentElement;
-        },
-            map = new WeakMap(),
-            length = 0,
-            cachedStyle = {},
-            cachedScroll = 0,
-            overlayStyle = {
-            'overflow': 'hidden',
-            'position': 'fixed'
-        };
+        var instances = 0;
+        var capturedOverflow = '';
+        var capturedScrollTop = 0;
 
-        var applyStyles = function applyStyles(currentStyles, newStyles) {
-            for (var prop in overlayStyle) {
-                currentStyles[prop] = newStyles[prop];
+        var HelperContext = function () {
+            function HelperContext(element) {
+                _classCallCheck(this, HelperContext);
+
+                this.lastY = 0;
+                this.element = element;
+                element.addEventListener('touchstart', this.onTouchStart.bind(this));
+                element.addEventListener('touchmove', this.onTouchMove.bind(this));
             }
-        };
 
-        var touchContext = {
-            startY: 0,
-            moveY: 0,
-            top: false,
-            bottom: false,
-            allowY: function allowY(context) {
-                return context.top && context.moveY > context.startY || context.bottom && context.moveY < context.startY;
-            }
-        };
+            _createClass(HelperContext, [{
+                key: 'onTouchStart',
+                value: function onTouchStart(event) {
+                    var currentY = event.touches[0].clientY;
 
-        var touchstart = function touchstart(e) {
-            var element = e.currentTarget,
-                context = map.get(element);
+                    this.lastY = currentY;
+                }
+            }, {
+                key: 'onTouchMove',
+                value: function onTouchMove(event) {
+                    var currentY = event.touches[0].clientY;
+                    var top = this.element.scrollTop;
+                    var totalScroll = this.element.scrollHeight;
+                    var currentScroll = top + this.element.offsetHeight;
 
-            context.startY = e.targetTouches[0].clientY;
-            context.top = element.scrollTop > 0;
-            context.bottom = element.scrollHeight - element.clientHeight > element.scrollTop;
-        };
+                    var scrollingUp = currentY > this.lastY;
+                    var scrollingDown = currentY < this.lastY;
+                    var cannotScrollUp = top === 0;
+                    var cannotScrollDown = currentScroll === totalScroll;
 
-        var touchmove = function touchmove(e) {
-            var element = e.currentTarget,
-                context = map.get(element);
+                    if (scrollingUp && cannotScrollUp || scrollingDown && cannotScrollDown) {
+                        event.preventDefault();
+                    }
 
-            context.moveY = e.targetTouches[0].clientY;
+                    this.lastY = currentY;
+                }
+            }]);
 
-            if (!context.allowY(context)) {
-                e.preventDefault();
-            }
-        };
+            return HelperContext;
+        }();
+
+        ;
 
         return {
-
             register: function register(element) {
-                if (map.has(element)) return;
-
-                element.addEventListener('touchstart', touchstart);
-                element.addEventListener('touchmove', touchmove);
-                map.set(element, Object.create(touchContext));
-                length++;
-
-                if (length === 1) {
-                    cachedScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                    applyStyles(cachedStyle, container().style);
-                    applyStyles(container().style, overlayStyle);
+                if (!element._modalHelperContext) {
+                    var context = new HelperContext(element);
+                    element._modalHelperContext = context;
+                }
+                instances++;
+                if (instances === 1) {
+                    capturedOverflow = document.documentElement.style.overflow;
+                    document.documentElement.style.overflow = 'hidden';
                 }
             },
-
             unregister: function unregister(element) {
-                if (!map.has(element)) return;
-
-                element.removeEventListener('touchstart', touchstart);
-                element.removeEventListener('touchmove', touchmove);
-                map.delete(element);
-                length--;
-
-                if (!length) {
-                    applyStyles(container().style, cachedStyle);
-                    document.documentElement.scrollTop = cachedScroll;
-                    document.body.scrollTop = cachedScroll;
+                if (instances === 0) {
+                    return;
+                }
+                instances--;
+                if (instances === 0) {
+                    document.documentElement.style.overflow = capturedOverflow;
+                    capturedOverflow = '';
                 }
             }
-
         };
     }();
-
-    ///////////////////////////////////////////////////////////////////////
-    //
-    // <pick-le>       
-    //
-    ///////////////////////////////////////////////////////////////////////
 
     function getItemsContainer(control) {
         return control.shadowRoot.querySelector('.items-container');
@@ -221,16 +199,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     }
 
     function scrollItemIntoView(itemsContainer, item) {
-        // Focusing the option is no bueno.
-        // Causes iOS (et al) to hide keyboard
-        // if the filter was focused
-        // option.focus();
+        // focus() causes iOS (et al) to hide keyboard.
+        // our scroll logic has constraints: no height: 100% on body
 
-        // Since the goal was to get the highlighted
-        // link into view (and because scrollIntoView sucks)
-        // we'll just have to adjust the scrollTop ourselves.
-        // This requires some certain CSS constraints on
-        // the <html> and <body> elements to work cross-browser.
         var documentRect = null;
         var listRect = itemsContainer.getBoundingClientRect();
         var optionRect = item.getBoundingClientRect();
@@ -317,9 +288,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         var list = this.shadowRoot.querySelector(SELECTOR.ITEMS);
 
         if (query.matches) {
-            overlayContext.register(list);
+            ModalHelper.register(list);
         } else {
-            overlayContext.unregister(list);
+            ModalHelper.unregister(list);
         }
     }
 
@@ -513,10 +484,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             value: function connectedCallback() {
                 document.addEventListener('click', handleDocumentClick.bind(this));
 
-                // init title
                 setTitleText(this, this.dataset.title);
 
-                // init accessibility attributes
                 this.setAttribute(ATTR_ROLE, LISTBOX);
                 this.setAttribute(ATTR.ARIA_HASPOPUP, TRUE_STRING);
             }
@@ -553,7 +522,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                     var _listener = respondToXsMediaQuery.bind(this);
                     _listener(smallScreenMediaQuery);
                     smallScreenMediaQuery.removeListener(_listener);
-                    overlayContext.unregister(getItemsContainer(this));
+                    ModalHelper.unregister(getItemsContainer(this));
                     this.setAttribute(ATTR.ARIA_EXPANDED, FALSE_STRING);
                 }
             }
