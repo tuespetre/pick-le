@@ -80,7 +80,7 @@
             <button slot="toggle" class="btn btn-default">
                 Links (like on GitHub issues)
             </button>
-            <pickle-option label="Link one label" value="#" selected>
+            <pickle-option value="#" selected>
                 Link one
             </pickle-option>
             <pickle-option value="#">
@@ -89,7 +89,9 @@
             <pickle-option value="#">
                 Link three
             </pickle-option>
-            <pickle-option value="#" label="Just a label"></pickle-option>
+            <pickle-option value="#">
+                <strong>Mark up and style option contents as you wish!</strong>
+            </pickle-option>
         </pickle-select>
         <hr />
         <pickle-select name="radios" type="radio" data-title="Title for the pickle-select">
@@ -119,7 +121,6 @@
         for (var i = 0; i < 20; i++) {
             var num = i + 1;
             var option = document.createElement('pickle-option');
-            option.label = 'Option ' + num + ' label';
             option.value = num;
             option.textContent = 'Option ' + num;
             radios.appendChild(option);
@@ -128,7 +129,6 @@
         for (var i = 0; i < 20; i++) {
             var num = i + 1;
             var option = document.createElement('pickle-option');
-            option.label = 'Option ' + num + ' label';
             option.value = num;
             option.textContent = 'Option ' + num;
             checkboxes.appendChild(option);

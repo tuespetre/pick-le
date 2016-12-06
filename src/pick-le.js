@@ -222,12 +222,8 @@
             option.removeAttribute('data-pickle-highlight');
 
             let filtered = false;
-            if (filter) {
-                const label = option.label.toLowerCase();
-                const text = option.text.toLowerCase();
-                if (label.indexOf(filter) === -1 && text.indexOf(filter) === -1) {
-                    filtered = true;
-                }
+            if (filter && option.text.toLowerCase().indexOf(filter) === -1) {
+                filtered = true;
             }
 
             if (filtered) {
@@ -426,10 +422,6 @@
         const input = contents.querySelector('.pickle-option-input');
         input.checked = option.selected;
         input.value = option.value;
-        
-        const label = contents.querySelector('.pickle-option-label');
-        label.textContent = option.label;
-        label.normalize();
 
         let wrapper = null;        
         switch (select.type) {
@@ -493,7 +485,7 @@
 
             const toggleSlot = getToggleSlot(this);
             toggleSlot.addEventListener('click', event => {
-                this.expanded = true;
+                this.expanded = !this.expanded;
                 event.preventDefault();
             });
 
@@ -620,23 +612,6 @@
             }
             else {
                 this.removeAttribute('selected');
-            }
-        }
-
-        get label() {
-            const value = this.getAttribute('label');
-            if (value !== null) {
-                return value.trim();
-            }
-            return '';
-        }
-
-        set label(value) {
-            if (value == null) {
-                this.removeAttribute('label');
-            }
-            else {
-                this.setAttribute('label', value);
             }
         }
 
