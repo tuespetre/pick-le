@@ -1,5 +1,7 @@
 $select: ':host' !default;
 $expanded: '([aria-expanded=true])' !default;
+$nofilter: '([no-filter])' !default;
+$alignright: '([align-right])' !default;
 $tool: 'slot[name=tool]::slotted(*)' !default;
 
 #{$select} {
@@ -37,8 +39,18 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     outline: none;
 }
 
+#{$select}#{$alignright} .pickle-select-anchor,
+#{$select}#{$alignright} .pickle-select-popup {
+    left: auto;
+    right: 0;
+}
+
 #{$select}#{$expanded} .pickle-select-popup {
     display: block;
+}
+
+#{$select}#{$nofilter} .pickle-select-filter {
+    display: none;
 }
 
 .pickle-select-title, 

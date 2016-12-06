@@ -38,7 +38,7 @@
         })();
     </script>
     <style>
-        pickle-select:not([defined]) :not([slot=toggle]) {
+        pickle-select:not([defined]) > :not([slot=toggle]) {
             display: none;
         }
     </style>
@@ -51,7 +51,7 @@
     </header>
     <div class="container">
         <h3>Things to think about</h3>
-        <ul>
+        <ol>
             <li>
                 <del>What about aggregating a 'change' event?</del>
             </li>
@@ -59,19 +59,19 @@
                 <del>What happens when adding a new [selected] pickle-option to a pickle-select?</del>
             </li>
             <li>
-                What about replacing the whole list of options in the pickle-select?
+                <del>What about replacing the whole list of options in the pickle-select?</del>
+            </li>
+            <li>
+                <del>Best way to disable the filtering (including hiding the tool?)</del>
+            </li>
+            <li>
+                <del>Best way to left/right/top/bottom align the popup?</del>
             </li>
             <li>
                 What about a 'filter' event that can be canceled, providing a chance to fetch remotely filtered data and re-populate the
                 options?
             </li>
-            <li>
-                Best way to disable the filtering (including hiding the tool?)
-            </li>
-            <li>
-                Best way to left/right/top/bottom align the popup?
-            </li>
-        </ul>
+        </ol>
         <hr />
         <h3>Avoiding flash of unstyled content</h3>
         <p>
@@ -82,7 +82,7 @@
         <script>
             document.getElementById('fouc-snippet').textContent = `                
 <style>
-    pickle-select:not([defined]) :not([slot=toggle]) {
+    pickle-select:not([defined]) > :not([slot=toggle]) {
         display: none;
     }
 </style>
@@ -93,31 +93,29 @@
     <form class="container">
         <h3>Simple usage examples</h3>
         <hr />
-        <p id="link-example-container"></p>
+        <div style="margin-bottom: 10px">
+            <pickle-select name="links" type="navigation" data-title="Title for the pickle-select" no-filter align-right>
+                <button slot="toggle" class="btn btn-default">
+                    Links by setting [type=navigation], with [no-filter] and [align-right]
+                </button>
+                <pickle-option value="#" selected>
+                    Link one
+                </pickle-option>
+                <pickle-option value="#">
+                    Link two
+                </pickle-option>
+                <pickle-option value="#">
+                    Link three
+                </pickle-option>
+                <pickle-option value="#">
+                    <h4>Mark up and style option contents as you wish!</h4>
+                    <p style="color: red; text-decoration: underline;">It's flexible!</p>
+                </pickle-option>
+            </pickle-select>
+        </div>
         <pre id="link-example-snippet"></pre>
         <script>
-            const linkExample = `
-<pickle-select name="links" type="navigation" data-title="Title for the pickle-select">
-    <button slot="toggle" class="btn btn-default">
-        Links by setting [type=navigation]
-    </button>
-    <pickle-option value="#" selected>
-        Link one
-    </pickle-option>
-    <pickle-option value="#">
-        Link two
-    </pickle-option>
-    <pickle-option value="#">
-        Link three
-    </pickle-option>
-    <pickle-option value="#">
-        <h4>Mark up and style option contents as you wish!</h4>
-        <p style="color: red; text-decoration: underline;">It's flexible!</p>
-    </pickle-option>
-</pickle-select>
-            `;
-            document.getElementById('link-example-container').innerHTML = linkExample;
-            document.getElementById('link-example-snippet').textContent = linkExample.trim();
+            document.getElementById('link-example-snippet').textContent = document.querySelector('[name=links]').outerHTML;
         </script>
         <hr />
         <pickle-select name="radios" type="radio" data-title="Title for the pickle-select">

@@ -1,6 +1,8 @@
 $select: 'pickle-select';
-$expanded: '[aria-expanded=true]' !default;
-$tool: 'slot[name=tool] > *' !default;
+$expanded: '[aria-expanded=true]';
+$nofilter: '[no-filter]';
+$alignright: '[align-right]';
+$tool: 'slot[name=tool] > *';
 
 $option: 'pickle-option';
 $hover: ':hover';
