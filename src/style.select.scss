@@ -1,0 +1,153 @@
+$select: ':host' !default;
+$expanded: '([aria-expanded=true])' !default;
+$nofilter: '([no-filter])' !default;
+$alignright: '([align-right])' !default;
+$tool: 'slot[name=tool]::slotted(*)' !default;
+
+#{$select} {
+    position: relative;
+    display: inline-block;
+}
+
+.pickle-select-anchor {
+    position: absolute;
+	top: 0; 
+	left: 0; 
+	bottom: 0;
+    right: auto;
+	width: 0;
+}
+
+.pickle-select-popup {    
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
+    bottom: auto;
+    width: 300px;
+    z-index: 3000;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    touch-action: manipulation;
+    transform: none !important;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #111;
+    line-height: 20px;
+    font-size: 14px;
+    outline: none;
+}
+
+#{$select}#{$alignright} .pickle-select-anchor,
+#{$select}#{$alignright} .pickle-select-popup {
+    left: auto;
+    right: 0;
+}
+
+#{$select}#{$expanded} .pickle-select-popup {
+    display: block;
+}
+
+#{$select}#{$nofilter} .pickle-select-filter {
+    display: none;
+}
+
+.pickle-select-title, 
+.pickle-select-filter, 
+#{$tool} {
+    display: block;
+    padding: 7px 10px;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid gainsboro;
+    flex-shrink: 0;
+    flex-grow: 0;
+    line-height: 20px;
+}
+
+.pickle-select-title {    
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    color: #111;
+    font-weight: bold;
+}
+
+.pickle-select-close {
+    margin-left: auto;
+    flex: 0 0 auto;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    color: #BBB;
+}
+
+.pickle-select-close:hover {
+    cursor: pointer;
+    color: #111;
+}
+
+.pickle-select-filter input {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: inherit;
+    background-color: white;
+    background-image: none;
+    border: 1px solid #66afe9;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+        
+.pickle-select-filter input:focus {
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+
+.pickle-select-options {    
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 340px;
+    background-color: white;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+}
+    
+@media screen and (max-width: 767px) { 
+    .pickle-select-popup {
+        position: fixed;
+        width: auto;
+        max-width: none;
+        top: 0;
+        left: 0 !important;
+        bottom: 0;
+        right: 0 !important;
+        margin: 0;
+        border-radius: 0;
+        border-width: 0;
+    }
+
+    #{$select}#{$expanded} .pickle-select-popup {
+        z-index: 3000;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pickle-select-title {
+        padding: 15px 10px;
+    }
+    
+    .pickle-select-options {  
+        max-height: none;
+        height: auto;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+}

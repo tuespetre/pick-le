@@ -1,0 +1,15 @@
+$select: 'pickle-select';
+$expanded: '[aria-expanded=true]';
+$nofilter: '[no-filter]';
+$alignright: '[align-right]';
+$tool: 'slot[name=tool] > *';
+
+$option: 'pickle-option';
+$hover: ':hover';
+$active: ':active';
+$focus: ':focus';
+$highlight: '[data-pickle-highlight]';
+$filtered: '[data-pickle-filtered]';
+
+@import 'style.select.scss';
+@import 'style.option.scss';

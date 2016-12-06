@@ -6,7 +6,8 @@ var gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     replace = require('gulp-replace'),
     minifyCss = require('gulp-minify-css'),
-    uglify = require('gulp-uglify'),
+    rename = require('gulp-rename'),
+    //uglify = require('gulp-uglify'),
     fs = require('fs');
     
 var injectRegex = /inject\(([\w\.\-\/]+)\)/g;
@@ -27,7 +28,7 @@ gulp.task('html', function () {
         .pipe(gulp.dest('build'));
 });
 
-gulp.task('js', ['css', 'html'], function () {
+gulp.task('es5', ['css', 'html'], function () {
     return gulp.src('src/pick-le.js')
         .pipe(replace(injectRegex, function (found) {
             var match = injectRegex.exec(found);
@@ -37,11 +38,24 @@ gulp.task('js', ['css', 'html'], function () {
         .pipe(babel({
 			presets: ['es2015']
 		}))
-        .pipe(uglify().on('error', util.log))
+        //.pipe(uglify().on('error', util.log))
+        .pipe(rename('pick-le.es5.js'))
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['js']);
+gulp.task('es2015', ['css', 'html'], function () {
+    return gulp.src('src/pick-le.js')
+        .pipe(replace(injectRegex, function (found) {
+            var match = injectRegex.exec(found);
+            while (injectRegex.exec(found) !== null);
+            return fs.readFileSync(match[1], 'utf8');
+        }))
+        //.pipe(uglify().on('error', util.log))
+        .pipe(rename('pick-le.js'))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', ['es2015', 'es5']);
 
 gulp.task('watch', function () {
     gulp.watch(['src/*'], ['build']);

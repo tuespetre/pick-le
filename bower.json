@@ -1,0 +1,21 @@
+{
+  "name": "pick-le",
+  "description": "A select-enhancing web component inspired by GitHub's Issue Tracker",
+  "main": "",
+  "authors": [
+    "Derek Gray"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/tuespetre/pick-le",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {    
+    "tuespetre/shadow-dom": "latest"
+  }
+}

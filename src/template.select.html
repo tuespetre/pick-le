@@ -1,0 +1,18 @@
+<slot name="toggle" class="pickle-select-toggle-slot"></slot>
+<div class="pickle-select-anchor">
+    <div class="pickle-select-popup" tabindex="-1">
+        <div class="pickle-select-title">
+            <span class="private-title"></span>
+            <span class="pickle-select-close">
+                &#x2716;&#xfe0e;
+            </span>
+        </div>
+        <slot name="tool"></slot>
+        <div class="pickle-select-filter">
+            <input type="search" autocomplete="off" tabindex="-1" data-value="" />
+        </div>
+        <div class="pickle-select-options">
+            <slot class="pickle-select-options-slot"></slot>
+        </div>
+    </div>
+</div>
