@@ -4,7 +4,6 @@
     const smallScreenMediaQuery = window.matchMedia('screen and (max-width: 767px)');
     const shadowDomPolyfilled = window.shadowDomPolyfilled;
     const nativeShadowDom = !shadowDomPolyfilled;
-    let detailsElementPolyfilled = false;
 
     const FRAG = strings => {
         const fragment = document.createDocumentFragment();
@@ -109,67 +108,6 @@
 
     })();
 
-    // Little polyfill for <details> if needed (IE...)
-    if (!('HTMLDetailsElement' in window)) {
-        detailsElementPolyfilled = true;
-
-        const detailsStyle = document.createElement('style');
-        detailsStyle.textContent = `
-            details:not([open]) > :not(summary) {
-                display: none;
-            }
-        `;
-        document.head.insertBefore(detailsStyle, document.head.firstChild);
-
-        Object.defineProperty(HTMLUnknownElement.prototype, 'open', {
-            get: function () {
-                return this.hasAttribute('open');
-            },
-            set: function (value) {
-                if (value === false) {
-                    this.removeAttribute('open');
-                }
-                else {
-                    this.setAttribute('open', '');
-                }
-            }
-        });
-
-        function queueDetailsNotificationTask(details) {
-            if (details._notificationTaskQueued) {
-                return;
-            }
-            details._notificationTaskQueued = true;
-            setTimeout(function () {
-                details._notificationTaskQueued = false;
-                details.open = !details.open;
-                const toggle = document.createEvent('event');
-                toggle.initEvent('toggle', true, false);
-                details.dispatchEvent(toggle);
-            });
-        }
-
-        document.addEventListener('click', function (event) {
-            const summary = event.target.closest('summary');
-            if (summary) {
-                queueDetailsNotificationTask(summary.parentNode);
-            }
-        });
-
-        document.addEventListener('keydown', function (event) {
-            const summary = event.target.closest('summary');
-            if (summary) {
-                switch (event.key || event.which || event.keyCode) {
-                    case ' ': case 'Spacebar': case 32:
-                    case 'Enter': case 13:
-                        queueDetailsNotificationTask(summary.parentNode);
-                        event.preventDefault();
-                        break;
-                }
-            }
-        });
-    }
-
     function isPickleOption(node) {
         return node.nodeType === Node.ELEMENT_NODE
             && node.localName === 'pickle-option';
@@ -201,10 +139,6 @@
         }
     }
 
-    function getAncestorDetails(control) {
-        return control.closest('details');
-    }
-
     function getAncestorSelect(option) {
         return option.closest('pickle-select');
     }
@@ -214,15 +148,15 @@
     }
 
     function getOptionsContainer(control) {
-        return control.shadowRoot.querySelector('.options-container');
+        return control.shadowRoot.querySelector('.pickle-select-options');
     }
 
     function getOptionsSlot(control) {
-        return control.shadowRoot.querySelector('.options-slot');
+        return control.shadowRoot.querySelector('.pickle-select-options-slot');
     }
 
     function getFilterInput(control) {
-        return control.shadowRoot.querySelector('.filter input');
+        return control.shadowRoot.querySelector('.pickle-select-filter input');
     }
 
     function getFirstHighlightedOption(control) {
@@ -239,6 +173,14 @@
 
     function getFocusTarget(control) {
         return getFilterInput(control);
+    }
+
+    function getToggleSlot(control) {
+        return control.shadowRoot.querySelector('.pickle-select-toggle-slot');
+    }
+
+    function getPopup(control) {
+        return control.shadowRoot.querySelector('.pickle-select-popup');
     }
 
     function scrollOptionIntoView(optionsContainer, option) {
@@ -308,12 +250,10 @@
     }
 
     function focusCollapsedTarget(control) {
-        const details = getAncestorDetails(control);
-        if (details) {
-            const summary = details.querySelector('summary');
-            if (summary) {
-                summary.focus();
-            }
+        const toggleSlot = getToggleSlot(control);
+        const assignedNodes = toggleSlot.assignedNodes();
+        if (assignedNodes.length) {
+            assignedNodes[0].focus();
         }
     }
 
@@ -354,7 +294,7 @@
         event.stopPropagation();
     }
 
-    function handleKeydown(event) {
+    function handleOptionsKeydown(event) {
         switch (event.key || event.which || event.keyCode) {
             case 'ArrowUp': case 'Up': case 38:
                 handleKeyNavigation(this, event, t => t.previousElementSibling);
@@ -365,7 +305,7 @@
                 break;
 
             case 'Escape': case 'Esc': case 27: {
-                getAncestorDetails(this).open = false;
+                this.expanded = false;
                 focusCollapsedTarget(this);
                 event.preventDefault();
                 event.stopPropagation();
@@ -386,7 +326,7 @@
                 break;
 
             case 'Tab': case 9:
-                getAncestorDetails(this).open = false;
+                this.expanded = false;
                 focusCollapsedTarget(this);
                 event.preventDefault();
                 event.stopPropagation();
@@ -406,41 +346,34 @@
     }
 
     function handleDocumentClick(event) {
-        const details = getAncestorDetails(this);
-        if (details.open && event.composedPath().indexOf(this) === -1) {
+        if (this.expanded && event.composedPath().indexOf(this) === -1) {
             getFilterInput(this).blur();
-            details.open = false;
+            this.expanded = false;
         }
     }
 
-    function handleDetailsToggle(event) {
-        const details = event.target;
-
-        if (details.open) {
-            const filterInput = getFilterInput(this);
-            const listener = respondToXsMediaQuery.bind(this);
+    function onExpandedChanged(control) {
+        if (control.expanded) {
+            const filterInput = getFilterInput(control);
+            const listener = respondToXsMediaQuery.bind(control);
             filterInput.value = null;
             filterInput.dataset.value = '';
-            filterOptions(this, null);
+            filterOptions(control, null);
             listener(smallScreenMediaQuery);
             smallScreenMediaQuery.addListener(listener);
 
-            let firstChecked = getFirstSelectedOption(this);
+            let firstChecked = getFirstSelectedOption(control);
             if (firstChecked) {
-                scrollOptionIntoView(getOptionsContainer(this), firstChecked);
+                scrollOptionIntoView(getOptionsContainer(control), firstChecked);
             }
 
-            if (!this.hasAttribute('tabindex')) {
-                this.setAttribute('tabindex', 0);
-            }
-
-            this.focus();
+            getPopup(control).focus();
         }
         else {
-            const listener = respondToXsMediaQuery.bind(this);
+            const listener = respondToXsMediaQuery.bind(control);
             listener(smallScreenMediaQuery);
             smallScreenMediaQuery.removeListener(listener);
-            ModalHelper.unregister(getOptionsContainer(this));
+            ModalHelper.unregister(getOptionsContainer(control));
         }
     }
 
@@ -555,40 +488,35 @@
 
             this.shadowRoot.appendChild(TEMPLATE_SELECT.cloneNode(true));
 
-            this.addEventListener('keydown', handleKeydown.bind(this));
+            const popup = getPopup(this);
+            popup.addEventListener('keydown', handleOptionsKeydown.bind(this));
 
-            this.shadowRoot.querySelector('.pickle-select-close').addEventListener('click', event => {
-                getAncestorDetails(this).open = false;
+            const toggleSlot = getToggleSlot(this);
+            toggleSlot.addEventListener('click', event => {
+                this.expanded = true;
+                event.preventDefault();
+            });
+
+            const closeButton = this.shadowRoot.querySelector('.pickle-select-close');
+            closeButton.addEventListener('click', event => {
+                this.expanded = false;
                 focusCollapsedTarget(this);
             });
 
             const filterInput = getFilterInput(this);
-
             filterInput.addEventListener('input', event => {
                 const oldValue = filterInput.dataset.value;
                 const newValue = event.target.value;
-
                 if (newValue !== oldValue) {
                     filterInput.dataset.value = newValue;
                     filterOptions(this, newValue);
                 }
             });
 
-            filterInput.addEventListener('keydown', handleKeydown.bind(this));
+            filterInput.addEventListener('keydown', handleOptionsKeydown.bind(this));
         }
 
         connectedCallback() {
-            const details = this.closest('details');
-            if (details) {
-                if (detailsElementPolyfilled) {
-                    const summary = details.querySelector('summary');
-                    if (summary) {
-                        summary.setAttribute('tabindex', '0');
-                    }
-                }
-                details.addEventListener('toggle', handleDetailsToggle.bind(this));
-            }
-
             document.addEventListener('click', handleDocumentClick.bind(this));
 
             getTitleElement(this).textContent = this.dataset.title;
@@ -599,6 +527,24 @@
 
         disconnectedCallback() {
             document.removeEventListener('click', handleDocumentClick.bind(this));
+        }
+
+        get expanded() {
+            return this.getAttribute('aria-expanded') === 'true';
+        }
+
+        set expanded(value) {
+            const oldValue = this.expanded;
+            const newValue = new Boolean(value);
+            if (oldValue != newValue) {
+                if (newValue == true) {
+                    this.setAttribute('aria-expanded', 'true');
+                }
+                else {
+                    this.removeAttribute('aria-expanded');
+                }
+                onExpandedChanged(this);
+            }
         }
 
         get type() {

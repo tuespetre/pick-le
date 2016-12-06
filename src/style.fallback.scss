@@ -1,6 +1,5 @@
-$select: 'pickle-select' !default;
-$focus: ':focus' !default;
-$details: 'details[open] pickle-select' !default;
+$select: 'pickle-select';
+$expanded: '[aria-expanded=true]' !default;
 $tool: 'slot[name=tool] > *' !default;
 
 $option: 'pickle-option';

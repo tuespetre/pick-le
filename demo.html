@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>pick-le demo</title>
+    <title>pickle-select demo</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="./bower_components/shadow-dom/dist/shadow-dom.js"></script>
     <script>
@@ -38,26 +38,7 @@
         })();
     </script>
     <style>
-        a {
-            color: fuchsia;
-        }
-        
-        details {
-            position: relative;
-        }
-        
-        summary {
-            display: flex;
-            border: 1px solid black;
-            border-radius: 3px;
-            padding: 6px 12px;
-        }
-        
-        ::-webkit-details-marker {
-            display: none;
-        }
-
-        selector-that-should-work {
+        pickle-select:not([defined]) :not([slot=toggle]) {
             display: none;
         }
     </style>
@@ -66,49 +47,68 @@
 <body>
     <header class="navbar navbar-default navbar-static-top">
         <div class="container">
-
         </div>
     </header>
+    <div class="container">        
+        <h3>Things to think about</h3>
+        <ul>
+            <li>
+                What about aggregating a 'change' event?
+            </li>
+            <li>
+                What happens when adding a new [selected] pickle-option to 
+                a pickle-select?
+            </li>
+            <li>
+                What about replacing the whole list of options in the pickle-select?
+            </li>
+            <li>
+                What about a 'filter' event that can be canceled, providing
+                a chance to fetch remotely filtered data and re-populate the options?
+            </li>
+            <li>
+                Best way to disable the filtering?
+            </li>
+            <li>
+                Best way to left/right/top/bottom align the popup?
+            </li>
+        </ul>
+        <hr />
+    </div>
     <form class="container">
-        <details>
-            <summary class="btn btn-default">
+        <pickle-select name="links" type="navigation" data-title="Title for the pickle-select">
+            <button slot="toggle" class="btn btn-default">
                 Links (like on GitHub issues)
-            </summary>
-            <pickle-select name="links" type="navigation" data-title="Title for the pick-le">
-                <pickle-option label="Link one label" value="#" selected>
-                    Link one
-                </pickle-option>
-                <pickle-option value="#">
-                    Link two
-                </pickle-option>
-                <pickle-option value="#">
-                    Link three
-                </pickle-option>
-                <pickle-option value="#" label="Just a label"></pickle-option>
-            </pickle-select>
-        </details>
+            </button>
+            <pickle-option label="Link one label" value="#" selected>
+                Link one
+            </pickle-option>
+            <pickle-option value="#">
+                Link two
+            </pickle-option>
+            <pickle-option value="#">
+                Link three
+            </pickle-option>
+            <pickle-option value="#" label="Just a label"></pickle-option>
+        </pickle-select>
         <hr />
-        <details>
-            <summary class="btn btn-default">
+        <pickle-select name="radios" type="radio" data-title="Title for the pickle-select">
+            <button slot="toggle" class="btn btn-default">
                 Single-select by setting [type=radio]
-            </summary>
-            <pickle-select name="radios" type="radio" data-title="Title for the pick-le">
-                <div slot="tool">
-                    This is where you can put an extra tool, maybe like a button or something!
-                </div>
-            </pickle-select>
-        </details>
+            </button>
+            <div slot="tool">
+                This is where you can put an extra tool, maybe like a button or something!
+            </div>
+        </pickle-select>
         <hr />
-        <details>
-            <summary class="btn btn-default">
+        <pickle-select name="checkboxes" type="checkbox" data-title="Title for the pickle-select">
+            <button slot="toggle" class="btn btn-default">
                 Multi-select by setting [type=checkbox]
-            </summary>
-            <pickle-select name="checkboxes" type="checkbox" data-title="Title for the pick-le">
-                <div slot="tool">
-                    This is where you can put an extra tool, maybe like a button or something!
-                </div>
-            </pickle-select>
-        </details>
+            </button>
+            <div slot="tool">
+                This is where you can put an extra tool, maybe like a button or something!
+            </div>
+        </pickle-select>
         <hr />
         <button type="submit" class="btn btn-primary">
             See the outputs in the query string
