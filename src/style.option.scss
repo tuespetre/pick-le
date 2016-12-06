@@ -20,7 +20,7 @@ $filtered: '([data-pickle-filtered])' !default;
     display: none;
 }
 
-#{$option} > label, #{$option} > a {
+.pickle-option-wrapper {
     display: flex;
     flex-flow: row nowrap;
     border: none;

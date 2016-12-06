@@ -53,7 +53,7 @@
         <h3>Things to think about</h3>
         <ul>
             <li>
-                What about aggregating a 'change' event?
+                <del>What about aggregating a 'change' event?</del>
             </li>
             <li>
                 What happens when adding a new [selected] pickle-option to 
@@ -67,7 +67,7 @@
                 a chance to fetch remotely filtered data and re-populate the options?
             </li>
             <li>
-                Best way to disable the filtering?
+                Best way to disable the filtering (including hiding the tool?)
             </li>
             <li>
                 Best way to left/right/top/bottom align the popup?
@@ -125,6 +125,7 @@
             option.textContent = 'Option ' + num;
             radios.appendChild(option);
         }
+
         var checkboxes = document.querySelector('[name=checkboxes]');
         for (var i = 0; i < 20; i++) {
             var num = i + 1;
@@ -133,6 +134,22 @@
             option.textContent = 'Option ' + num;
             checkboxes.appendChild(option);
         }
+        
+        checkboxes.addEventListener('change', function (event) {
+            var optionsNodeList = checkboxes.querySelectorAll('pickle-option');
+            var optionsArray = Array.prototype.slice.call(optionsNodeList);
+
+            var text = optionsArray
+                .filter(function (option) {
+                    return option.selected;
+                })
+                .map(function (option) {
+                    return option.text;
+                })
+                .join(', ');
+
+            console.log(text);
+        });
     </script>
 </body>
 

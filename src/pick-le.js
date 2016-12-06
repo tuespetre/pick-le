@@ -384,6 +384,7 @@
         this.setAttribute('data-pickle-highlight', '');
         
         const input = this.shadowRoot.querySelector('input');
+        const previousChecked = input.checked;
         switch (ancestorSelect.type) {
             case 'checkbox':
                 input.checked = !input.checked;
@@ -413,39 +414,33 @@
                 break;
         }
         this.selected = input.checked;
+        if (previousChecked !== input.checked) {
+            const change = document.createEvent('event');
+            change.initEvent('change', true, false);
+            this.dispatchEvent(change);
+        }
     }
 
     function renderOption(option) {
         const select = getAncestorSelect(option);
         const contents = document.importNode(TEMPLATE_OPTION, true);
-
+        const wrapper = contents.querySelector('.pickle-option-wrapper');
         const input = contents.querySelector('.pickle-option-input');
         input.checked = option.selected;
         input.value = option.value;
+        input.type = select.type;
+        input.name = select.name;
 
-        let wrapper = null;        
-        switch (select.type) {
-            case 'radio':
-            case 'checkbox':
-                input.type = select.type;
-                input.name = select.name;
-                wrapper = document.createElement('label');
-                break;
-            case 'navigation':
-                input.type = 'radio';
-                wrapper = document.createElement('a');
-                wrapper.href = option.value;
-                break;
+        if (select.type === 'navigation') {
+            wrapper.href = option.value;
         }
 
-        wrapper.appendChild(contents);
-        const existing = option.shadowRoot.firstElementChild;
-        if (existing) {
-            option.shadowRoot.replaceChild(wrapper, existing);
+        let firstChild;
+        while (firstChild = option.shadowRoot.firstChild) {
+            option.shadowRoot.removeChild(firstChild);
         }
-        else {
-            option.shadowRoot.appendChild(wrapper);
-        }
+        
+        option.shadowRoot.appendChild(contents);
     }
 
     function registerOptionForFormParticipation(option) {
