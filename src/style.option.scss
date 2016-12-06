@@ -47,6 +47,7 @@ $filtered: '([data-pickle-filtered])' !default;
     width: 25px;
     text-align: center;
     font-weight: bold;
+    flex: 0 0 auto;
 }
 
 .pickle-option-glyph svg {
@@ -75,5 +76,7 @@ $filtered: '([data-pickle-filtered])' !default;
 }
 
 .pickle-option-label:not(:empty) + .pickle-option-text:not(:empty) {
+    font-size: 12px;
+    color: #777;
     margin-top: 7px;
 }
