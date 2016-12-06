@@ -78,14 +78,21 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     flex: 0 0 auto;
     display: inline-block;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 20px;
     line-height: 20px;
     color: #BBB;
 }
 
 .pickle-select-close:hover {
-    cursor: pointer;
     color: #111;
+    cursor: pointer;
+}
+
+.pickle-select-close svg {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    fill: currentColor; 
 }
 
 .pickle-select-filter input {
@@ -142,6 +149,11 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
 
     .pickle-select-title {
         padding: 15px 10px;
+    }
+
+    .pickle-select-close svg {
+        width: 20px;
+        height: 20px;
     }
     
     .pickle-select-options {  
