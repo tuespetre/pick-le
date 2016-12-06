@@ -49,22 +49,21 @@
         <div class="container">
         </div>
     </header>
-    <div class="container">        
+    <div class="container">
         <h3>Things to think about</h3>
         <ul>
             <li>
                 <del>What about aggregating a 'change' event?</del>
             </li>
             <li>
-                What happens when adding a new [selected] pickle-option to 
-                a pickle-select?
+                <del>What happens when adding a new [selected] pickle-option to a pickle-select?</del>
             </li>
             <li>
                 What about replacing the whole list of options in the pickle-select?
             </li>
             <li>
-                What about a 'filter' event that can be canceled, providing
-                a chance to fetch remotely filtered data and re-populate the options?
+                What about a 'filter' event that can be canceled, providing a chance to fetch remotely filtered data and re-populate the
+                options?
             </li>
             <li>
                 Best way to disable the filtering (including hiding the tool?)
@@ -74,25 +73,52 @@
             </li>
         </ul>
         <hr />
+        <h3>Avoiding flash of unstyled content</h3>
+        <p>
+            The following &lt;style&gt; snippet can be used to ensure that only the
+            toggle button is shown until the custom element is defined:
+        </p>
+        <pre id="fouc-snippet"></pre>
+        <script>
+            document.getElementById('fouc-snippet').textContent = `                
+<style>
+    pickle-select:not([defined]) :not([slot=toggle]) {
+        display: none;
+    }
+</style>
+            `.trim();
+        </script>
+        <hr />
     </div>
     <form class="container">
-        <pickle-select name="links" type="navigation" data-title="Title for the pickle-select">
-            <button slot="toggle" class="btn btn-default">
-                Links (like on GitHub issues)
-            </button>
-            <pickle-option value="#" selected>
-                Link one
-            </pickle-option>
-            <pickle-option value="#">
-                Link two
-            </pickle-option>
-            <pickle-option value="#">
-                Link three
-            </pickle-option>
-            <pickle-option value="#">
-                <strong>Mark up and style option contents as you wish!</strong>
-            </pickle-option>
-        </pickle-select>
+        <h3>Simple usage examples</h3>
+        <hr />
+        <p id="link-example-container"></p>
+        <pre id="link-example-snippet"></pre>
+        <script>
+            const linkExample = `
+<pickle-select name="links" type="navigation" data-title="Title for the pickle-select">
+    <button slot="toggle" class="btn btn-default">
+        Links by setting [type=navigation]
+    </button>
+    <pickle-option value="#" selected>
+        Link one
+    </pickle-option>
+    <pickle-option value="#">
+        Link two
+    </pickle-option>
+    <pickle-option value="#">
+        Link three
+    </pickle-option>
+    <pickle-option value="#">
+        <h4>Mark up and style option contents as you wish!</h4>
+        <p style="color: red; text-decoration: underline;">It's flexible!</p>
+    </pickle-option>
+</pickle-select>
+            `;
+            document.getElementById('link-example-container').innerHTML = linkExample;
+            document.getElementById('link-example-snippet').textContent = linkExample.trim();
+        </script>
         <hr />
         <pickle-select name="radios" type="radio" data-title="Title for the pickle-select">
             <button slot="toggle" class="btn btn-default">
@@ -125,6 +151,14 @@
             option.textContent = 'Option ' + num;
             radios.appendChild(option);
         }
+        setTimeout(function () {
+            radios.querySelector('pickle-option').selected = true;
+            var newOption = document.createElement('pickle-option');
+            newOption.value = 21;
+            newOption.textContent = 'Inserted after the fact -- what happens?';
+            newOption.selected = true;
+            radios.appendChild(newOption);
+        });
 
         var checkboxes = document.querySelector('[name=checkboxes]');
         for (var i = 0; i < 20; i++) {
@@ -137,18 +171,14 @@
         
         checkboxes.addEventListener('change', function (event) {
             var optionsNodeList = checkboxes.querySelectorAll('pickle-option');
-            var optionsArray = Array.prototype.slice.call(optionsNodeList);
+            var options = Array.prototype.slice.call(optionsNodeList);
 
-            var text = optionsArray
-                .filter(function (option) {
-                    return option.selected;
-                })
-                .map(function (option) {
-                    return option.text;
-                })
+            var text = options
+                .filter(function (option) { return option.selected; })
+                .map(function (option) { return option.text; })
                 .join(', ');
 
-            console.log(text);
+            console.log(text || 'Select');
         });
     </script>
 </body>

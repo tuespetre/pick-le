@@ -373,6 +373,62 @@
         }
     }
 
+    function ensureOneSelectedOption(control) {
+        if (!control.isConnected) {
+            return;
+        }
+
+        let lastSelected = null;
+        forEachOption(control, option => {
+            if (option.selected) {
+                if (lastSelected !== null) {
+                    lastSelected.selected = false;
+                }
+                lastSelected = option;
+            }
+        });
+    }
+
+    function setOptionSelectedAttribute(option, selected) {
+        if (selected) {
+            option.setAttribute('selected', '');
+        }
+        else {
+            option.removeAttribute('selected');
+        }
+    }
+
+    function changeOptionSelected(option, selected = null) {
+        const ancestorSelect = getAncestorSelect(option);    
+        const input = option.shadowRoot.querySelector('input');
+        const oldState = input.checked;
+        let newState;
+
+        switch (ancestorSelect.type) {
+            case 'checkbox':
+                newState = (selected === null) ? !input.checked : selected;
+                input.checked = newState;
+                break;
+            case 'radio':
+            case 'navigation':
+                newState = (selected === null) ? true : selected;
+                input.checked = newState;
+                if (newState === true) {
+                    forEachOption(ancestorSelect, other => {
+                        if (other !== option) {
+                            other.removeAttribute('selected');
+                            other.shadowRoot.querySelector('input').checked = false;
+                        }
+                    });
+                }
+                break;
+        }
+
+        setOptionSelectedAttribute(option, newState);
+
+        return newState != oldState;
+    }
+
     function handleOptionClick(event) {
         const ancestorSelect = getAncestorSelect(this);
         if (ancestorSelect) {
@@ -383,41 +439,19 @@
         }
         this.setAttribute('data-pickle-highlight', '');
         
-        const input = this.shadowRoot.querySelector('input');
-        const previousChecked = input.checked;
+        if (changeOptionSelected(this)) {
+            const change = document.createEvent('event');
+            change.initEvent('change', true, false);
+            this.dispatchEvent(change);
+        }
+
+        // This is kind of like 'activation behavior' in HTML
         switch (ancestorSelect.type) {
-            case 'checkbox':
-                input.checked = !input.checked;
-                break;
-            case 'radio':
-                input.checked = true;
-                if (nativeShadowDom) {
-                    forEachOption(ancestorSelect, option => {
-                        if (option !== this) {
-                            option.selected = false;
-                            option.shadowRoot.querySelector('input').checked = false;
-                        }
-                    });
-                }
-                break;
-            case 'navigation':
-                input.checked = true;
-                forEachOption(ancestorSelect, option => {
-                    if (option !== this) {
-                        option.selected = false;
-                        option.shadowRoot.querySelector('input').checked = false;
-                    }
-                });
+            case 'navigation':                
                 if (event.composedPath()[0] === this) {
                     this.shadowRoot.querySelector('a').click();
                 }
                 break;
-        }
-        this.selected = input.checked;
-        if (previousChecked !== input.checked) {
-            const change = document.createEvent('event');
-            change.initEvent('change', true, false);
-            this.dispatchEvent(change);
         }
     }
 
@@ -428,11 +462,17 @@
         const input = contents.querySelector('.pickle-option-input');
         input.checked = option.selected;
         input.value = option.value;
-        input.type = select.type;
         input.name = select.name;
 
-        if (select.type === 'navigation') {
-            wrapper.href = option.value;
+        switch (select.type) {
+            case 'checkbox':
+            case 'radio':
+                input.type = select.type;
+                break;
+            case 'navigation':
+                input.type = 'radio';
+                wrapper.href = option.value;
+                break;
         }
 
         let firstChild;
@@ -449,7 +489,8 @@
         // See: https://github.com/w3c/webcomponents/issues/187
         const proxyInput = document.createElement('input');
         proxyInput.type = 'hidden';
-        document.addEventListener('submit', event => {
+        
+        const handler = event => {
             const ancestorSelect = getAncestorSelect(option);
             let participated = false;
             if (ancestorSelect && ancestorSelect.type !== 'navigation' && option.selected) {
@@ -463,7 +504,9 @@
             if (!participated && proxyInput.parentNode) {
                 proxyInput.parentNode.removeChild(proxyInput);
             }
-        }, true);
+        }
+
+        document.addEventListener('submit', handler, true);
     }
 
     class PickleSelect extends HTMLElement {
@@ -477,6 +520,14 @@
 
             const popup = getPopup(this);
             popup.addEventListener('keydown', handleOptionsKeydown.bind(this));
+
+            const optionsObserver = new MutationObserver(records => {
+                if (this.type === 'checkbox') {
+                    return;
+                }
+                ensureOneSelectedOption(this);
+            });
+            optionsObserver.observe(this, { childList: true });
 
             const toggleSlot = getToggleSlot(this);
             toggleSlot.addEventListener('click', event => {
@@ -507,6 +558,8 @@
             document.addEventListener('click', handleDocumentClick.bind(this));
 
             getTitleElement(this).textContent = this.dataset.title;
+
+            ensureOneSelectedOption(this);
 
             // Simulate the :defined pseudo-class
             this.setAttribute('defined', '');
@@ -576,14 +629,14 @@
             this.attachShadow({ mode: 'open' });
 
             this.addEventListener('click', handleOptionClick.bind(this));
-
-            if (nativeShadowDom) {
-                registerOptionForFormParticipation(this);
-            }
         }
 
         connectedCallback() {
             renderOption(this);
+
+            if (nativeShadowDom) {
+                registerOptionForFormParticipation(this);
+            }
 
             // Simulate the :defined pseudo-class
             this.setAttribute('defined', '');
@@ -602,11 +655,11 @@
         }
 
         set selected(value) {
-            if (new Boolean(value) == true) {
-                this.setAttribute('selected', '');
+            if (this.isConnected) {
+                changeOptionSelected(this, new Boolean(value) == true);
             }
             else {
-                this.removeAttribute('selected');
+                setOptionSelectedAttribute(this, new Boolean(value) == true);
             }
         }
 

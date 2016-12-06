@@ -36,8 +36,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     var TEMPLATE_SELECT = FRAG(_templateObject);
     var TEMPLATE_OPTION = FRAG(_templateObject2);
     var STYLE_SELECT = ':host{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .pickle-select-popup{display:block}.pickle-select-filter,.pickle-select-title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:14px;line-height:20px;color:#BBB}.pickle-select-close:hover{cursor:pointer;color:#111}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pickle-select-popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}:host([aria-expanded=true]) .pickle-select-popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pickle-select-title{padding:15px 10px}.pickle-select-options{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}';
-    var STYLE_OPTION = '.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}:host{display:block;margin:0;padding:0}:host(:active),:host(:focus),:host(:hover),:host([data-pickle-highlight]){background-color:#f5f5f5;outline:0}:host([data-pickle-filtered]){display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;border:none;border-bottom:1px solid #dcdcdc;padding:7px 25px 7px 0;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:25px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
-    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:14px;line-height:20px;color:#BBB}.pickle-select-close:hover{cursor:pointer;color:#111}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pickle-select-popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}pickle-select[aria-expanded=true] .pickle-select-popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pickle-select-title{padding:15px 10px}.pickle-select-options{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}pickle-option{display:block;margin:0;padding:0}pickle-option:active,pickle-option:focus,pickle-option:hover,pickle-option[data-pickle-highlight]{background-color:#f5f5f5;outline:0}pickle-option[data-pickle-filtered]{display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;border:none;border-bottom:1px solid #dcdcdc;padding:7px 25px 7px 0;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:25px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
+    var STYLE_OPTION = '.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}:host{display:block;margin:0;padding:0}:host(:active),:host(:focus),:host(:hover),:host([data-pickle-highlight]){background-color:#f5f5f5;outline:0}:host([data-pickle-filtered]){display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
+    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:14px;line-height:20px;color:#BBB}.pickle-select-close:hover{cursor:pointer;color:#111}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pickle-select-popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}pickle-select[aria-expanded=true] .pickle-select-popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pickle-select-title{padding:15px 10px}.pickle-select-options{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}pickle-option{display:block;margin:0;padding:0}pickle-option:active,pickle-option:focus,pickle-option:hover,pickle-option[data-pickle-highlight]{background-color:#f5f5f5;outline:0}pickle-option[data-pickle-filtered]{display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
 
     if (shadowDomPolyfilled) {
         var fallbackStyles = document.createElement('style');
@@ -395,9 +395,64 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         }
     }
 
-    function handleOptionClick(event) {
-        var _this = this;
+    function ensureOneSelectedOption(control) {
+        if (!control.isConnected) {
+            return;
+        }
 
+        var lastSelected = null;
+        forEachOption(control, function (option) {
+            if (option.selected) {
+                if (lastSelected !== null) {
+                    lastSelected.selected = false;
+                }
+                lastSelected = option;
+            }
+        });
+    }
+
+    function setOptionSelectedAttribute(option, selected) {
+        if (selected) {
+            option.setAttribute('selected', '');
+        } else {
+            option.removeAttribute('selected');
+        }
+    }
+
+    function changeOptionSelected(option) {
+        var selected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+        var ancestorSelect = getAncestorSelect(option);
+        var input = option.shadowRoot.querySelector('input');
+        var oldState = input.checked;
+        var newState = void 0;
+
+        switch (ancestorSelect.type) {
+            case 'checkbox':
+                newState = selected === null ? !input.checked : selected;
+                input.checked = newState;
+                break;
+            case 'radio':
+            case 'navigation':
+                newState = selected === null ? true : selected;
+                input.checked = newState;
+                if (newState === true) {
+                    forEachOption(ancestorSelect, function (other) {
+                        if (other !== option) {
+                            other.removeAttribute('selected');
+                            other.shadowRoot.querySelector('input').checked = false;
+                        }
+                    });
+                }
+                break;
+        }
+
+        setOptionSelectedAttribute(option, newState);
+
+        return newState != oldState;
+    }
+
+    function handleOptionClick(event) {
         var ancestorSelect = getAncestorSelect(this);
         if (ancestorSelect) {
             var firstHighlightedOption = getFirstHighlightedOption(ancestorSelect);
@@ -407,41 +462,19 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         }
         this.setAttribute('data-pickle-highlight', '');
 
-        var input = this.shadowRoot.querySelector('input');
-        var previousChecked = input.checked;
+        if (changeOptionSelected(this)) {
+            var change = document.createEvent('event');
+            change.initEvent('change', true, false);
+            this.dispatchEvent(change);
+        }
+
+        // This is kind of like 'activation behavior' in HTML
         switch (ancestorSelect.type) {
-            case 'checkbox':
-                input.checked = !input.checked;
-                break;
-            case 'radio':
-                input.checked = true;
-                if (nativeShadowDom) {
-                    forEachOption(ancestorSelect, function (option) {
-                        if (option !== _this) {
-                            option.selected = false;
-                            option.shadowRoot.querySelector('input').checked = false;
-                        }
-                    });
-                }
-                break;
             case 'navigation':
-                input.checked = true;
-                forEachOption(ancestorSelect, function (option) {
-                    if (option !== _this) {
-                        option.selected = false;
-                        option.shadowRoot.querySelector('input').checked = false;
-                    }
-                });
                 if (event.composedPath()[0] === this) {
                     this.shadowRoot.querySelector('a').click();
                 }
                 break;
-        }
-        this.selected = input.checked;
-        if (previousChecked !== input.checked) {
-            var change = document.createEvent('event');
-            change.initEvent('change', true, false);
-            this.dispatchEvent(change);
         }
     }
 
@@ -452,11 +485,17 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         var input = contents.querySelector('.pickle-option-input');
         input.checked = option.selected;
         input.value = option.value;
-        input.type = select.type;
         input.name = select.name;
 
-        if (select.type === 'navigation') {
-            wrapper.href = option.value;
+        switch (select.type) {
+            case 'checkbox':
+            case 'radio':
+                input.type = select.type;
+                break;
+            case 'navigation':
+                input.type = 'radio';
+                wrapper.href = option.value;
+                break;
         }
 
         var firstChild = void 0;
@@ -473,7 +512,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         // See: https://github.com/w3c/webcomponents/issues/187
         var proxyInput = document.createElement('input');
         proxyInput.type = 'hidden';
-        document.addEventListener('submit', function (event) {
+
+        var handler = function handler(event) {
             var ancestorSelect = getAncestorSelect(option);
             var participated = false;
             if (ancestorSelect && ancestorSelect.type !== 'navigation' && option.selected) {
@@ -487,7 +527,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             if (!participated && proxyInput.parentNode) {
                 proxyInput.parentNode.removeChild(proxyInput);
             }
-        }, true);
+        };
+
+        document.addEventListener('submit', handler, true);
     }
 
     var PickleSelect = function (_HTMLElement) {
@@ -496,39 +538,47 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         function PickleSelect() {
             _classCallCheck(this, PickleSelect);
 
-            var _this2 = _possibleConstructorReturn(this, (PickleSelect.__proto__ || Object.getPrototypeOf(PickleSelect)).call(this));
+            var _this = _possibleConstructorReturn(this, (PickleSelect.__proto__ || Object.getPrototypeOf(PickleSelect)).call(this));
 
-            _this2.attachShadow({ mode: 'open' });
+            _this.attachShadow({ mode: 'open' });
 
-            _this2.shadowRoot.appendChild(TEMPLATE_SELECT.cloneNode(true));
+            _this.shadowRoot.appendChild(TEMPLATE_SELECT.cloneNode(true));
 
-            var popup = getPopup(_this2);
-            popup.addEventListener('keydown', handleOptionsKeydown.bind(_this2));
+            var popup = getPopup(_this);
+            popup.addEventListener('keydown', handleOptionsKeydown.bind(_this));
 
-            var toggleSlot = getToggleSlot(_this2);
+            var optionsObserver = new MutationObserver(function (records) {
+                if (_this.type === 'checkbox') {
+                    return;
+                }
+                ensureOneSelectedOption(_this);
+            });
+            optionsObserver.observe(_this, { childList: true });
+
+            var toggleSlot = getToggleSlot(_this);
             toggleSlot.addEventListener('click', function (event) {
-                _this2.expanded = !_this2.expanded;
+                _this.expanded = !_this.expanded;
                 event.preventDefault();
             });
 
-            var closeButton = _this2.shadowRoot.querySelector('.pickle-select-close');
+            var closeButton = _this.shadowRoot.querySelector('.pickle-select-close');
             closeButton.addEventListener('click', function (event) {
-                _this2.expanded = false;
-                focusCollapsedTarget(_this2);
+                _this.expanded = false;
+                focusCollapsedTarget(_this);
             });
 
-            var filterInput = getFilterInput(_this2);
+            var filterInput = getFilterInput(_this);
             filterInput.addEventListener('input', function (event) {
                 var oldValue = filterInput.dataset.value;
                 var newValue = event.target.value;
                 if (newValue !== oldValue) {
                     filterInput.dataset.value = newValue;
-                    filterOptions(_this2, newValue);
+                    filterOptions(_this, newValue);
                 }
             });
 
-            filterInput.addEventListener('keydown', handleOptionsKeydown.bind(_this2));
-            return _this2;
+            filterInput.addEventListener('keydown', handleOptionsKeydown.bind(_this));
+            return _this;
         }
 
         _createClass(PickleSelect, [{
@@ -537,6 +587,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 document.addEventListener('click', handleDocumentClick.bind(this));
 
                 getTitleElement(this).textContent = this.dataset.title;
+
+                ensureOneSelectedOption(this);
 
                 // Simulate the :defined pseudo-class
                 this.setAttribute('defined', '');
@@ -606,22 +658,22 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         function PickleOption() {
             _classCallCheck(this, PickleOption);
 
-            var _this3 = _possibleConstructorReturn(this, (PickleOption.__proto__ || Object.getPrototypeOf(PickleOption)).call(this));
+            var _this2 = _possibleConstructorReturn(this, (PickleOption.__proto__ || Object.getPrototypeOf(PickleOption)).call(this));
 
-            _this3.attachShadow({ mode: 'open' });
+            _this2.attachShadow({ mode: 'open' });
 
-            _this3.addEventListener('click', handleOptionClick.bind(_this3));
-
-            if (nativeShadowDom) {
-                registerOptionForFormParticipation(_this3);
-            }
-            return _this3;
+            _this2.addEventListener('click', handleOptionClick.bind(_this2));
+            return _this2;
         }
 
         _createClass(PickleOption, [{
             key: 'connectedCallback',
             value: function connectedCallback() {
                 renderOption(this);
+
+                if (nativeShadowDom) {
+                    registerOptionForFormParticipation(this);
+                }
 
                 // Simulate the :defined pseudo-class
                 this.setAttribute('defined', '');
@@ -640,10 +692,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 return this.hasAttribute('selected');
             },
             set: function set(value) {
-                if (new Boolean(value) == true) {
-                    this.setAttribute('selected', '');
+                if (this.isConnected) {
+                    changeOptionSelected(this, new Boolean(value) == true);
                 } else {
-                    this.removeAttribute('selected');
+                    setOptionSelectedAttribute(this, new Boolean(value) == true);
                 }
             }
         }, {
