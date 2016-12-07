@@ -32,17 +32,12 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
     touch-action: manipulation;
     transform: none !important;
+    
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #111;
     line-height: 20px;
     font-size: 14px;
     outline: none;
-}
-
-#{$select}#{$alignright} .pickle-select-anchor,
-#{$select}#{$alignright} .pickle-select-popup {
-    left: auto;
-    right: 0;
 }
 
 #{$select}#{$expanded} .pickle-select-popup {
@@ -127,24 +122,20 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     -webkit-overflow-scrolling: touch;
 }
     
-@media screen and (max-width: 767px) { 
-    .pickle-select-popup {
-        position: fixed;
-        width: auto;
-        max-width: none;
-        top: 0;
-        left: 0 !important;
-        bottom: 0;
-        right: 0 !important;
-        margin: 0;
-        border-radius: 0;
-        border-width: 0;
+@media screen and (max-width: 767px) {
+    #{$select} {
+        display: block;
     }
 
-    #{$select}#{$expanded} .pickle-select-popup {
-        z-index: 3000;
-        display: flex;
-        flex-direction: column;
+    .pickle-select-anchor,
+    .pickle-select-popup {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: auto;
+        bottom: auto;
+        margin: 0;
     }
 
     .pickle-select-title {
@@ -155,11 +146,12 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
         width: 20px;
         height: 20px;
     }
-    
-    .pickle-select-options {  
-        max-height: none;
-        height: auto;
-        flex-grow: 1;
-        flex-shrink: 1;
+}
+
+@media screen and (min-width: 768px) {
+    #{$select}#{$alignright} .pickle-select-anchor,
+    #{$select}#{$alignright} .pickle-select-popup {
+        left: auto;
+        right: 0;
     }
 }

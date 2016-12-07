@@ -3,20 +3,19 @@
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _templateObject = _taggedTemplateLiteral(['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="search" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"><slot class="pickle-select-options-slot"></slot></div></div></div>'], ['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="search" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"><slot class="pickle-select-options-slot"></slot></div></div></div>']),
-    _templateObject2 = _taggedTemplateLiteral(['<a class="pickle-option-wrapper"><input class="pickle-option-input" type="radio"> <span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><slot></slot></div></a>'], ['<a class="pickle-option-wrapper"><input class="pickle-option-input" type="radio"> <span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><slot></slot></div></a>']);
+    _templateObject2 = _taggedTemplateLiteral(['<div class="pickle-option-wrapper"><input class="pickle-option-input" type="radio"> <span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><slot></slot></div></div>'], ['<div class="pickle-option-wrapper"><input class="pickle-option-input" type="radio"> <span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><slot></slot></div></div>']);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 (function () {
     'use strict';
 
-    var smallScreenMediaQuery = window.matchMedia('screen and (max-width: 767px)');
     var shadowDomPolyfilled = window.shadowDomPolyfilled;
     var nativeShadowDom = !shadowDomPolyfilled;
 
@@ -35,9 +34,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
     var TEMPLATE_SELECT = FRAG(_templateObject);
     var TEMPLATE_OPTION = FRAG(_templateObject2);
-    var STYLE_SELECT = ':host{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([align-right]) .pickle-select-anchor,:host([align-right]) .pickle-select-popup{left:auto;right:0}:host([aria-expanded=true]) .pickle-select-popup{display:block}:host([no-filter]) .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pickle-select-popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}:host([aria-expanded=true]) .pickle-select-popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pickle-select-title{padding:15px 10px}.pickle-select-close svg{width:20px;height:20px}.pickle-select-options{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}';
-    var STYLE_OPTION = '.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}:host{display:block;margin:0;padding:0}:host(:active),:host(:focus),:host(:hover),:host([data-pickle-highlight]){background-color:#f5f5f5;outline:0}:host([data-pickle-filtered]){display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
-    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[align-right] .pickle-select-anchor,pickle-select[align-right] .pickle-select-popup{left:auto;right:0}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}pickle-select[no-filter] .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-option-wrapper,.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover{color:#111;text-decoration:none}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){.pickle-select-popup{position:fixed;width:auto;max-width:none;top:0;left:0!important;bottom:0;right:0!important;margin:0;border-radius:0;border-width:0}pickle-select[aria-expanded=true] .pickle-select-popup{z-index:3000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.pickle-select-title{padding:15px 10px}.pickle-select-close svg{width:20px;height:20px}.pickle-select-options{max-height:none;height:auto;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}}pickle-option{display:block;margin:0;padding:0}pickle-option:active,pickle-option:focus,pickle-option:hover,pickle-option[data-pickle-highlight]{background-color:#f5f5f5;outline:0}pickle-option[data-pickle-filtered]{display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
+    var STYLE_SELECT = ':host{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .pickle-select-popup{display:block}:host([no-filter]) .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){:host{display:block}.pickle-select-anchor,.pickle-select-popup{position:absolute;top:100%;left:0;right:0;width:auto;bottom:auto;margin:0}.pickle-select-title{padding:15px 10px}.pickle-select-close svg{width:20px;height:20px}}@media screen and (min-width:768px){:host([align-right]) .pickle-select-anchor,:host([align-right]) .pickle-select-popup{left:auto;right:0}}';
+    var STYLE_OPTION = ':host{display:block;margin:0;padding:0}:host([data-pickle-highlight]){background-color:#f5f5f5;outline:0}:host([data-pickle-filtered]){display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-wrapper:active,.pickle-option-wrapper:focus{color:#111;text-decoration:none;background-color:#f5f5f5;outline:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
+    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-select-anchor{position:absolute;top:0;left:0;bottom:0;right:auto;width:0}.pickle-select-popup{display:none;position:absolute;top:100%;left:0;right:auto;bottom:auto;width:300px;z-index:3000;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);-ms-touch-action:manipulation;touch-action:manipulation;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;outline:0}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}pickle-select[no-filter] .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}@media screen and (max-width:767px){pickle-select{display:block}.pickle-select-anchor,.pickle-select-popup{position:absolute;top:100%;left:0;right:0;width:auto;bottom:auto;margin:0}.pickle-select-title{padding:15px 10px}.pickle-select-close svg{width:20px;height:20px}}@media screen and (min-width:768px){pickle-select[align-right] .pickle-select-anchor,pickle-select[align-right] .pickle-select-popup{left:auto;right:0}}pickle-option{display:block;margin:0;padding:0}pickle-option[data-pickle-highlight]{background-color:#f5f5f5;outline:0}pickle-option[data-pickle-filtered]{display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;position:relative;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-wrapper:active,.pickle-option-wrapper:focus{color:#111;text-decoration:none;background-color:#f5f5f5;outline:0}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-input:checked+.pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}';
 
     if (shadowDomPolyfilled) {
         var fallbackStyles = document.createElement('style');
@@ -51,80 +50,6 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         optionStyles.textContent = STYLE_OPTION;
         TEMPLATE_OPTION.insertBefore(optionStyles, TEMPLATE_OPTION.firstChild);
     }
-
-    var ModalHelper = function () {
-
-        var instances = 0;
-        var capturedOverflow = '';
-        var capturedScrollTop = 0;
-
-        var HelperContext = function () {
-            function HelperContext(element) {
-                _classCallCheck(this, HelperContext);
-
-                this.lastY = 0;
-                this.element = element;
-                element.addEventListener('touchstart', this.onTouchStart.bind(this));
-                element.addEventListener('touchmove', this.onTouchMove.bind(this));
-            }
-
-            _createClass(HelperContext, [{
-                key: 'onTouchStart',
-                value: function onTouchStart(event) {
-                    var currentY = event.touches[0].clientY;
-
-                    this.lastY = currentY;
-                }
-            }, {
-                key: 'onTouchMove',
-                value: function onTouchMove(event) {
-                    var currentY = event.touches[0].clientY;
-                    var top = this.element.scrollTop;
-                    var totalScroll = this.element.scrollHeight;
-                    var currentScroll = top + this.element.offsetHeight;
-
-                    var scrollingUp = currentY > this.lastY;
-                    var scrollingDown = currentY < this.lastY;
-                    var cannotScrollUp = top === 0;
-                    var cannotScrollDown = currentScroll === totalScroll;
-
-                    if (scrollingUp && cannotScrollUp || scrollingDown && cannotScrollDown) {
-                        event.preventDefault();
-                    }
-
-                    this.lastY = currentY;
-                }
-            }]);
-
-            return HelperContext;
-        }();
-
-        ;
-
-        return {
-            register: function register(element) {
-                if (!element._modalHelperContext) {
-                    var context = new HelperContext(element);
-                    element._modalHelperContext = context;
-                }
-                instances++;
-                if (instances === 1) {
-                    capturedOverflow = document.documentElement.style.overflow;
-                    document.documentElement.style.overflow = 'hidden';
-                }
-            },
-            unregister: function unregister(element) {
-                if (instances === 0) {
-                    return;
-                }
-                instances--;
-                if (instances === 0) {
-                    document.documentElement.style.overflow = capturedOverflow;
-                    capturedOverflow = '';
-                }
-            }
-        };
-    }();
 
     function isPickleOption(node) {
         return node.nodeType === Node.ELEMENT_NODE && node.localName === 'pickle-option';
@@ -273,16 +198,6 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         }
     }
 
-    function respondToXsMediaQuery(query) {
-        var optionsContainer = getOptionsContainer(this);
-
-        if (query.matches) {
-            ModalHelper.register(optionsContainer);
-        } else {
-            ModalHelper.unregister(optionsContainer);
-        }
-    }
-
     function handleKeyNavigation(control, event, getSibling) {
         var highlightedOption = getFirstHighlightedOption(control) || getFirstSelectedOption(control);
 
@@ -374,12 +289,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     function onExpandedChanged(control) {
         if (control.expanded) {
             var filterInput = getFilterInput(control);
-            var listener = respondToXsMediaQuery.bind(control);
             filterInput.value = null;
             filterInput.dataset.value = '';
             filterOptions(control, null);
-            listener(smallScreenMediaQuery);
-            smallScreenMediaQuery.addListener(listener);
 
             var firstChecked = getFirstSelectedOption(control);
             if (firstChecked) {
@@ -387,11 +299,6 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             }
 
             getPopup(control).focus();
-        } else {
-            var _listener = respondToXsMediaQuery.bind(control);
-            _listener(smallScreenMediaQuery);
-            smallScreenMediaQuery.removeListener(_listener);
-            ModalHelper.unregister(getOptionsContainer(control));
         }
     }
 
@@ -472,7 +379,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         switch (ancestorSelect.type) {
             case 'navigation':
                 if (event.composedPath()[0] === this) {
-                    this.shadowRoot.querySelector('a').click();
+                    window.location.href = this.value;
                 }
                 break;
         }
@@ -494,7 +401,6 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 break;
             case 'navigation':
                 input.type = 'radio';
-                wrapper.href = option.value;
                 break;
         }
 

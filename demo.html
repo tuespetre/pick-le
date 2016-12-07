@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>pickle-select demo</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="./bower_components/shadow-dom/dist/shadow-dom.js"></script>
@@ -95,7 +96,7 @@
         <hr />
         <div style="margin-bottom: 10px">
             <pickle-select name="links" type="navigation" data-title="Title for the pickle-select" no-filter align-right>
-                <button slot="toggle" class="btn btn-default">
+                <button slot="toggle" class="btn btn-default" style="white-space: normal;">
                     Links by setting [type=navigation], with [no-filter] and [align-right]
                 </button>
                 <pickle-option value="#" selected>

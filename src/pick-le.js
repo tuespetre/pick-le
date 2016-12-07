@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    const smallScreenMediaQuery = window.matchMedia('screen and (max-width: 767px)');
     const shadowDomPolyfilled = window.shadowDomPolyfilled;
     const nativeShadowDom = !shadowDomPolyfilled;
 
@@ -37,76 +36,6 @@
         optionStyles.textContent = STYLE_OPTION;
         TEMPLATE_OPTION.insertBefore(optionStyles, TEMPLATE_OPTION.firstChild);
     }
-
-    const ModalHelper = (() => {
-
-        let instances = 0;
-        let capturedOverflow = '';
-        let capturedScrollTop = 0;
-
-        class HelperContext {
-
-            constructor(element) {
-                this.lastY = 0;
-                this.element = element;
-                element.addEventListener('touchstart', this.onTouchStart.bind(this));
-                element.addEventListener('touchmove', this.onTouchMove.bind(this));
-            }
-
-            onTouchStart(event) {
-                const currentY = event.touches[0].clientY;
-
-                this.lastY = currentY;
-            }
-
-            onTouchMove(event) {
-                const currentY = event.touches[0].clientY;
-                const top = this.element.scrollTop;
-                const totalScroll = this.element.scrollHeight;
-                const currentScroll = top + this.element.offsetHeight;
-
-                const scrollingUp = (currentY > this.lastY);
-                const scrollingDown = (currentY < this.lastY);
-                const cannotScrollUp = (top === 0);
-                const cannotScrollDown = (currentScroll === totalScroll);
-
-                if ((scrollingUp && cannotScrollUp) || (scrollingDown && cannotScrollDown)) {
-                    event.preventDefault();
-                }
-
-                this.lastY = currentY;
-            }
-
-        };
-
-        return {
-
-            register(element) {
-                if (!element._modalHelperContext) {
-                    const context = new HelperContext(element);
-                    element._modalHelperContext = context;
-                }
-                instances++;
-                if (instances === 1) {
-                    capturedOverflow = document.documentElement.style.overflow;
-                    document.documentElement.style.overflow = 'hidden';
-                }
-            },
-
-            unregister(element) {
-                if (instances === 0) {
-                    return;
-                }
-                instances--;
-                if (instances === 0) {
-                    document.documentElement.style.overflow = capturedOverflow;
-                    capturedOverflow = '';
-                }
-            }
-
-        };
-
-    })();
 
     function isPickleOption(node) {
         return node.nodeType === Node.ELEMENT_NODE
@@ -253,17 +182,6 @@
         }
     }
 
-    function respondToXsMediaQuery(query) {
-        const optionsContainer = getOptionsContainer(this);
-
-        if (query.matches) {
-            ModalHelper.register(optionsContainer);
-        }
-        else {
-            ModalHelper.unregister(optionsContainer);
-        }
-    }
-
     function handleKeyNavigation(control, event, getSibling) {
         let highlightedOption = getFirstHighlightedOption(control)
             || getFirstSelectedOption(control);
@@ -351,12 +269,9 @@
     function onExpandedChanged(control) {
         if (control.expanded) {
             const filterInput = getFilterInput(control);
-            const listener = respondToXsMediaQuery.bind(control);
             filterInput.value = null;
             filterInput.dataset.value = '';
             filterOptions(control, null);
-            listener(smallScreenMediaQuery);
-            smallScreenMediaQuery.addListener(listener);
 
             let firstChecked = getFirstSelectedOption(control);
             if (firstChecked) {
@@ -364,12 +279,6 @@
             }
 
             getPopup(control).focus();
-        }
-        else {
-            const listener = respondToXsMediaQuery.bind(control);
-            listener(smallScreenMediaQuery);
-            smallScreenMediaQuery.removeListener(listener);
-            ModalHelper.unregister(getOptionsContainer(control));
         }
     }
 
@@ -449,7 +358,7 @@
         switch (ancestorSelect.type) {
             case 'navigation':                
                 if (event.composedPath()[0] === this) {
-                    this.shadowRoot.querySelector('a').click();
+                    window.location.href = this.value;
                 }
                 break;
         }
@@ -471,7 +380,6 @@
                 break;
             case 'navigation':
                 input.type = 'radio';
-                wrapper.href = option.value;
                 break;
         }
 
