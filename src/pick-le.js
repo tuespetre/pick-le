@@ -358,7 +358,7 @@
         switch (ancestorSelect.type) {
             case 'navigation':                
                 if (event.composedPath()[0] === this) {
-                    window.location.href = this.value;
+                    this.shadowRoot.querySelector('a').click();
                 }
                 break;
         }
@@ -380,6 +380,7 @@
                 break;
             case 'navigation':
                 input.type = 'radio';
+                wrapper.href = option.value;
                 break;
         }
     }
@@ -530,7 +531,7 @@
             this.attachShadow({ mode: 'open' });
 
             this.shadowRoot.appendChild(document.importNode(TEMPLATE_OPTION, true));
-
+            
             this.addEventListener('click', handleOptionClick.bind(this));
         }
 
