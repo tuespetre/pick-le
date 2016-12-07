@@ -366,7 +366,7 @@
 
     function renderOption(option) {
         const select = getAncestorSelect(option);
-        const contents = document.importNode(TEMPLATE_OPTION, true);
+        const contents = option.shadowRoot;
         const wrapper = contents.querySelector('.pickle-option-wrapper');
         const input = contents.querySelector('.pickle-option-input');
         input.checked = option.selected;
@@ -382,13 +382,6 @@
                 input.type = 'radio';
                 break;
         }
-
-        let firstChild;
-        while (firstChild = option.shadowRoot.firstChild) {
-            option.shadowRoot.removeChild(firstChild);
-        }
-        
-        option.shadowRoot.appendChild(contents);
     }
 
     function registerOptionForFormParticipation(option) {
@@ -535,6 +528,8 @@
             super();
 
             this.attachShadow({ mode: 'open' });
+
+            this.shadowRoot.appendChild(document.importNode(TEMPLATE_OPTION, true));
 
             this.addEventListener('click', handleOptionClick.bind(this));
         }

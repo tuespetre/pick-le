@@ -13,7 +13,6 @@ $filtered: '([data-pickle-filtered])' !default;
 
 #{$option}#{$highlight} {
     background-color: #f5f5f5;
-    outline: none;
 }
 
 #{$option}#{$filtered} {
@@ -27,7 +26,6 @@ $filtered: '([data-pickle-filtered])' !default;
     border: none;
     border-bottom: 1px solid gainsboro;
     padding: 7px;
-    position: relative;
     cursor: pointer;
     color: #111;
     text-decoration: none;
@@ -35,13 +33,6 @@ $filtered: '([data-pickle-filtered])' !default;
     font-size: 14px;
     font-weight: normal;
     margin: 0;
-
-    &:active, &:focus {
-        color: #111;
-        text-decoration: none;
-        background-color: #f5f5f5;
-        outline: none;
-    }
 }
 
 .pickle-option-glyph {
@@ -72,4 +63,10 @@ $filtered: '([data-pickle-filtered])' !default;
 
 .pickle-option-contents {
     flex: 1 1 auto;
+}
+
+@media (min-width: 768px) {
+    .pickle-option-wrapper:hover {
+        background-color: #f5f5f5;
+    }
 }
