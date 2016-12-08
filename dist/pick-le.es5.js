@@ -310,12 +310,16 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             option.selected = true;
         }
 
-        if (option.selected != oldSelected) {
-            if (select.type === 'select-multiple') {
-                renderOption(wrapper, option);
-            } else {
-                forEachOption(this, function (wrapper) {
-                    renderOption(wrapper, wrapper.option);
+        if (option.selected !== oldSelected) {
+            renderOption(wrapper, option);
+            if (select.type !== 'select-multiple') {
+                forEachOption(this, function (other) {
+                    if (wrapper !== other) {
+                        // Necessary evil for browsers like IE
+                        var _option = other.option;
+                        _option.selected = false;
+                        renderOption(other, _option);
+                    }
                 });
             }
             var change = document.createEvent('event');
@@ -355,33 +359,34 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         }
         var selectChildren = select.children;
         var selectChildCount = selectChildren.length;
+        var optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
+        var fragment = document.createDocumentFragment();
         for (var i = 0; i < selectChildCount; i++) {
             var selectChild = selectChildren[i];
             if (selectChild.localName === 'option') {
-                var fragment = document.importNode(TEMPLATE_OPTION, true);
-                var wrapper = fragment.querySelector('.pickle-option');
+                var wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
                 wrapper.option = selectChild;
-                container.appendChild(wrapper);
+                fragment.appendChild(wrapper);
             } else if (selectChild.localName === 'optgroup') {
                 var optgroup = document.createElement('div');
                 optgroup.className = 'pickle-optgroup';
                 optgroup.textContent = selectChild.label;
-                container.appendChild(optgroup);
+                fragment.appendChild(optgroup);
                 var groupChildren = selectChild.children;
                 var groupChildCount = groupChildren.length;
                 for (var _i = 0; _i < groupChildCount; _i++) {
                     var groupChild = groupChildren[_i];
                     if (groupChild.localName === 'option') {
-                        var _fragment = document.importNode(TEMPLATE_OPTION, true);
-                        var _wrapper = _fragment.querySelector('.pickle-option');
+                        var _wrapper = optionTemplate.cloneNode(true);
                         renderOption(_wrapper, groupChild);
                         _wrapper.option = groupChild;
-                        container.appendChild(_wrapper);
+                        fragment.appendChild(_wrapper);
                     }
                 }
             }
         }
+        container.appendChild(fragment);
     }
 
     var PickleSelect = function (_HTMLElement) {
@@ -454,10 +459,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 if (oldValue != newValue) {
                     if (newValue == true) {
                         this.setAttribute('aria-expanded', 'true');
+                        onExpanded(this);
                     } else {
                         this.removeAttribute('aria-expanded');
                     }
-                    onExpanded(this);
                 }
             }
         }]);

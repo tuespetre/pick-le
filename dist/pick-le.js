@@ -290,13 +290,16 @@
             option.selected = true;
         }
 
-        if (option.selected != oldSelected) {
-            if (select.type === 'select-multiple') {
-                renderOption(wrapper, option);
-            }
-            else {
-                forEachOption(this, wrapper => {
-                    renderOption(wrapper, wrapper.option);
+        if (option.selected !== oldSelected) {
+            renderOption(wrapper, option);
+            if (select.type !== 'select-multiple') {
+                forEachOption(this, other => {
+                    if (wrapper !== other) {
+                        // Necessary evil for browsers like IE
+                        const option = other.option;
+                        option.selected = false;
+                        renderOption(other, option);
+                    }
                 });
             }
             const change = document.createEvent('event');
@@ -337,34 +340,35 @@
         }
         const selectChildren = select.children;
         const selectChildCount = selectChildren.length;
+        const optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
+        const fragment = document.createDocumentFragment();
         for (let i = 0; i < selectChildCount; i++) {
             const selectChild = selectChildren[i];
             if (selectChild.localName === 'option') {
-                const fragment = document.importNode(TEMPLATE_OPTION, true);
-                const wrapper = fragment.querySelector('.pickle-option');
+                const wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
                 wrapper.option = selectChild;
-                container.appendChild(wrapper);
+                fragment.appendChild(wrapper);
             }
             else if (selectChild.localName === 'optgroup') {
                 const optgroup = document.createElement('div');
                 optgroup.className = 'pickle-optgroup';
                 optgroup.textContent = selectChild.label;
-                container.appendChild(optgroup);
+                fragment.appendChild(optgroup);
                 const groupChildren = selectChild.children;
                 const groupChildCount = groupChildren.length;
                 for (let i = 0; i < groupChildCount; i++) {
                     const groupChild = groupChildren[i];
                     if (groupChild.localName === 'option') {
-                        const fragment = document.importNode(TEMPLATE_OPTION, true);
-                        const wrapper = fragment.querySelector('.pickle-option');
+                        const wrapper = optionTemplate.cloneNode(true);
                         renderOption(wrapper, groupChild);
                         wrapper.option = groupChild;
-                        container.appendChild(wrapper);
+                        fragment.appendChild(wrapper);
                     }
                 }
             }
         }
+        container.appendChild(fragment);
     }
 
     class PickleSelect extends HTMLElement {
@@ -430,11 +434,11 @@
             if (oldValue != newValue) {
                 if (newValue == true) {
                     this.setAttribute('aria-expanded', 'true');
+                    onExpanded(this);
                 }
                 else {
                     this.removeAttribute('aria-expanded');
                 }
-                onExpanded(this);
             }
         }
     }
