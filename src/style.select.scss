@@ -9,35 +9,52 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     display: inline-block;
 }
 
-.pickle-select-anchor {
-    position: absolute;
-	top: 0; 
-	left: 0; 
-	bottom: 0;
-    right: auto;
-	width: 0;
+/*
+    This ensures that the 'fallback content' and the <select>
+    are actually attached to the DOM in browsers that have
+    Shadow DOM polyfilled.
+*/
+.pickle-default-slot {
+    display: none !important;
 }
 
-.pickle-select-popup {    
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: auto;
-    bottom: auto;
-    width: 300px;
+.pickle-select-anchor {
+    min-width: 250px;
     z-index: 3000;
+    height: 0;
+}
+
+.pickle-select-anchor,
+.pickle-select-popup {
+    width: 100%;
+    position: absolute;
+	top: 100%; 
+    right: auto;
+	bottom: auto;
+	left: 0;
+}
+
+#{$select}#{$alignright} .pickle-select-anchor,
+#{$select}#{$alignright} .pickle-select-popup {
+    right: 0;
+    left: auto;
+}
+
+.pickle-select-popup {   
+    display: none;
+    box-sizing: border-box;
     border: 1px solid gainsboro;
     border-radius: 4px;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    touch-action: manipulation;
+    outline: none;
     transform: none !important;
     
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #111;
     line-height: 20px;
     font-size: 14px;
-    outline: none;
+
+    touch-action: manipulation;
 }
 
 #{$select}#{$expanded} .pickle-select-popup {
@@ -92,6 +109,7 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
 
 .pickle-select-filter input {
     display: block;
+    box-sizing: border-box;
     width: 100%;
     height: 34px;
     padding: 6px 12px;
@@ -121,37 +139,98 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     position: relative;
     -webkit-overflow-scrolling: touch;
 }
-    
-@media screen and (max-width: 767px) {
-    #{$select} {
-        display: block;
-    }
 
-    .pickle-select-anchor,
-    .pickle-select-popup {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        width: auto;
-        bottom: auto;
-        margin: 0;
-    }
-
-    .pickle-select-title {
-        padding: 15px 10px;
-    }
-
-    .pickle-select-close svg {
-        width: 20px;
-        height: 20px;
-    }
+.pickle-select-options-inner {
+    display: block;
+    overflow: visible;
+    width: 100%;
+    height: auto;
 }
 
-@media screen and (min-width: 768px) {
-    #{$select}#{$alignright} .pickle-select-anchor,
-    #{$select}#{$alignright} .pickle-select-popup {
-        left: auto;
-        right: 0;
-    }
+.pickle-optgroup {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    padding: 7px 7px 7px 28px;
+    border-bottom: 1px solid gainsboro;
+}
+
+.pickle-option {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    border: none;
+    border-bottom: 1px solid gainsboro;
+    padding: 7px;
+    cursor: pointer;
+    color: #111;
+    text-decoration: none;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+}
+
+.pickle-option[data-pickle-filtered] {
+    display: none;
+}
+
+.pickle-option:hover {
+    background-color: #f7f7f7;
+    text-decoration: none;
+    outline: none;
+    color: #111;
+}
+
+.pickle-option[data-pickle-highlighted] {
+    background-color: steelblue;
+    color: white;
+}
+
+.pickle-option-glyph {
+    opacity: 0;
+    height: 20px;
+    width: 14px;
+    margin-right: 7px;
+    text-align: center;
+    font-weight: bold;
+    flex: 0 0 auto;
+}
+
+.pickle-option-glyph svg {
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    margin-top: 3px;
+    fill: currentColor;
+}
+
+.pickle-option-input {
+    display: none;
+}
+
+.pickle-option[data-pickle-selected] .pickle-option-glyph {
+    opacity: 1;
+}
+
+.pickle-option-contents {
+    flex: 1 1 auto;
+}
+
+.pickle-option-label:not(:empty) {
+    display: block;
+    font-weight: bold;
+}
+
+.pickle-option-text:not(:empty) {
+    display: block;
+}
+
+.pickle-option-label:not(:empty) + .pickle-option-text:not(:empty) {
+    font-size: 90%;
+    margin-top: 5px;
+    color: #555;
+}
+
+.pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty) + .pickle-option-text:not(:empty) {
+    color: white;
 }
