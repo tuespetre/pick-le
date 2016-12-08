@@ -181,7 +181,7 @@
 
         let next = highlightedOption;
         while (next = getSibling(next)) {
-            if (next.classList.contains('pickle-option') && !next.dataset.pickleFiltered) {
+            if (next.classList.contains('pickle-option') && !next.hasAttribute('data-pickle-filtered')) {
                 highlightedOption.removeAttribute('data-pickle-highlighted');
                 next.setAttribute('data-pickle-highlighted', '');
                 scrollOptionIntoView(getOptionsContainer(control), next);
@@ -266,6 +266,13 @@
         let firstSelected = getFirstSelectedOption(control);
         if (firstSelected) {
             scrollOptionIntoView(getOptionsContainer(control), firstSelected);
+            firstSelected.setAttribute('data-pickle-highlighted', '');
+        }
+        else {
+            let firstVisible = getFirstVisibleOption(control);
+            if (firstVisible) {
+                firstVisible.setAttribute('data-pickle-highlighted', '');
+            }
         }
 
         getPopup(control).focus();
