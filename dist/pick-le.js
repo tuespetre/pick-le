@@ -155,6 +155,7 @@
 
         if (optionToHighlight) {
             optionToHighlight.setAttribute('data-pickle-highlighted', '');
+            scrollOptionIntoView(getOptionsContainer(control), optionToHighlight);
         }
     }
 
@@ -256,7 +257,11 @@
         const filterInput = getFilterInput(control);
         filterInput.value = null;
         filterInput.dataset.value = '';
-        filterOptions(control, null);
+        
+        forEachOption(control, option => {
+            option.removeAttribute('data-pickle-highlighted');
+            option.removeAttribute('data-pickle-filtered');
+        });
 
         let firstSelected = getFirstSelectedOption(control);
         if (firstSelected) {

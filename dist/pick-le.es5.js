@@ -172,6 +172,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
         if (optionToHighlight) {
             optionToHighlight.setAttribute('data-pickle-highlighted', '');
+            scrollOptionIntoView(getOptionsContainer(control), optionToHighlight);
         }
     }
 
@@ -277,7 +278,11 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         var filterInput = getFilterInput(control);
         filterInput.value = null;
         filterInput.dataset.value = '';
-        filterOptions(control, null);
+
+        forEachOption(control, function (option) {
+            option.removeAttribute('data-pickle-highlighted');
+            option.removeAttribute('data-pickle-filtered');
+        });
 
         var firstSelected = getFirstSelectedOption(control);
         if (firstSelected) {
