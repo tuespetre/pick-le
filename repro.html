@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+    </head>
+    <body>
+        <style>
+            .hover-me:hover {
+                color: red;
+            }
+        </style>
+        <h4>Link assigned to a first-level slot</h4>
+        <div id="div1">
+            <a href="#" class="hover-me" onclick="alert('clicked')">
+                I have to be clicked once
+            </a>
+        </div>
+        <div id="div2">
+            <a href="#" class="hover-me" onclick="alert('clicked')">
+                I have to be clicked once
+            </a>
+        </div>
+        <h4>Link assigned to a second-level slot, which is assigned to a first-level slot</h4>
+        <div id="div3">
+            <div id="div4">
+                <a href="#" class="hover-me" onclick="alert('clicked')">
+                    I am assigned to the slot, and have to be clicked twice
+                </a>
+            </div>
+        </div>
+        <h4>Link inside of a first-level shadow root which has a slot with assigned nodes</h4>
+        <div id="div5">
+            <a href="#" class="hover-me" onclick="alert('clicked')">
+                I am assigned to the slot, and have to be clicked once
+            </a>
+        </div>
+
+        <section>
+            <h4>
+                :hover styles cause nodes to need a double tap in order to fire the 
+                click event when they are assigned to a slot that is assigned to a slot
+            </h4>
+            <div>
+                <div>
+                    <a href="#" class="hover-me" onclick="alert('clicked')">
+                        You can click me with two taps
+                    </a>
+                </div>
+            </div>
+            <slot>
+                <div class="hover-me">
+                <slot>
+                    <a href="#" class="hover-me" onclick="alert('clicked')">
+                        You can click me with two taps
+                    </a>
+                </slot>
+                </div>
+            </slot>
+            <script>
+                document.currentScript.previousElementSibling.attachShadow({ mode: 'open' }).innerHTML = `
+                    <div>
+                        <slot></slot>
+                    </div>
+                `;
+                document.currentScript.previousElementSibling.firstElementChild.attachShadow({ mode: 'open' }).innerHTML = `
+                    <style>
+                        div:hover {
+                            background-color: whitesmoke;
+                        }
+                    </style>
+                    <div>
+                        <slot name="fallback">
+                            <slot></slot>
+                        </slot>
+                    </div>
+                `;
+            </script>
+        </section>
+
+        <section>
+            <h4>:hover styles are not applied to nodes assigned to slots which are not immediate children of a shadow root</h4>
+            <div>
+                <a href="#" class="hover-me" onclick="alert('clicked')">
+                    You can click me with one tap but I will not change color
+                </a>
+            </div>
+            <script>
+                document.currentScript.previousElementSibling.attachShadow({ mode: 'open' }).innerHTML = `
+                    <div>
+                        <slot></slot>
+                    </div>
+                `;
+            </script>
+        </section>
+
+        <script>
+            document.getElementById('div1').attachShadow({ mode: 'open' }).innerHTML = `<slot></slot>`;
+            document.getElementById('div2').attachShadow({ mode: 'open' }).innerHTML = `<slot></slot>`;
+            document.getElementById('div3').attachShadow({ mode: 'open' }).innerHTML = `<slot></slot>`;
+            document.getElementById('div4').attachShadow({ mode: 'open' }).innerHTML = `<slot></slot>`;
+
+            document.getElementById('div5').attachShadow({ mode: 'open' }).innerHTML = `
+                <slot></slot>
+                <div>
+                    <style>.hover-me:hover { color: red; }</style>
+                    <a href="#" class="hover-me" onclick="alert('clicked')">
+                        I am part of the shadow root's contents, and have to be clicked once
+                    </a>
+                </div>
+            `;
+
+            document.getElementById('div7').attachShadow({ mode: 'open' }).innerHTML = `
+                <style>.hover-me:hover { color: red; }</style>
+                <div>
+                    <a href="#" class="hover-me" onclick="alert('clicked')">
+                        I'm in a shadow root that is distributed to a slot
+                    </a>
+                </div>
+                <slot></slot>
+            `;
+        </script>
+    </body>
+</html>

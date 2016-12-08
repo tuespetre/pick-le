@@ -39,7 +39,7 @@
         })();
     </script>
     <style>
-        pickle-select:not([defined]) > :not([slot=toggle]) {
+        pickle-select:not([defined]) > [slot] {
             display: none;
         }
     </style>
@@ -94,92 +94,45 @@
     <form class="container">
         <h3>Simple usage examples</h3>
         <hr />
-        <div style="margin-bottom: 10px">
-            <pickle-select name="links" type="navigation" data-title="Title for the pickle-select" no-filter align-right>
-                <button slot="toggle" class="btn btn-default" style="white-space: normal;">
-                    Links by setting [type=navigation], with [no-filter] and [align-right]
-                </button>
-                <pickle-option value="#" selected>
-                    Link one
-                </pickle-option>
-                <pickle-option value="#">
-                    Link two
-                </pickle-option>
-                <pickle-option value="#">
-                    Link three
-                </pickle-option>
-                <pickle-option value="#">
-                    <h4>Mark up and style option contents as you wish!</h4>
-                    <p style="color: red; text-decoration: underline;">It's flexible!</p>
-                </pickle-option>
-            </pickle-select>
-        </div>
-        <pre id="link-example-snippet"></pre>
-        <script>
-            document.getElementById('link-example-snippet').textContent = document.querySelector('[name=links]').outerHTML;
-        </script>
-        <hr />
-        <pickle-select name="radios" type="radio" data-title="Title for the pickle-select">
-            <button slot="toggle" class="btn btn-default">
+        <pickle-select id="single-example" data-title="Title for the pickle-select">
+            <button slot="toggle" type="button" class="btn btn-default">
                 Single-select by setting [type=radio]
             </button>
             <div slot="tool">
                 This is where you can put an extra tool, maybe like a button or something!
             </div>
+            <select name="single">
+                <option value="0">Option 0</option>
+                <optgroup label="Group 1">
+                    <option value="1" label="Label for this option">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </optgroup>
+                <optgroup label="Group 2">
+                    <option value="4" label="Label for this option">Option 4</option>
+                    <option value="5">Option 5</option>
+                    <option value="6">Option 6</option>
+                </optgroup>
+            </select>
         </pickle-select>
         <hr />
-        <pickle-select name="checkboxes" type="checkbox" data-title="Title for the pickle-select">
-            <button slot="toggle" class="btn btn-default">
+        <pickle-select id="multiple-example" data-title="Title for the pickle-select">
+            <button slot="toggle" type="button" class="btn btn-default">
                 Multi-select by setting [type=checkbox]
             </button>
             <div slot="tool">
                 This is where you can put an extra tool, maybe like a button or something!
             </div>
+            <select name="multiple" multiple>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
         </pickle-select>
         <hr />
         <button type="submit" class="btn btn-primary">
             See the outputs in the query string
         </button>
     </form>
-    <script>
-        var radios = document.querySelector('[name=radios]');
-        for (var i = 0; i < 20; i++) {
-            var num = i + 1;
-            var option = document.createElement('pickle-option');
-            option.value = num;
-            option.textContent = 'Option ' + num;
-            radios.appendChild(option);
-        }
-        setTimeout(function () {
-            radios.querySelector('pickle-option').selected = true;
-            var newOption = document.createElement('pickle-option');
-            newOption.value = 21;
-            newOption.textContent = 'Inserted after the fact -- what happens?';
-            newOption.selected = true;
-            radios.appendChild(newOption);
-        });
-
-        var checkboxes = document.querySelector('[name=checkboxes]');
-        for (var i = 0; i < 20; i++) {
-            var num = i + 1;
-            var option = document.createElement('pickle-option');
-            option.value = num;
-            option.textContent = 'Option ' + num;
-            checkboxes.appendChild(option);
-        }
-        
-        checkboxes.addEventListener('change', function (event) {
-            var optionsNodeList = checkboxes.querySelectorAll('pickle-option');
-            var options = Array.prototype.slice.call(optionsNodeList);
-
-            var text = options
-                .filter(function (option) { return option.selected; })
-                .map(function (option) { return option.text; })
-                .join(', ');
-
-            console.log(text || 'Select');
-        });
-    </script>
 </body>
-
 </html>

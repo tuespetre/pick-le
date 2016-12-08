@@ -1,8 +1,7 @@
 (function () {
     'use strict';
 
-    const shadowDomPolyfilled = window.shadowDomPolyfilled;
-    const nativeShadowDom = !shadowDomPolyfilled;
+    const shadowDomPolyfilled = window.shadowDomPolyfilled || window.ShadyDOM;
 
     const FRAG = strings => {
         const fragment = document.createDocumentFragment();
@@ -37,51 +36,46 @@
         TEMPLATE_OPTION.insertBefore(optionStyles, TEMPLATE_OPTION.firstChild);
     }
 
-    function isPickleOption(node) {
-        return node.nodeType === Node.ELEMENT_NODE
-            && node.localName === 'pickle-option';
-    }
-
     function findFirstOption(control, predicate) {
-        const assignedNodes = getOptionsSlot(control).assignedNodes();
-        const assignedNodesCount = assignedNodes.length;
-        for (let i = 0; i < assignedNodesCount; i++) {
-            const assignedNode = assignedNodes[i];
-            if (!isPickleOption(assignedNode)) {
+        const elements = getOptionsContainer(control).children;
+        const elementCount = elements.length;
+        for (let i = 0; i < elementCount; i++) {
+            const element = elements[i];
+            if (element.className !== 'pickle-option') {
                 continue;
             }
-            if (predicate(assignedNode)) {
-                return assignedNode;
+            if (predicate(element)) {
+                return element;
             }
         }
     }
 
     function forEachOption(control, action) {
-        const assignedNodes = getOptionsSlot(control).assignedNodes();
-        const assignedNodesCount = assignedNodes.length;
-        for (let i = 0; i < assignedNodesCount; i++) {
-            const assignedNode = assignedNodes[i];
-            if (!isPickleOption(assignedNode)) {
+        const elements = getOptionsContainer(control).children;
+        const elementCount = elements.length;
+        for (let i = 0; i < elementCount; i++) {
+            const element = elements[i];
+            if (element.className !== 'pickle-option') {
                 continue;
             }
-            action(assignedNode);
+            action(element);
         }
     }
 
-    function getAncestorSelect(option) {
-        return option.closest('pickle-select');
-    }
-
-    function getTitleElement(control) {
-        return control.shadowRoot.querySelector('.private-title');
+    function getSelect(control) {
+        const children = control.children;
+        const childCount = control.children.length;
+        for (let i = 0; i < childCount; i++) {
+            const child = children[i];
+            if (child.localName === 'select') {
+                return child;
+            }
+        }
+        return null;
     }
 
     function getOptionsContainer(control) {
         return control.shadowRoot.querySelector('.pickle-select-options');
-    }
-
-    function getOptionsSlot(control) {
-        return control.shadowRoot.querySelector('.pickle-select-options-slot');
     }
 
     function getFilterInput(control) {
@@ -89,19 +83,15 @@
     }
 
     function getFirstHighlightedOption(control) {
-        return findFirstOption(control, option => option.hasAttribute('data-pickle-highlight'));
+        return findFirstOption(control, option => option.hasAttribute('data-pickle-highlighted'));
     }
 
     function getFirstSelectedOption(control) {
-        return findFirstOption(control, option => option.selected);
+        return findFirstOption(control, option => option.hasAttribute('data-pickle-selected'));
     }
 
     function getFirstVisibleOption(control) {
         return findFirstOption(control, option => !option.hasAttribute('data-pickle-filtered'));
-    }
-
-    function getFocusTarget(control) {
-        return getFilterInput(control);
     }
 
     function getToggleSlot(control) {
@@ -114,7 +104,6 @@
 
     function scrollOptionIntoView(optionsContainer, option) {
         // focus() causes iOS (et al) to hide keyboard.
-        // our scroll logic has constraints: no height: 100% on body
 
         let documentRect = null;
         let containerRect = optionsContainer.getBoundingClientRect();
@@ -148,14 +137,9 @@
         }
 
         forEachOption(control, option => {
-            option.removeAttribute('data-pickle-highlight');
+            option.removeAttribute('data-pickle-highlighted');
 
-            let filtered = false;
-            if (filter && option.text.toLowerCase().indexOf(filter) === -1) {
-                filtered = true;
-            }
-
-            if (filtered) {
+            if (filter && option.textContent.toLowerCase().indexOf(filter) === -1) {
                 option.setAttribute('data-pickle-filtered', '');
             }
             else {
@@ -170,7 +154,7 @@
         }
 
         if (optionToHighlight) {
-            optionToHighlight.setAttribute('data-pickle-highlight', '');
+            optionToHighlight.setAttribute('data-pickle-highlighted', '');
         }
     }
 
@@ -189,16 +173,16 @@
         if (!highlightedOption) {
             const firstVisibleOption = getFirstVisibleOption(control);
             if (firstVisibleOption) {
-                firstVisibleOption.setAttribute('data-pickle-highlight', '');
+                firstVisibleOption.setAttribute('data-pickle-highlighted', '');
             }
             return;
         }
 
         let next = highlightedOption;
         while (next = getSibling(next)) {
-            if (isPickleOption(next) && !next.dataset.pickleFiltered) {
-                highlightedOption.removeAttribute('data-pickle-highlight');
-                next.setAttribute('data-pickle-highlight', '');
+            if (next.classList.contains('pickle-option') && !next.dataset.pickleFiltered) {
+                highlightedOption.removeAttribute('data-pickle-highlighted');
+                next.setAttribute('data-pickle-highlighted', '');
                 scrollOptionIntoView(getOptionsContainer(control), next);
                 break;
             }
@@ -266,149 +250,121 @@
         }
     }
 
-    function onExpandedChanged(control) {
-        if (control.expanded) {
-            const filterInput = getFilterInput(control);
-            filterInput.value = null;
-            filterInput.dataset.value = '';
-            filterOptions(control, null);
+    function onExpanded(control) {
+        renderOptions(control);
 
-            let firstChecked = getFirstSelectedOption(control);
-            if (firstChecked) {
-                scrollOptionIntoView(getOptionsContainer(control), firstChecked);
-            }
+        const filterInput = getFilterInput(control);
+        filterInput.value = null;
+        filterInput.dataset.value = '';
+        filterOptions(control, null);
 
-            getPopup(control).focus();
-        }
-    }
-
-    function ensureOneSelectedOption(control) {
-        if (!control.isConnected) {
-            return;
+        let firstSelected = getFirstSelectedOption(control);
+        if (firstSelected) {
+            scrollOptionIntoView(getOptionsContainer(control), firstSelected);
         }
 
-        let lastSelected = null;
-        forEachOption(control, option => {
-            if (option.selected) {
-                if (lastSelected !== null) {
-                    lastSelected.selected = false;
-                }
-                lastSelected = option;
-            }
-        });
-    }
-
-    function setOptionSelectedAttribute(option, selected) {
-        if (selected) {
-            option.setAttribute('selected', '');
-        }
-        else {
-            option.removeAttribute('selected');
-        }
-    }
-
-    function changeOptionSelected(option, selected = null) {
-        const ancestorSelect = getAncestorSelect(option);    
-        const input = option.shadowRoot.querySelector('input');
-        const oldState = input.checked;
-        let newState;
-
-        switch (ancestorSelect.type) {
-            case 'checkbox':
-                newState = (selected === null) ? !input.checked : selected;
-                input.checked = newState;
-                break;
-            case 'radio':
-            case 'navigation':
-                newState = (selected === null) ? true : selected;
-                input.checked = newState;
-                if (newState === true) {
-                    forEachOption(ancestorSelect, other => {
-                        if (other !== option) {
-                            other.removeAttribute('selected');
-                            other.shadowRoot.querySelector('input').checked = false;
-                        }
-                    });
-                }
-                break;
-        }
-
-        setOptionSelectedAttribute(option, newState);
-
-        return newState != oldState;
+        getPopup(control).focus();
     }
 
     function handleOptionClick(event) {
-        const ancestorSelect = getAncestorSelect(this);
-        if (ancestorSelect) {
-            const firstHighlightedOption = getFirstHighlightedOption(ancestorSelect);
-            if (firstHighlightedOption) {
-                firstHighlightedOption.removeAttribute('data-pickle-highlight');
-            }
+        const wrapper = event.target.closest('.pickle-option');
+        const select = getSelect(this);
+
+        if (!wrapper || !select) {
+            return;
         }
-        this.setAttribute('data-pickle-highlight', '');
+
+        const firstHighlightedOption = getFirstHighlightedOption(this);
+        if (firstHighlightedOption) {
+            firstHighlightedOption.removeAttribute('data-pickle-highlighted');
+        }
+        wrapper.setAttribute('data-pickle-highlighted', '');
         
-        if (changeOptionSelected(this)) {
+        const option = wrapper.option;
+        const oldSelected = option.selected;
+
+        if (select.type === 'select-multiple') {
+            option.selected = !oldSelected;
+        }
+        else {
+            option.selected = true;
+        }
+
+        if (option.selected != oldSelected) {
+            if (select.type === 'select-multiple') {
+                renderOption(wrapper, option);
+            }
+            else {
+                forEachOption(this, wrapper => {
+                    renderOption(wrapper, wrapper.option);
+                });
+            }
             const change = document.createEvent('event');
             change.initEvent('change', true, false);
-            this.dispatchEvent(change);
-        }
-
-        // This is kind of like 'activation behavior' in HTML
-        switch (ancestorSelect.type) {
-            case 'navigation':                
-                if (event.composedPath()[0] === this) {
-                    this.shadowRoot.querySelector('a').click();
-                }
-                break;
+            select.dispatchEvent(change);
         }
     }
 
-    function renderOption(option) {
-        const select = getAncestorSelect(option);
-        const contents = option.shadowRoot;
-        const wrapper = contents.querySelector('.pickle-option-wrapper');
-        const input = contents.querySelector('.pickle-option-input');
-        input.checked = option.selected;
-        input.value = option.value;
-        input.name = select.name;
+    function renderOption(wrapper, option) {
+        const label = option.getAttribute('label');
+        if (label) {
+            wrapper.querySelector('.pickle-option-label').textContent = label;
+        }
+            
+        const text = option.text;
+        if (text) {
+            wrapper.querySelector('.pickle-option-text').textContent = text;
+        }
 
-        switch (select.type) {
-            case 'checkbox':
-            case 'radio':
-                input.type = select.type;
-                break;
-            case 'navigation':
-                input.type = 'radio';
-                wrapper.href = option.value;
-                break;
+        const selected = option.selected;
+        if (selected) {
+            wrapper.setAttribute('data-pickle-selected', '');
+        }
+        else {
+            wrapper.removeAttribute('data-pickle-selected');
         }
     }
 
-    function registerOptionForFormParticipation(option) {
-        // This is here until there is a more 'blessed' way of
-        // participating in form submission.
-        // See: https://github.com/w3c/webcomponents/issues/187
-        const proxyInput = document.createElement('input');
-        proxyInput.type = 'hidden';
-        
-        const handler = event => {
-            const ancestorSelect = getAncestorSelect(option);
-            let participated = false;
-            if (ancestorSelect && ancestorSelect.type !== 'navigation' && option.selected) {
-                proxyInput.name = ancestorSelect.name;
-                proxyInput.value = option.value;
-                if (event.target.contains(option)) {
-                    event.target.appendChild(proxyInput);
-                    participated = true;
+    function renderOptions(control) {
+        const container = getOptionsContainer(control);
+        let firstChild;
+        while (firstChild = container.firstChild) {
+            container.removeChild(firstChild);
+        }
+        const select = control.querySelector('select');
+        if (!select) {
+            return;
+        }
+        const selectChildren = select.children;
+        const selectChildCount = selectChildren.length;
+        for (let i = 0; i < selectChildCount; i++) {
+            const selectChild = selectChildren[i];
+            if (selectChild.localName === 'option') {
+                const fragment = document.importNode(TEMPLATE_OPTION, true);
+                const wrapper = fragment.querySelector('.pickle-option');
+                renderOption(wrapper, selectChild);
+                wrapper.option = selectChild;
+                container.appendChild(wrapper);
+            }
+            else if (selectChild.localName === 'optgroup') {
+                const optgroup = document.createElement('div');
+                optgroup.className = 'pickle-optgroup';
+                optgroup.textContent = selectChild.label;
+                container.appendChild(optgroup);
+                const groupChildren = selectChild.children;
+                const groupChildCount = groupChildren.length;
+                for (let i = 0; i < groupChildCount; i++) {
+                    const groupChild = groupChildren[i];
+                    if (groupChild.localName === 'option') {
+                        const fragment = document.importNode(TEMPLATE_OPTION, true);
+                        const wrapper = fragment.querySelector('.pickle-option');
+                        renderOption(wrapper, groupChild);
+                        wrapper.option = groupChild;
+                        container.appendChild(wrapper);
+                    }
                 }
             }
-            if (!participated && proxyInput.parentNode) {
-                proxyInput.parentNode.removeChild(proxyInput);
-            }
         }
-
-        document.addEventListener('submit', handler, true);
     }
 
     class PickleSelect extends HTMLElement {
@@ -419,17 +375,6 @@
             this.attachShadow({ mode: 'open' });
 
             this.shadowRoot.appendChild(TEMPLATE_SELECT.cloneNode(true));
-
-            const popup = getPopup(this);
-            popup.addEventListener('keydown', handleOptionsKeydown.bind(this));
-
-            const optionsObserver = new MutationObserver(records => {
-                if (this.type === 'checkbox') {
-                    return;
-                }
-                ensureOneSelectedOption(this);
-            });
-            optionsObserver.observe(this, { childList: true });
 
             const toggleSlot = getToggleSlot(this);
             toggleSlot.addEventListener('click', event => {
@@ -444,6 +389,7 @@
             });
 
             const filterInput = getFilterInput(this);
+            filterInput.addEventListener('keydown', handleOptionsKeydown.bind(this));
             filterInput.addEventListener('input', event => {
                 const oldValue = filterInput.dataset.value;
                 const newValue = event.target.value;
@@ -453,15 +399,18 @@
                 }
             });
 
-            filterInput.addEventListener('keydown', handleOptionsKeydown.bind(this));
+            const popup = getPopup(this);
+            popup.addEventListener('keydown', handleOptionsKeydown.bind(this));
+
+            const container = getOptionsContainer(this);
+            container.addEventListener('click', handleOptionClick.bind(this));
         }
 
         connectedCallback() {
             document.addEventListener('click', handleDocumentClick.bind(this));
 
-            getTitleElement(this).textContent = this.dataset.title;
-
-            ensureOneSelectedOption(this);
+            const title = this.shadowRoot.querySelector('.private-title');
+            title.textContent = this.dataset.title;
 
             // Simulate the :defined pseudo-class
             this.setAttribute('defined', '');
@@ -485,100 +434,11 @@
                 else {
                     this.removeAttribute('aria-expanded');
                 }
-                onExpandedChanged(this);
+                onExpanded(this);
             }
         }
-
-        get type() {
-            const value = this.getAttribute('type');
-            switch (value) {
-                case 'radio':
-                case 'checkbox':
-                case 'navigation':
-                    return value;
-                default:
-                    return 'radio';
-            }
-        }
-
-        set type(value) {
-            this.setAttribute('type', value);
-        }
-
-        get name() {
-            const value = this.getAttribute('name');
-            if (value !== null) {
-                return value.trim();
-            }
-            return '';
-        }
-
-        set name(value) {
-            if (value == null) {
-                this.removeAttribute('name');
-            }
-            else {
-                this.setAttribute('name', value);
-            }
-        }
-    }
-
-    class PickleOption extends HTMLElement {
-
-        constructor() {
-            super();
-
-            this.attachShadow({ mode: 'open' });
-
-            this.shadowRoot.appendChild(document.importNode(TEMPLATE_OPTION, true));
-            
-            this.addEventListener('click', handleOptionClick.bind(this));
-        }
-
-        connectedCallback() {
-            renderOption(this);
-
-            if (nativeShadowDom) {
-                registerOptionForFormParticipation(this);
-            }
-
-            // Simulate the :defined pseudo-class
-            this.setAttribute('defined', '');
-        }
-
-        get value() {
-            return this.getAttribute('value');
-        }
-
-        set value(value) {
-            this.setAttribute('value', value);
-        }
-
-        get selected() {
-            return this.hasAttribute('selected');
-        }
-
-        set selected(value) {
-            if (this.isConnected) {
-                changeOptionSelected(this, new Boolean(value) == true);
-            }
-            else {
-                setOptionSelectedAttribute(this, new Boolean(value) == true);
-            }
-        }
-
-        get text() {
-            return this.textContent.replace(/\s+/, ' ').trim();
-        }
-
-        set text(value) {
-            this.textContent = value;
-        }
-
     }
 
     customElements.define('pickle-select', PickleSelect);
-
-    customElements.define('pickle-option', PickleOption);
 
 })();
