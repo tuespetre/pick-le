@@ -49,6 +49,12 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     outline: none;
 }
 
+#{$select}#{$alignright} .pickle-select-anchor,
+#{$select}#{$alignright} .pickle-select-popup {
+    left: auto;
+    right: 0;
+}
+
 #{$select}#{$expanded} .pickle-select-popup {
     display: block;
 }
@@ -219,38 +225,4 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
 
 .pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty) + .pickle-option-text:not(:empty) {
     color: white;
-}
-    
-@media screen and (max-width: 767px) {
-    #{$select} {
-        display: block;
-    }
-
-    .pickle-select-anchor,
-    .pickle-select-popup {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        width: auto;
-        bottom: auto;
-        margin: 0;
-    }
-
-    .pickle-select-title {
-        padding: 15px 10px;
-    }
-
-    .pickle-select-close svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    #{$select}#{$alignright} .pickle-select-anchor,
-    #{$select}#{$alignright} .pickle-select-popup {
-        left: auto;
-        right: 0;
-    }
 }
