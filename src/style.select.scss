@@ -219,7 +219,8 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
 }
 
 .pickle-option-label:not(:empty) + .pickle-option-text:not(:empty) {
-    margin-top: 7px;
+    font-size: 90%;
+    margin-top: 5px;
     color: #555;
 }
 
