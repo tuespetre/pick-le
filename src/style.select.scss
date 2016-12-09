@@ -140,6 +140,13 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     -webkit-overflow-scrolling: touch;
 }
 
+.pickle-select-options-inner {
+    display: block;
+    overflow: visible;
+    width: 100%;
+    height: auto;
+}
+
 .pickle-optgroup {
     background-color: #f1f1f1;
     font-weight: bold;
@@ -167,9 +174,7 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
     display: none;
 }
 
-.pickle-option:hover,
-.pickle-option:focus,
-.pickle-option:active {
+.pickle-option:hover {
     background-color: #f7f7f7;
     text-decoration: none;
     outline: none;

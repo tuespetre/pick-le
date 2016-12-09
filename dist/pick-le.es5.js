@@ -2,8 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _templateObject = _taggedTemplateLiteral(['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="text" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"></div></div></div><div class="pickle-default-slot"><slot></slot></div>'], ['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="text" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"></div></div></div><div class="pickle-default-slot"><slot></slot></div>']),
-    _templateObject2 = _taggedTemplateLiteral(['<div class="pickle-option" onclick="void(0)"><span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><div class="pickle-option-label"></div><div class="pickle-option-text"></div></div></div>'], ['<div class="pickle-option" onclick="void(0)"><span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><div class="pickle-option-label"></div><div class="pickle-option-text"></div></div></div>']);
+var _templateObject = _taggedTemplateLiteral(['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="text" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"><div class="pickle-select-options-inner"></div></div></div></div><div class="pickle-default-slot"><slot></slot></div>'], ['<slot name="toggle" class="pickle-select-toggle-slot"></slot><div class="pickle-select-anchor"><div class="pickle-select-popup" tabindex="-1"><div class="pickle-select-title"><span class="private-title"></span> <span class="pickle-select-close"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg></span></div><slot name="tool"></slot><div class="pickle-select-filter"><input type="text" autocomplete="off" tabindex="-1" data-value=""></div><div class="pickle-select-options"><div class="pickle-select-options-inner"></div></div></div></div><div class="pickle-default-slot"><slot></slot></div>']),
+    _templateObject2 = _taggedTemplateLiteral(['<div class="pickle-option"><span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><div class="pickle-option-label"></div><div class="pickle-option-text"></div></div></div>'], ['<div class="pickle-option"><span class="pickle-option-glyph"><svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg></span><div class="pickle-option-contents"><div class="pickle-option-label"></div><div class="pickle-option-text"></div></div></div>']);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -33,9 +33,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
     var TEMPLATE_SELECT = FRAG(_templateObject);
     var TEMPLATE_OPTION = FRAG(_templateObject2);
-    var STYLE_SELECT = ':host{position:relative;display:inline-block}.pickle-default-slot{display:none!important}.pickle-select-anchor{min-width:250px;z-index:3000;height:0}.pickle-select-anchor,.pickle-select-popup{width:100%;position:absolute;top:100%;right:auto;bottom:auto;left:0}:host([align-right]) .pickle-select-anchor,:host([align-right]) .pickle-select-popup{right:0;left:auto}.pickle-select-popup{display:none;box-sizing:border-box;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);outline:0;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;-ms-touch-action:manipulation;touch-action:manipulation}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .pickle-select-popup{display:block}:host([no-filter]) .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;box-sizing:border-box;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}.pickle-optgroup{background-color:#f1f1f1;font-weight:700;padding:7px 7px 7px 28px;border-bottom:1px solid #dcdcdc}.pickle-option{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;border:none;border-bottom:1px solid #dcdcdc;padding:7px;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option[data-pickle-filtered]{display:none}.pickle-option:active,.pickle-option:focus,.pickle-option:hover{background-color:#f7f7f7;text-decoration:none;outline:0;color:#111}.pickle-option[data-pickle-highlighted]{background-color:#4682b4;color:#fff}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option[data-pickle-selected] .pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.pickle-option-label:not(:empty){display:block;font-weight:700}.pickle-option-text:not(:empty){display:block}.pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){font-size:90%;margin-top:5px;color:#555}.pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){color:#fff}';
+    var STYLE_SELECT = ':host{position:relative;display:inline-block}.pickle-default-slot{display:none!important}.pickle-select-anchor{min-width:250px;z-index:3000;height:0}.pickle-select-anchor,.pickle-select-popup{width:100%;position:absolute;top:100%;right:auto;bottom:auto;left:0}:host([align-right]) .pickle-select-anchor,:host([align-right]) .pickle-select-popup{right:0;left:auto}.pickle-select-popup{display:none;box-sizing:border-box;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);outline:0;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;-ms-touch-action:manipulation;touch-action:manipulation}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}:host([aria-expanded=true]) .pickle-select-popup{display:block}:host([no-filter]) .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]::slotted(*){display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;box-sizing:border-box;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}.pickle-select-options-inner{display:block;overflow:visible;width:100%;height:auto}.pickle-optgroup{background-color:#f1f1f1;font-weight:700;padding:7px 7px 7px 28px;border-bottom:1px solid #dcdcdc}.pickle-option{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;border:none;border-bottom:1px solid #dcdcdc;padding:7px;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option[data-pickle-filtered]{display:none}.pickle-option:hover{background-color:#f7f7f7;text-decoration:none;outline:0;color:#111}.pickle-option[data-pickle-highlighted]{background-color:#4682b4;color:#fff}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option[data-pickle-selected] .pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.pickle-option-label:not(:empty){display:block;font-weight:700}.pickle-option-text:not(:empty){display:block}.pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){font-size:90%;margin-top:5px;color:#555}.pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){color:#fff}';
     var STYLE_OPTION = ':host{display:block;margin:0;padding:0}:host([data-pickle-highlight]){background-color:#f5f5f5}:host([data-pickle-filtered]){display:none}.pickle-option-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;border:none;border-bottom:1px solid #dcdcdc;padding:7px;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option-wrapper:active,.pickle-option-wrapper:focus,.pickle-option-wrapper:hover,.pickle-option-wrapper[data-pickle-highlighted]{background-color:#f5f5f5;text-decoration:none;outline:0;color:#111}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option-wrapper[data-pickle-selected] .pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.pickle-option-label:not(:empty){display:block;font-weight:700}.pickle-option-text:not(:empty){display:block}.pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){margin-top:7px;color:#777;font-size:90%}';
-    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-default-slot{display:none!important}.pickle-select-anchor{min-width:250px;z-index:3000;height:0}.pickle-select-anchor,.pickle-select-popup{width:100%;position:absolute;top:100%;right:auto;bottom:auto;left:0}pickle-select[align-right] .pickle-select-anchor,pickle-select[align-right] .pickle-select-popup{right:0;left:auto}.pickle-select-popup{display:none;box-sizing:border-box;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);outline:0;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;-ms-touch-action:manipulation;touch-action:manipulation}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}pickle-select[no-filter] .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;box-sizing:border-box;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}.pickle-optgroup{background-color:#f1f1f1;font-weight:700;padding:7px 7px 7px 28px;border-bottom:1px solid #dcdcdc}.pickle-option{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;border:none;border-bottom:1px solid #dcdcdc;padding:7px;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option[data-pickle-filtered]{display:none}.pickle-option:active,.pickle-option:focus,.pickle-option:hover{background-color:#f7f7f7;text-decoration:none;outline:0;color:#111}.pickle-option[data-pickle-highlighted]{background-color:#4682b4;color:#fff}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option[data-pickle-selected] .pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.pickle-option-label:not(:empty){display:block;font-weight:700}.pickle-option-text:not(:empty){display:block}.pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){font-size:90%;margin-top:5px;color:#555}.pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){color:#fff}';
+    var STYLE_FALLBACK = 'pickle-select{position:relative;display:inline-block}.pickle-default-slot{display:none!important}.pickle-select-anchor{min-width:250px;z-index:3000;height:0}.pickle-select-anchor,.pickle-select-popup{width:100%;position:absolute;top:100%;right:auto;bottom:auto;left:0}pickle-select[align-right] .pickle-select-anchor,pickle-select[align-right] .pickle-select-popup{right:0;left:auto}.pickle-select-popup{display:none;box-sizing:border-box;border:1px solid #dcdcdc;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.175);outline:0;-webkit-transform:none!important;transform:none!important;font-family:\'Helvetica Neue\',Helvetica,Arial,sans-serif;color:#111;line-height:20px;font-size:14px;-ms-touch-action:manipulation;touch-action:manipulation}.pickle-select-filter input,.pickle-select-filter input:focus{box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}pickle-select[aria-expanded=true] .pickle-select-popup{display:block}pickle-select[no-filter] .pickle-select-filter{display:none}.pickle-select-filter,.pickle-select-title,slot[name=tool]>*{display:block;padding:7px 10px;background-color:#f1f1f1;border-bottom:1px solid #dcdcdc;-ms-flex-negative:0;flex-shrink:0;-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0;line-height:20px}.pickle-select-title{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#111;font-weight:700}.pickle-select-close{margin-left:auto;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;display:inline-block;font-weight:700;font-size:20px;line-height:20px;color:#BBB}.pickle-select-close:hover{color:#111;cursor:pointer}.pickle-select-close svg{width:15px;height:15px;display:inline-block;fill:currentColor}.pickle-select-filter input{display:block;box-sizing:border-box;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:inherit;background-color:#fff;background-image:none;border:1px solid #66afe9;border-radius:4px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.pickle-select-filter input:focus{border-color:#66afe9;outline:0}.pickle-select-options{display:block;overflow-x:hidden;overflow-y:auto;max-height:340px;background-color:#fff;position:relative;-webkit-overflow-scrolling:touch}.pickle-select-options-inner{display:block;overflow:visible;width:100%;height:auto}.pickle-optgroup{background-color:#f1f1f1;font-weight:700;padding:7px 7px 7px 28px;border-bottom:1px solid #dcdcdc}.pickle-option{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;border:none;border-bottom:1px solid #dcdcdc;padding:7px;cursor:pointer;color:#111;text-decoration:none;line-height:20px;font-size:14px;font-weight:400;margin:0}.pickle-option[data-pickle-filtered]{display:none}.pickle-option:hover{background-color:#f7f7f7;text-decoration:none;outline:0;color:#111}.pickle-option[data-pickle-highlighted]{background-color:#4682b4;color:#fff}.pickle-option-glyph{opacity:0;height:20px;width:14px;margin-right:7px;text-align:center;font-weight:700;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto}.pickle-option-glyph svg{display:inline-block;height:14px;width:14px;margin-top:3px;fill:currentColor}.pickle-option-input{display:none}.pickle-option[data-pickle-selected] .pickle-option-glyph{opacity:1}.pickle-option-contents{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.pickle-option-label:not(:empty){display:block;font-weight:700}.pickle-option-text:not(:empty){display:block}.pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){font-size:90%;margin-top:5px;color:#555}.pickle-option[data-pickle-highlighted] .pickle-option-label:not(:empty)+.pickle-option-text:not(:empty){color:#fff}';
 
     if (shadowDomPolyfilled) {
         var fallbackStyles = document.createElement('style');
@@ -51,7 +51,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     }
 
     function findFirstOption(control, predicate) {
-        var elements = getOptionsContainer(control).children;
+        var elements = getOptionsContainerInner(control).children;
         var elementCount = elements.length;
         for (var i = 0; i < elementCount; i++) {
             var element = elements[i];
@@ -65,7 +65,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     }
 
     function forEachOption(control, action) {
-        var elements = getOptionsContainer(control).children;
+        var elements = getOptionsContainerInner(control).children;
         var elementCount = elements.length;
         for (var i = 0; i < elementCount; i++) {
             var element = elements[i];
@@ -90,6 +90,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
     function getOptionsContainer(control) {
         return control.shadowRoot.querySelector('.pickle-select-options');
+    }
+
+    function getOptionsContainerInner(control) {
+        return control.shadowRoot.querySelector('.pickle-select-options-inner');
     }
 
     function getFilterInput(control) {
@@ -122,10 +126,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         return control.shadowRoot.querySelector('.pickle-select-popup');
     }
 
-    function scrollOptionIntoView(optionsContainer, option) {
+    function scrollOptionIntoView(control, option) {
         // focus() causes iOS (et al) to hide keyboard.
 
-        var documentRect = null;
+        var optionsContainer = getOptionsContainer(control);
         var containerRect = optionsContainer.getBoundingClientRect();
         var optionRect = option.getBoundingClientRect();
 
@@ -136,7 +140,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         }
 
         optionRect = option.getBoundingClientRect();
-        documentRect = document.documentElement.getBoundingClientRect();
+        var documentRect = document.documentElement.getBoundingClientRect();
 
         if (optionRect.bottom > documentRect.height) {
             var diff = optionRect.bottom - documentRect.height;
@@ -172,7 +176,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
         if (optionToHighlight) {
             optionToHighlight.setAttribute('data-pickle-highlighted', '');
-            scrollOptionIntoView(getOptionsContainer(control), optionToHighlight);
+            scrollOptionIntoView(control, optionToHighlight);
         }
     }
 
@@ -200,7 +204,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             if (next.classList.contains('pickle-option') && !next.hasAttribute('data-pickle-filtered')) {
                 highlightedOption.removeAttribute('data-pickle-highlighted');
                 next.setAttribute('data-pickle-highlighted', '');
-                scrollOptionIntoView(getOptionsContainer(control), next);
+                scrollOptionIntoView(control, next);
                 break;
             }
         }
@@ -239,7 +243,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             case 'Enter':case 13:
                 var highlighted = getFirstHighlightedOption(this);
                 if (highlighted) {
-                    highlighted.click();
+                    handleOptionClick(this, highlighted);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -286,7 +290,7 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
         var firstSelected = getFirstSelectedOption(control);
         if (firstSelected) {
-            scrollOptionIntoView(getOptionsContainer(control), firstSelected);
+            scrollOptionIntoView(control, firstSelected);
             firstSelected.setAttribute('data-pickle-highlighted', '');
         } else {
             var firstVisible = getFirstVisibleOption(control);
@@ -298,15 +302,14 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         getPopup(control).focus();
     }
 
-    function handleOptionClick(event) {
-        var wrapper = event.target.closest('.pickle-option');
-        var select = getSelect(this);
+    function handleOptionClick(control, wrapper) {
+        var select = getSelect(control);
 
         if (!wrapper || !select) {
             return;
         }
 
-        var firstHighlightedOption = getFirstHighlightedOption(this);
+        var firstHighlightedOption = getFirstHighlightedOption(control);
         if (firstHighlightedOption) {
             firstHighlightedOption.removeAttribute('data-pickle-highlighted');
         }
@@ -314,29 +317,45 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
         var option = wrapper.option;
         var oldSelected = option.selected;
+        var newSelected = void 0;
 
         if (select.type === 'select-multiple') {
-            option.selected = !oldSelected;
+            newSelected = !oldSelected;
         } else {
-            option.selected = true;
+            newSelected = true;
         }
 
-        if (option.selected !== oldSelected) {
-            renderOption(wrapper, option);
+        if (newSelected !== oldSelected) {
             if (select.type !== 'select-multiple') {
-                forEachOption(this, function (other) {
-                    if (wrapper !== other) {
-                        // Necessary evil for browsers like IE
-                        var _option = other.option;
-                        _option.selected = false;
-                        renderOption(other, _option);
-                    }
-                });
+                (function () {
+                    var selected = [];
+                    forEachOption(control, function (other) {
+                        if (wrapper !== other) {
+                            var _option = other.option;
+                            if (_option.selected) {
+                                selected.push(other);
+                            }
+                        }
+                    });
+                    option.selected = newSelected;
+                    renderOption(wrapper, option);
+                    selected.forEach(function (other) {
+                        var option = other.option;
+                        // necessary evil for IE
+                        option.selected = false;
+                        renderOption(other, option);
+                    });
+                })();
+            } else {
+                option.selected = newSelected;
+                renderOption(wrapper, option);
             }
             var change = document.createEvent('event');
             change.initEvent('change', true, false);
             select.dispatchEvent(change);
         }
+
+        getPopup(control).focus();
     }
 
     function renderOption(wrapper, option) {
@@ -359,11 +378,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
     }
 
     function renderOptions(control) {
-        var container = getOptionsContainer(control);
-        var firstChild = void 0;
-        while (firstChild = container.firstChild) {
-            container.removeChild(firstChild);
-        }
+        var oldContainer = getOptionsContainerInner(control);
+        var newContainer = oldContainer.cloneNode(false);
         var select = control.querySelector('select');
         if (!select) {
             return;
@@ -371,19 +387,18 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         var selectChildren = select.children;
         var selectChildCount = selectChildren.length;
         var optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
-        var fragment = document.createDocumentFragment();
         for (var i = 0; i < selectChildCount; i++) {
             var selectChild = selectChildren[i];
             if (selectChild.localName === 'option') {
                 var wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
                 wrapper.option = selectChild;
-                fragment.appendChild(wrapper);
+                newContainer.appendChild(wrapper);
             } else if (selectChild.localName === 'optgroup') {
                 var optgroup = document.createElement('div');
                 optgroup.className = 'pickle-optgroup';
                 optgroup.textContent = selectChild.label;
-                fragment.appendChild(optgroup);
+                newContainer.appendChild(optgroup);
                 var groupChildren = selectChild.children;
                 var groupChildCount = groupChildren.length;
                 for (var _i = 0; _i < groupChildCount; _i++) {
@@ -392,12 +407,12 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                         var _wrapper = optionTemplate.cloneNode(true);
                         renderOption(_wrapper, groupChild);
                         _wrapper.option = groupChild;
-                        fragment.appendChild(_wrapper);
+                        newContainer.appendChild(_wrapper);
                     }
                 }
             }
         }
-        container.appendChild(fragment);
+        oldContainer.parentNode.replaceChild(newContainer, oldContainer);
     }
 
     var PickleSelect = function (_HTMLElement) {
@@ -439,7 +454,14 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
             popup.addEventListener('keydown', handleOptionsKeydown.bind(_this));
 
             var container = getOptionsContainer(_this);
-            container.addEventListener('click', handleOptionClick.bind(_this));
+            container.addEventListener('keydown', handleOptionsKeydown.bind(_this));
+            container.addEventListener('click', function (event) {
+                popup.focus();
+                var wrapper = event.target.closest('.pickle-option');
+                if (wrapper) {
+                    handleOptionClick(_this, wrapper);
+                }
+            });
             return _this;
         }
 

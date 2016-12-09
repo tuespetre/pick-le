@@ -26,7 +26,7 @@
         const fallbackStyles = document.createElement('style');
         fallbackStyles.textContent = STYLE_FALLBACK;
         document.head.insertBefore(fallbackStyles, document.head.firstChild);
-    } 
+    }
     else {
         const selectStyles = document.createElement('style');
         selectStyles.textContent = STYLE_SELECT;
@@ -37,7 +37,7 @@
     }
 
     function findFirstOption(control, predicate) {
-        const elements = getOptionsContainer(control).children;
+        const elements = getOptionsContainerInner(control).children;
         const elementCount = elements.length;
         for (let i = 0; i < elementCount; i++) {
             const element = elements[i];
@@ -51,7 +51,7 @@
     }
 
     function forEachOption(control, action) {
-        const elements = getOptionsContainer(control).children;
+        const elements = getOptionsContainerInner(control).children;
         const elementCount = elements.length;
         for (let i = 0; i < elementCount; i++) {
             const element = elements[i];
@@ -78,6 +78,10 @@
         return control.shadowRoot.querySelector('.pickle-select-options');
     }
 
+    function getOptionsContainerInner(control) {
+        return control.shadowRoot.querySelector('.pickle-select-options-inner');
+    }
+
     function getFilterInput(control) {
         return control.shadowRoot.querySelector('.pickle-select-filter input');
     }
@@ -102,11 +106,11 @@
         return control.shadowRoot.querySelector('.pickle-select-popup');
     }
 
-    function scrollOptionIntoView(optionsContainer, option) {
+    function scrollOptionIntoView(control, option) {
         // focus() causes iOS (et al) to hide keyboard.
 
-        let documentRect = null;
-        let containerRect = optionsContainer.getBoundingClientRect();
+        const optionsContainer = getOptionsContainer(control);
+        const containerRect = optionsContainer.getBoundingClientRect();
         let optionRect = option.getBoundingClientRect();
 
         if (optionRect.bottom > containerRect.bottom) {
@@ -117,7 +121,7 @@
         }
 
         optionRect = option.getBoundingClientRect();
-        documentRect = document.documentElement.getBoundingClientRect();
+        const documentRect = document.documentElement.getBoundingClientRect();
 
         if (optionRect.bottom > documentRect.height) {
             const diff = optionRect.bottom - documentRect.height;
@@ -155,7 +159,7 @@
 
         if (optionToHighlight) {
             optionToHighlight.setAttribute('data-pickle-highlighted', '');
-            scrollOptionIntoView(getOptionsContainer(control), optionToHighlight);
+            scrollOptionIntoView(control, optionToHighlight);
         }
     }
 
@@ -184,7 +188,7 @@
             if (next.classList.contains('pickle-option') && !next.hasAttribute('data-pickle-filtered')) {
                 highlightedOption.removeAttribute('data-pickle-highlighted');
                 next.setAttribute('data-pickle-highlighted', '');
-                scrollOptionIntoView(getOptionsContainer(control), next);
+                scrollOptionIntoView(control, next);
                 break;
             }
         }
@@ -218,7 +222,7 @@
             case 'Enter': case 13:
                 var highlighted = getFirstHighlightedOption(this);
                 if (highlighted) {
-                    highlighted.click();
+                    handleOptionClick(this, highlighted);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -257,7 +261,7 @@
         const filterInput = getFilterInput(control);
         filterInput.value = null;
         filterInput.dataset.value = '';
-        
+
         forEachOption(control, option => {
             option.removeAttribute('data-pickle-highlighted');
             option.removeAttribute('data-pickle-filtered');
@@ -265,7 +269,7 @@
 
         let firstSelected = getFirstSelectedOption(control);
         if (firstSelected) {
-            scrollOptionIntoView(getOptionsContainer(control), firstSelected);
+            scrollOptionIntoView(control, firstSelected);
             firstSelected.setAttribute('data-pickle-highlighted', '');
         }
         else {
@@ -278,46 +282,60 @@
         getPopup(control).focus();
     }
 
-    function handleOptionClick(event) {
-        const wrapper = event.target.closest('.pickle-option');
-        const select = getSelect(this);
+    function handleOptionClick(control, wrapper) {
+        const select = getSelect(control);
 
         if (!wrapper || !select) {
             return;
         }
 
-        const firstHighlightedOption = getFirstHighlightedOption(this);
+        const firstHighlightedOption = getFirstHighlightedOption(control);
         if (firstHighlightedOption) {
             firstHighlightedOption.removeAttribute('data-pickle-highlighted');
         }
         wrapper.setAttribute('data-pickle-highlighted', '');
-        
+
         const option = wrapper.option;
         const oldSelected = option.selected;
+        let newSelected;
 
         if (select.type === 'select-multiple') {
-            option.selected = !oldSelected;
+            newSelected = !oldSelected;
         }
         else {
-            option.selected = true;
+            newSelected = true;
         }
 
-        if (option.selected !== oldSelected) {
-            renderOption(wrapper, option);
+        if (newSelected !== oldSelected) {
             if (select.type !== 'select-multiple') {
-                forEachOption(this, other => {
+                const selected = [];
+                forEachOption(control, other => {
                     if (wrapper !== other) {
-                        // Necessary evil for browsers like IE
                         const option = other.option;
-                        option.selected = false;
-                        renderOption(other, option);
+                        if (option.selected) {
+                            selected.push(other);
+                        }
                     }
                 });
+                option.selected = newSelected;
+                renderOption(wrapper, option);
+                selected.forEach(other => {
+                    const option = other.option;
+                    // necessary evil for IE
+                    option.selected = false;
+                    renderOption(other, option);
+                });
+            }
+            else {
+                option.selected = newSelected;
+                renderOption(wrapper, option);
             }
             const change = document.createEvent('event');
             change.initEvent('change', true, false);
             select.dispatchEvent(change);
         }
+
+        getPopup(control).focus();
     }
 
     function renderOption(wrapper, option) {
@@ -325,7 +343,7 @@
         if (label) {
             wrapper.querySelector('.pickle-option-label').textContent = label;
         }
-            
+
         const text = option.text;
         if (text) {
             wrapper.querySelector('.pickle-option-text').textContent = text;
@@ -341,11 +359,8 @@
     }
 
     function renderOptions(control) {
-        const container = getOptionsContainer(control);
-        let firstChild;
-        while (firstChild = container.firstChild) {
-            container.removeChild(firstChild);
-        }
+        const oldContainer = getOptionsContainerInner(control);
+        const newContainer = oldContainer.cloneNode(false);
         const select = control.querySelector('select');
         if (!select) {
             return;
@@ -353,20 +368,19 @@
         const selectChildren = select.children;
         const selectChildCount = selectChildren.length;
         const optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
-        const fragment = document.createDocumentFragment();
         for (let i = 0; i < selectChildCount; i++) {
             const selectChild = selectChildren[i];
             if (selectChild.localName === 'option') {
                 const wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
                 wrapper.option = selectChild;
-                fragment.appendChild(wrapper);
+                newContainer.appendChild(wrapper);
             }
             else if (selectChild.localName === 'optgroup') {
                 const optgroup = document.createElement('div');
                 optgroup.className = 'pickle-optgroup';
                 optgroup.textContent = selectChild.label;
-                fragment.appendChild(optgroup);
+                newContainer.appendChild(optgroup);
                 const groupChildren = selectChild.children;
                 const groupChildCount = groupChildren.length;
                 for (let i = 0; i < groupChildCount; i++) {
@@ -375,12 +389,12 @@
                         const wrapper = optionTemplate.cloneNode(true);
                         renderOption(wrapper, groupChild);
                         wrapper.option = groupChild;
-                        fragment.appendChild(wrapper);
+                        newContainer.appendChild(wrapper);
                     }
                 }
             }
         }
-        container.appendChild(fragment);
+        oldContainer.parentNode.replaceChild(newContainer, oldContainer);
     }
 
     class PickleSelect extends HTMLElement {
@@ -419,7 +433,14 @@
             popup.addEventListener('keydown', handleOptionsKeydown.bind(this));
 
             const container = getOptionsContainer(this);
-            container.addEventListener('click', handleOptionClick.bind(this));
+            container.addEventListener('keydown', handleOptionsKeydown.bind(this));
+            container.addEventListener('click', event => {
+                popup.focus();
+                const wrapper = event.target.closest('.pickle-option');
+                if (wrapper) {
+                    handleOptionClick(this, wrapper);
+                }
+            });
         }
 
         connectedCallback() {

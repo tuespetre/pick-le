@@ -101,19 +101,18 @@
             <div slot="tool">
                 This is where you can put an extra tool, maybe like a button or something!
             </div>
-            <select name="single">
-                <option value="0">Option 0</option>
-                <optgroup label="Group 1">
-                    <option value="1" label="Label for this option">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </optgroup>
-                <optgroup label="Group 2">
-                    <option value="4" label="Label for this option">Option 4</option>
-                    <option value="5">Option 5</option>
-                    <option value="6">Option 6</option>
-                </optgroup>
-            </select>
+            <select name="single"></select>
+            <script>
+                (function () {
+                    var select = document.querySelector('select[name=single]');
+                    for (var i = 0; i < 500; i++) {
+                        var option = document.createElement('option');
+                        option.value = i + 1;
+                        option.text = 'Option ' + (i + 1);
+                        select.appendChild(option);
+                    }
+                })();
+            </script>
         </pickle-select>
         <hr />
         <pickle-select id="multiple-example" data-title="Title for the pickle-select">
@@ -123,11 +122,18 @@
             <div slot="tool">
                 This is where you can put an extra tool, maybe like a button or something!
             </div>
-            <select name="multiple" multiple>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-            </select>
+            <select multiple name="multiple"></select>
+            <script>
+                (function () {
+                    var select = document.querySelector('select[name=multiple]');
+                    for (var i = 0; i < 500; i++) {
+                        var option = document.createElement('option');
+                        option.value = i + 1;
+                        option.text = 'Option ' + (i + 1);
+                        select.appendChild(option);
+                    }
+                })();
+            </script>
         </pickle-select>
         <hr />
         <button type="submit" class="btn btn-primary">
