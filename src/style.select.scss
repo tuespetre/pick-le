@@ -19,40 +19,42 @@ $tool: 'slot[name=tool]::slotted(*)' !default;
 }
 
 .pickle-select-anchor {
-    position: absolute;
-	top: 0; 
-	left: 0; 
-	bottom: 0;
-    right: auto;
-	width: 0;
+    min-width: 250px;
+    z-index: 3000;
+    height: 0;
 }
 
-.pickle-select-popup {    
-    display: none;
+.pickle-select-anchor,
+.pickle-select-popup {
+    width: 100%;
     position: absolute;
-    top: 100%;
-    left: 0;
+	top: 100%; 
     right: auto;
-    bottom: auto;
-    width: 300px;
-    z-index: 3000;
+	bottom: auto;
+	left: 0;
+}
+
+#{$select}#{$alignright} .pickle-select-anchor,
+#{$select}#{$alignright} .pickle-select-popup {
+    right: 0;
+    left: auto;
+}
+
+.pickle-select-popup {   
+    display: none;
+    box-sizing: border-box;
     border: 1px solid gainsboro;
     border-radius: 4px;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    touch-action: manipulation;
+    outline: none;
     transform: none !important;
     
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #111;
     line-height: 20px;
     font-size: 14px;
-    outline: none;
-}
 
-#{$select}#{$alignright} .pickle-select-anchor,
-#{$select}#{$alignright} .pickle-select-popup {
-    left: auto;
-    right: 0;
+    touch-action: manipulation;
 }
 
 #{$select}#{$expanded} .pickle-select-popup {
