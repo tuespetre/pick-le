@@ -101,7 +101,9 @@
             <div slot="tool">
                 This is where you can put an extra tool, maybe like a button or something!
             </div>
-            <select name="single"></select>
+            <select name="single">
+                <option selected hidden value="">Placeholder</option>
+            </select>
             <script>
                 (function () {
                     var select = document.querySelector('select[name=single]');

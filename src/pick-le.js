@@ -370,6 +370,9 @@
         const optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
         for (let i = 0; i < selectChildCount; i++) {
             const selectChild = selectChildren[i];
+            if (selectChild.hidden) {
+                continue;
+            }
             if (selectChild.localName === 'option') {
                 const wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
@@ -385,6 +388,9 @@
                 const groupChildCount = groupChildren.length;
                 for (let i = 0; i < groupChildCount; i++) {
                     const groupChild = groupChildren[i];
+                    if (groupChild.hidden) {
+                        continue;
+                    }
                     if (groupChild.localName === 'option') {
                         const wrapper = optionTemplate.cloneNode(true);
                         renderOption(wrapper, groupChild);

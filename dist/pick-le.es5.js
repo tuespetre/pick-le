@@ -389,6 +389,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
         var optionTemplate = document.importNode(TEMPLATE_OPTION.querySelector('.pickle-option'), true);
         for (var i = 0; i < selectChildCount; i++) {
             var selectChild = selectChildren[i];
+            if (selectChild.hidden) {
+                continue;
+            }
             if (selectChild.localName === 'option') {
                 var wrapper = optionTemplate.cloneNode(true);
                 renderOption(wrapper, selectChild);
@@ -403,6 +406,9 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
                 var groupChildCount = groupChildren.length;
                 for (var _i = 0; _i < groupChildCount; _i++) {
                     var groupChild = groupChildren[_i];
+                    if (groupChild.hidden) {
+                        continue;
+                    }
                     if (groupChild.localName === 'option') {
                         var _wrapper = optionTemplate.cloneNode(true);
                         renderOption(_wrapper, groupChild);
